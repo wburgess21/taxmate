@@ -21,14 +21,14 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="border-b border-gray-200">
+      <nav className="border-b border-gray-200 sticky top-0 bg-white z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-[#005424] rounded-lg flex items-center justify-center">
                 <Calculator className="w-5 h-5 text-white" />
               </div>
-              <span className="text-2xl font-bold">TaxMate</span>
+              <span className="text-xl sm:text-2xl font-bold">TaxMate</span>
             </div>
             <div className="hidden md:flex items-center gap-8">
               <Link href="#features" className="text-gray-600 hover:text-gray-900 transition-colors">
@@ -40,39 +40,55 @@ export default function Home() {
               <Link href="#faq" className="text-gray-600 hover:text-gray-900 transition-colors">
                 FAQ
               </Link>
-              <Button asChild className="bg-[#005424] hover:bg-[#004020]">
-                <a 
-                  href="https://apps.apple.com/app/taxmate" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                >
-                  Download App
-                </a>
-              </Button>
+              <a 
+                href="https://apps.apple.com/app/taxmate" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <img 
+                  alt="Download on the App Store" 
+                  className="w-[130px] h-[100px] object-contain" 
+                  src="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/black/en-us?releaseDate=1740700800"
+                />
+              </a>
+            </div>
+            {/* Mobile App Store Badge */}
+            <div className="md:hidden">
+              <a 
+                href="https://apps.apple.com/app/taxmate" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <img 
+                  alt="Download on the App Store" 
+                  className="w-[130px] h-[100px] object-contain" 
+                  src="https://toolbox.marketingtools.apple.com/api/v2/badges/download-on-the-app-store/black/en-us?releaseDate=1740700800"
+                />
+              </a>
             </div>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="py-20 md:py-32">
+      <section className="py-12 sm:py-16 md:py-20 lg:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
-            <Badge className="mb-6 bg-green-50 text-[#005424] border-[#005424] hover:bg-green-100">
+            <Badge className="mb-4 sm:mb-6 bg-green-50 text-[#005424] border-[#005424] hover:bg-green-100 text-sm sm:text-base">
               HMRC-Compliant Calculations
             </Badge>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 tracking-tight px-2">
               A better way to calculate
               <span className="block text-[#005424]">home office tax</span>
             </h1>
-            <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-8 sm:mb-10 max-w-2xl mx-auto px-4">
               Stop under-claiming or guessing. Calculate your home office tax deduction 
               accurately using both HMRC-approved methods and choose the best option for you.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Button 
                 size="lg" 
-                className="bg-[#005424] hover:bg-[#004020] text-lg px-8 h-14"
+                className="bg-[#005424] hover:bg-[#004020] text-base sm:text-lg px-6 sm:px-8 h-12 sm:h-14 w-full sm:w-auto"
                 asChild
               >
                 <a 
@@ -81,13 +97,13 @@ export default function Home() {
                   rel="noopener noreferrer"
                 >
                   Download for iOS
-                  <ChevronRight className="ml-2 w-5 h-5" />
+                  <ChevronRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
                 </a>
               </Button>
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="text-lg px-8 h-14 border-2"
+                className="text-base sm:text-lg px-6 sm:px-8 h-12 sm:h-14 border-2 w-full sm:w-auto"
                 asChild
               >
                 <Link href="#how-it-works">
@@ -100,18 +116,18 @@ export default function Home() {
       </section>
 
       {/* Problem Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-12 sm:py-16 md:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-center">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-center px-2">
               Home office tax is often miscalculated
             </h2>
-            <p className="text-lg text-gray-600 text-center mb-12">
+            <p className="text-base sm:text-lg text-gray-600 text-center mb-8 sm:mb-12 px-4">
               There are two HMRC-approved ways to claim home office expenses: the simplified 
               flat rate and a detailed calculation based on actual costs. The right choice 
               depends on how you work, how much space you use, and what your real expenses are.
             </p>
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -146,18 +162,18 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20">
+      <section id="features" className="py-12 sm:py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <div className="text-center mb-10 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 px-2">
               Calculate with confidence
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
               TaxMate does the complex calculations for you and presents everything clearly.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             <Card className="border-2 hover:border-[#005424] transition-colors">
               <CardHeader>
                 <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center mb-4">
@@ -252,26 +268,26 @@ export default function Home() {
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-20 bg-gray-50">
+      <section id="how-it-works" className="py-12 sm:py-16 md:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <div className="text-center mb-10 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 px-2">
               How it works
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
               Get your home office tax deduction in three simple steps
             </p>
           </div>
 
           <div className="max-w-4xl mx-auto">
-            <div className="space-y-12">
-              <div className="flex gap-6 items-start">
-                <div className="flex-shrink-0 w-12 h-12 bg-[#005424] text-white rounded-full flex items-center justify-center text-xl font-bold">
+            <div className="space-y-8 sm:space-y-10 md:space-y-12">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start">
+                <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-[#005424] text-white rounded-full flex items-center justify-center text-lg sm:text-xl font-bold">
                   1
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold mb-3">Enter your work pattern</h3>
-                  <p className="text-gray-600 text-lg">
+                  <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">Enter your work pattern</h3>
+                  <p className="text-gray-600 text-base sm:text-lg">
                     Tell us how many hours per day you work from home. This helps calculate 
                     the proportion of your home used for business.
                   </p>
@@ -280,13 +296,13 @@ export default function Home() {
 
               <Separator />
 
-              <div className="flex gap-6 items-start">
-                <div className="flex-shrink-0 w-12 h-12 bg-[#005424] text-white rounded-full flex items-center justify-center text-xl font-bold">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start">
+                <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-[#005424] text-white rounded-full flex items-center justify-center text-lg sm:text-xl font-bold">
                   2
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold mb-3">Add your expenses and rooms</h3>
-                  <p className="text-gray-600 text-lg">
+                  <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">Add your expenses and rooms</h3>
+                  <p className="text-gray-600 text-base sm:text-lg">
                     Enter your annual household expenses (rent, mortgage interest, council tax, 
                     utilities) and specify how many rooms you use exclusively or partially for work.
                   </p>
@@ -295,13 +311,13 @@ export default function Home() {
 
               <Separator />
 
-              <div className="flex gap-6 items-start">
-                <div className="flex-shrink-0 w-12 h-12 bg-[#005424] text-white rounded-full flex items-center justify-center text-xl font-bold">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start">
+                <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-[#005424] text-white rounded-full flex items-center justify-center text-lg sm:text-xl font-bold">
                   3
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold mb-3">Get your result</h3>
-                  <p className="text-gray-600 text-lg">
+                  <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">Get your result</h3>
+                  <p className="text-gray-600 text-base sm:text-lg">
                     See both calculation methods compared side by side. The app shows you which 
                     option is best and explains the difference clearly.
                   </p>
@@ -310,10 +326,10 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="text-center mt-16">
+          <div className="text-center mt-10 sm:mt-12 md:mt-16 px-4">
             <Button 
               size="lg" 
-              className="bg-[#005424] hover:bg-[#004020] text-lg px-8 h-14"
+              className="bg-[#005424] hover:bg-[#004020] text-base sm:text-lg px-6 sm:px-8 h-12 sm:h-14 w-full sm:w-auto"
               asChild
             >
               <a 
@@ -322,7 +338,7 @@ export default function Home() {
                 rel="noopener noreferrer"
               >
                 Download TaxMate
-                <ChevronRight className="ml-2 w-5 h-5" />
+                <ChevronRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
               </a>
             </Button>
           </div>
@@ -330,18 +346,18 @@ export default function Home() {
       </section>
 
       {/* Who It's For Section */}
-      <section className="py-20">
+      <section className="py-12 sm:py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <div className="text-center mb-10 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 px-2">
               Who is TaxMate for?
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
               Designed for anyone who works from home and completes Self Assessment
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto">
             <Card className="text-center">
               <CardHeader>
                 <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -388,15 +404,15 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-20 bg-gray-50">
+      <section id="faq" className="py-12 sm:py-16 md:py-20 bg-gray-50">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <div className="text-center mb-10 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 px-2">
               Frequently asked questions
             </h2>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>Is TaxMate affiliated with HMRC?</CardTitle>
@@ -475,18 +491,18 @@ export default function Home() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-20">
+      <section className="py-12 sm:py-16 md:py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="bg-gradient-to-br from-[#005424] to-[#003618] rounded-2xl p-12 text-white">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <div className="bg-gradient-to-br from-[#005424] to-[#003618] rounded-2xl p-6 sm:p-8 md:p-12 text-white">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 px-2">
               Make your home office tax decision with confidence
             </h2>
-            <p className="text-xl mb-8 text-green-50">
+            <p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 text-green-50 px-2">
               Download TaxMate and calculate your deduction in minutes.
             </p>
             <Button 
               size="lg" 
-              className="bg-white text-[#005424] hover:bg-gray-100 text-lg px-8 h-14"
+              className="bg-white text-[#005424] hover:bg-gray-100 text-base sm:text-lg px-6 sm:px-8 h-12 sm:h-14 w-full sm:w-auto"
               asChild
             >
               <a 
@@ -495,7 +511,7 @@ export default function Home() {
                 rel="noopener noreferrer"
               >
                 Download for iOS
-                <ChevronRight className="ml-2 w-5 h-5" />
+                <ChevronRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
               </a>
             </Button>
           </div>
@@ -505,17 +521,17 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-gradient-to-b from-gray-50 to-white border-t border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-16">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+          <div className="py-10 sm:py-12 md:py-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12 mb-8 sm:mb-10 md:mb-12">
               {/* Brand Section */}
-              <div className="lg:col-span-2">
-                <div className="flex items-center gap-3 mb-6">
+              <div className="sm:col-span-2 lg:col-span-2">
+                <div className="flex items-center gap-3 mb-4 sm:mb-6">
                   <div className="w-10 h-10 bg-gradient-to-br from-[#005424] to-[#003618] rounded-xl flex items-center justify-center shadow-lg">
                     <Calculator className="w-6 h-6 text-white" />
                   </div>
-                  <span className="text-2xl font-bold text-gray-900">TaxMate</span>
+                  <span className="text-xl sm:text-2xl font-bold text-gray-900">TaxMate</span>
                 </div>
-                <p className="text-gray-600 mb-6 max-w-md leading-relaxed">
+                <p className="text-gray-600 mb-4 sm:mb-6 max-w-md leading-relaxed text-sm sm:text-base">
                   A better way to calculate home office tax for self-employed individuals 
                   and small business owners in the UK.
                 </p>
@@ -534,12 +550,12 @@ export default function Home() {
               
               {/* Product Links */}
               <div>
-                <h3 className="font-bold text-gray-900 mb-6 text-lg">Product</h3>
-                <ul className="space-y-3">
+                <h3 className="font-bold text-gray-900 mb-4 sm:mb-6 text-base sm:text-lg">Product</h3>
+                <ul className="space-y-2 sm:space-y-3">
                   <li>
                     <Link 
                       href="#features" 
-                      className="text-gray-600 hover:text-[#005424] transition-colors duration-200 inline-flex items-center gap-1 group"
+                      className="text-gray-600 hover:text-[#005424] transition-colors duration-200 inline-flex items-center gap-1 group text-sm sm:text-base"
                     >
                       Features
                       <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -548,7 +564,7 @@ export default function Home() {
                   <li>
                     <Link 
                       href="#how-it-works" 
-                      className="text-gray-600 hover:text-[#005424] transition-colors duration-200 inline-flex items-center gap-1 group"
+                      className="text-gray-600 hover:text-[#005424] transition-colors duration-200 inline-flex items-center gap-1 group text-sm sm:text-base"
                     >
                       How It Works
                       <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -557,7 +573,7 @@ export default function Home() {
                   <li>
                     <Link 
                       href="#faq" 
-                      className="text-gray-600 hover:text-[#005424] transition-colors duration-200 inline-flex items-center gap-1 group"
+                      className="text-gray-600 hover:text-[#005424] transition-colors duration-200 inline-flex items-center gap-1 group text-sm sm:text-base"
                     >
                       FAQ
                       <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -568,12 +584,12 @@ export default function Home() {
               
               {/* Legal Links */}
               <div>
-                <h3 className="font-bold text-gray-900 mb-6 text-lg">Legal</h3>
-                <ul className="space-y-3">
+                <h3 className="font-bold text-gray-900 mb-4 sm:mb-6 text-base sm:text-lg">Legal</h3>
+                <ul className="space-y-2 sm:space-y-3">
                   <li>
                     <Link 
                       href="/privacy" 
-                      className="text-gray-600 hover:text-[#005424] transition-colors duration-200 inline-flex items-center gap-1 group"
+                      className="text-gray-600 hover:text-[#005424] transition-colors duration-200 inline-flex items-center gap-1 group text-sm sm:text-base"
                     >
                       Privacy Policy
                       <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -582,7 +598,7 @@ export default function Home() {
                   <li>
                     <Link 
                       href="/terms" 
-                      className="text-gray-600 hover:text-[#005424] transition-colors duration-200 inline-flex items-center gap-1 group"
+                      className="text-gray-600 hover:text-[#005424] transition-colors duration-200 inline-flex items-center gap-1 group text-sm sm:text-base"
                     >
                       Terms of Use
                       <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -594,9 +610,9 @@ export default function Home() {
           </div>
           
           {/* Bottom Bar */}
-          <div className="border-t border-gray-200 py-8">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <div className="text-gray-600 text-sm">
+          <div className="border-t border-gray-200 py-6 sm:py-8">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4">
+              <div className="text-gray-600 text-xs sm:text-sm text-center md:text-left">
                 <p className="font-medium">&copy; {new Date().getFullYear()} TaxMate. All rights reserved.</p>
               </div>
               <div className="text-gray-500 text-xs text-center md:text-right max-w-2xl">
