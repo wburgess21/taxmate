@@ -1,7 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Calculator, ArrowLeft, ChevronRight, ExternalLink } from "lucide-react";
+import { ArrowLeft, ChevronRight, ExternalLink } from "lucide-react";
 
 export const metadata = {
   title: "Terms of Use - TaxMate",
@@ -14,11 +15,9 @@ export default function TermsOfUse() {
       {/* Navigation */}
       <nav className="border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center h-24">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-[#005424] rounded-lg flex items-center justify-center">
-                <Calculator className="w-5 h-5 text-white" />
-              </div>
+              <Image src="/logo.png" alt="TaxMate Logo" width={60} height={60} className="rounded-lg shadow-md" />
               <span className="text-2xl font-bold">TaxMate</span>
             </Link>
             <Button variant="ghost" asChild>
@@ -63,9 +62,7 @@ export default function TermsOfUse() {
               {/* Brand Section */}
               <div className="lg:col-span-2">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#005424] to-[#003618] rounded-xl flex items-center justify-center shadow-lg">
-                    <Calculator className="w-6 h-6 text-white" />
-                  </div>
+                  <Image src="/logo.png" alt="TaxMate Logo" width={60} height={60} className="rounded-xl shadow-lg" />
                   <span className="text-2xl font-bold text-gray-900">TaxMate</span>
                 </div>
                 <p className="text-gray-600 mb-6 max-w-md leading-relaxed">

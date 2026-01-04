@@ -1,10 +1,10 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { 
-  Calculator, 
   TrendingUp, 
   FileText, 
   CheckCircle2, 
@@ -21,13 +21,11 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="border-b border-gray-200 sticky top-0 bg-white z-50">
+      <nav className="border-b border-gray-200 sticky top-0 bg-white/30 backdrop-blur z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center h-24">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-[#005424] rounded-lg flex items-center justify-center">
-                <Calculator className="w-5 h-5 text-white" />
-              </div>
+              <Image src="/logo.png" alt="TaxMate Logo" width={60} height={60} className="rounded-lg shadow-md" />
               <span className="text-xl sm:text-2xl font-bold">TaxMate</span>
             </div>
             <div className="hidden md:flex items-center gap-8">
@@ -176,9 +174,7 @@ export default function Home() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             <Card className="border-2 hover:border-[#005424] transition-colors">
               <CardHeader>
-                <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center mb-4">
-                  <Calculator className="w-6 h-6 text-[#005424]" />
-                </div>
+                <Image src="/logo.png" alt="TaxMate Logo" width={60} height={60} className="rounded-lg shadow-md mb-4" />
                 <CardTitle>Both Methods Calculated</CardTitle>
               </CardHeader>
               <CardContent>
@@ -526,9 +522,7 @@ export default function Home() {
               {/* Brand Section */}
               <div className="sm:col-span-2 lg:col-span-2">
                 <div className="flex items-center gap-3 mb-4 sm:mb-6">
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#005424] to-[#003618] rounded-xl flex items-center justify-center shadow-lg">
-                    <Calculator className="w-6 h-6 text-white" />
-                  </div>
+                  <Image src="/logo.png" alt="TaxMate Logo" width={60} height={60} className="rounded-xl shadow-lg" />
                   <span className="text-xl sm:text-2xl font-bold text-gray-900">TaxMate</span>
                 </div>
                 <p className="text-gray-600 mb-4 sm:mb-6 max-w-md leading-relaxed text-sm sm:text-base">
