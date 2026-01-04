@@ -1,65 +1,614 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { 
+  Calculator, 
+  TrendingUp, 
+  FileText, 
+  CheckCircle2, 
+  Clock, 
+  Home as HomeIcon, 
+  Users, 
+  BarChart3,
+  Shield,
+  ChevronRight,
+  ExternalLink
+} from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-white">
+      {/* Navigation */}
+      <nav className="border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-[#005424] rounded-lg flex items-center justify-center">
+                <Calculator className="w-5 h-5 text-white" />
+              </div>
+              <span className="text-2xl font-bold">TaxMate</span>
+            </div>
+            <div className="hidden md:flex items-center gap-8">
+              <Link href="#features" className="text-gray-600 hover:text-gray-900 transition-colors">
+                Features
+              </Link>
+              <Link href="#how-it-works" className="text-gray-600 hover:text-gray-900 transition-colors">
+                How It Works
+              </Link>
+              <Link href="#faq" className="text-gray-600 hover:text-gray-900 transition-colors">
+                FAQ
+              </Link>
+              <Button asChild className="bg-[#005424] hover:bg-[#004020]">
+                <a 
+                  href="https://apps.apple.com/app/taxmate" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  Download App
+                </a>
+              </Button>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="py-20 md:py-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-4xl mx-auto">
+            <Badge className="mb-6 bg-green-50 text-[#005424] border-[#005424] hover:bg-green-100">
+              HMRC-Compliant Calculations
+            </Badge>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+              A better way to calculate
+              <span className="block text-[#005424]">home office tax</span>
+            </h1>
+            <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+              Stop under-claiming or guessing. Calculate your home office tax deduction 
+              accurately using both HMRC-approved methods and choose the best option for you.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg" 
+                className="bg-[#005424] hover:bg-[#004020] text-lg px-8 h-14"
+                asChild
+              >
+                <a 
+                  href="https://apps.apple.com/app/taxmate" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  Download for iOS
+                  <ChevronRight className="ml-2 w-5 h-5" />
+                </a>
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="text-lg px-8 h-14 border-2"
+                asChild
+              >
+                <Link href="#how-it-works">
+                  See How It Works
+                </Link>
+              </Button>
+            </div>
+          </div>
         </div>
-      </main>
+      </section>
+
+      {/* Problem Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-center">
+              Home office tax is often miscalculated
+            </h2>
+            <p className="text-lg text-gray-600 text-center mb-12">
+              There are two HMRC-approved ways to claim home office expenses: the simplified 
+              flat rate and a detailed calculation based on actual costs. The right choice 
+              depends on how you work, how much space you use, and what your real expenses are.
+            </p>
+            <div className="grid md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <TrendingUp className="w-5 h-5 text-gray-400" />
+                    Flat Rate
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    Simple but often leaves money on the table. Great for minimal home use, 
+                    but most people qualify for more.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BarChart3 className="w-5 h-5 text-gray-400" />
+                    Detailed Calculation
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    Based on actual costs and usage. Usually results in a higher deduction, 
+                    but requires understanding the calculation method.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Calculate with confidence
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              TaxMate does the complex calculations for you and presents everything clearly.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card className="border-2 hover:border-[#005424] transition-colors">
+              <CardHeader>
+                <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center mb-4">
+                  <Calculator className="w-6 h-6 text-[#005424]" />
+                </div>
+                <CardTitle>Both Methods Calculated</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-base">
+                  See flat rate and detailed calculations side by side. Know exactly which 
+                  option gives you the better result.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 hover:border-[#005424] transition-colors">
+              <CardHeader>
+                <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center mb-4">
+                  <HomeIcon className="w-6 h-6 text-[#005424]" />
+                </div>
+                <CardTitle>Your Real Costs</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-base">
+                  Enter your actual household expenses like rent, mortgage interest, council tax, 
+                  and utilities. Get an accurate calculation based on your situation.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 hover:border-[#005424] transition-colors">
+              <CardHeader>
+                <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center mb-4">
+                  <Clock className="w-6 h-6 text-[#005424]" />
+                </div>
+                <CardTitle>Fast & Simple</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-base">
+                  Answer a few straightforward questions and get your results in minutes. 
+                  No tax knowledge required.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 hover:border-[#005424] transition-colors">
+              <CardHeader>
+                <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center mb-4">
+                  <FileText className="w-6 h-6 text-[#005424]" />
+                </div>
+                <CardTitle>Calculation History</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-base">
+                  Keep track of your calculations over time. Review past results and 
+                  see how changes affect your deduction.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 hover:border-[#005424] transition-colors">
+              <CardHeader>
+                <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center mb-4">
+                  <Shield className="w-6 h-6 text-[#005424]" />
+                </div>
+                <CardTitle>HMRC Guidance</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-base">
+                  Built following published HMRC guidance. Designed to help you claim 
+                  accurately, not aggressively.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 hover:border-[#005424] transition-colors">
+              <CardHeader>
+                <div className="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center mb-4">
+                  <CheckCircle2 className="w-6 h-6 text-[#005424]" />
+                </div>
+                <CardTitle>Clear Breakdown</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-base">
+                  See exactly how your figure is calculated. Save or share your summary 
+                  for your records or accountant.
+                </CardDescription>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section id="how-it-works" className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              How it works
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Get your home office tax deduction in three simple steps
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto">
+            <div className="space-y-12">
+              <div className="flex gap-6 items-start">
+                <div className="flex-shrink-0 w-12 h-12 bg-[#005424] text-white rounded-full flex items-center justify-center text-xl font-bold">
+                  1
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-3">Enter your work pattern</h3>
+                  <p className="text-gray-600 text-lg">
+                    Tell us how many hours per day you work from home. This helps calculate 
+                    the proportion of your home used for business.
+                  </p>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="flex gap-6 items-start">
+                <div className="flex-shrink-0 w-12 h-12 bg-[#005424] text-white rounded-full flex items-center justify-center text-xl font-bold">
+                  2
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-3">Add your expenses and rooms</h3>
+                  <p className="text-gray-600 text-lg">
+                    Enter your annual household expenses (rent, mortgage interest, council tax, 
+                    utilities) and specify how many rooms you use exclusively or partially for work.
+                  </p>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="flex gap-6 items-start">
+                <div className="flex-shrink-0 w-12 h-12 bg-[#005424] text-white rounded-full flex items-center justify-center text-xl font-bold">
+                  3
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-3">Get your result</h3>
+                  <p className="text-gray-600 text-lg">
+                    See both calculation methods compared side by side. The app shows you which 
+                    option is best and explains the difference clearly.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center mt-16">
+            <Button 
+              size="lg" 
+              className="bg-[#005424] hover:bg-[#004020] text-lg px-8 h-14"
+              asChild
+            >
+              <a 
+                href="https://apps.apple.com/app/taxmate" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                Download TaxMate
+                <ChevronRight className="ml-2 w-5 h-5" />
+              </a>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Who It's For Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Who is TaxMate for?
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Designed for anyone who works from home and completes Self Assessment
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <Card className="text-center">
+              <CardHeader>
+                <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Users className="w-8 h-8 text-[#005424]" />
+                </div>
+                <CardTitle>Self-Employed</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-base">
+                  Sole traders and freelancers working from home full-time or part-time.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center">
+              <CardHeader>
+                <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <HomeIcon className="w-8 h-8 text-[#005424]" />
+                </div>
+                <CardTitle>Small Business Owners</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-base">
+                  Business owners who use their home as their primary place of work.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center">
+              <CardHeader>
+                <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FileText className="w-8 h-8 text-[#005424]" />
+                </div>
+                <CardTitle>Self Assessment Filers</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-base">
+                  Anyone completing their own Self Assessment who wants clarity and accuracy.
+                </CardDescription>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section id="faq" className="py-20 bg-gray-50">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Frequently asked questions
+            </h2>
+          </div>
+
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Is TaxMate affiliated with HMRC?</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  No, TaxMate is not affiliated with HMRC. It is an independent app built 
+                  to help you calculate home office expenses following published HMRC guidance.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Will this guarantee my claim is accepted?</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  TaxMate calculates your deduction based on HMRC's published methods. However, 
+                  you are responsible for ensuring the figures you enter are accurate and that 
+                  you retain evidence of your expenses.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Can I use this if I have employees?</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  TaxMate is designed for self-employed individuals and sole traders claiming 
+                  expenses through Self Assessment. It is not designed for payroll or corporate 
+                  expense claims.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Do I need to be tax-savvy to use this?</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  No. The app is designed to be simple and clear, even if you're not confident 
+                  with tax. It asks straightforward questions and explains everything in plain English.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>What if my situation changes during the year?</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  You can create multiple calculations and save them in your history. This lets 
+                  you compare different scenarios or track changes over time.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Can I share the results with my accountant?</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  Yes. The app provides a clear breakdown of your calculation that you can save 
+                  or share as needed.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="bg-gradient-to-br from-[#005424] to-[#003618] rounded-2xl p-12 text-white">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Make your home office tax decision with confidence
+            </h2>
+            <p className="text-xl mb-8 text-green-50">
+              Download TaxMate and calculate your deduction in minutes.
+            </p>
+            <Button 
+              size="lg" 
+              className="bg-white text-[#005424] hover:bg-gray-100 text-lg px-8 h-14"
+              asChild
+            >
+              <a 
+                href="https://apps.apple.com/app/taxmate" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                Download for iOS
+                <ChevronRight className="ml-2 w-5 h-5" />
+              </a>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gradient-to-b from-gray-50 to-white border-t border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="py-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+              {/* Brand Section */}
+              <div className="lg:col-span-2">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 bg-gradient-to-br from-[#005424] to-[#003618] rounded-xl flex items-center justify-center shadow-lg">
+                    <Calculator className="w-6 h-6 text-white" />
+                  </div>
+                  <span className="text-2xl font-bold text-gray-900">TaxMate</span>
+                </div>
+                <p className="text-gray-600 mb-6 max-w-md leading-relaxed">
+                  A better way to calculate home office tax for self-employed individuals 
+                  and small business owners in the UK.
+                </p>
+                <div className="flex items-center gap-4">
+                  <a 
+                    href="https://apps.apple.com/app/taxmate" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-[#005424] text-white rounded-lg hover:bg-[#004020] transition-all duration-200 shadow-sm hover:shadow-md text-sm font-medium"
+                  >
+                    Download App
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
+              
+              {/* Product Links */}
+              <div>
+                <h3 className="font-bold text-gray-900 mb-6 text-lg">Product</h3>
+                <ul className="space-y-3">
+                  <li>
+                    <Link 
+                      href="#features" 
+                      className="text-gray-600 hover:text-[#005424] transition-colors duration-200 inline-flex items-center gap-1 group"
+                    >
+                      Features
+                      <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      href="#how-it-works" 
+                      className="text-gray-600 hover:text-[#005424] transition-colors duration-200 inline-flex items-center gap-1 group"
+                    >
+                      How It Works
+                      <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      href="#faq" 
+                      className="text-gray-600 hover:text-[#005424] transition-colors duration-200 inline-flex items-center gap-1 group"
+                    >
+                      FAQ
+                      <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+              
+              {/* Legal Links */}
+              <div>
+                <h3 className="font-bold text-gray-900 mb-6 text-lg">Legal</h3>
+                <ul className="space-y-3">
+                  <li>
+                    <Link 
+                      href="/privacy" 
+                      className="text-gray-600 hover:text-[#005424] transition-colors duration-200 inline-flex items-center gap-1 group"
+                    >
+                      Privacy Policy
+                      <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </Link>
+                  </li>
+                  <li>
+                    <Link 
+                      href="/terms" 
+                      className="text-gray-600 hover:text-[#005424] transition-colors duration-200 inline-flex items-center gap-1 group"
+                    >
+                      Terms of Use
+                      <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          {/* Bottom Bar */}
+          <div className="border-t border-gray-200 py-8">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              <div className="text-gray-600 text-sm">
+                <p className="font-medium">&copy; {new Date().getFullYear()} TaxMate. All rights reserved.</p>
+              </div>
+              <div className="text-gray-500 text-xs text-center md:text-right max-w-2xl">
+                <p>
+                  TaxMate is not affiliated with HMRC. This app is designed to help you calculate 
+                  home office expenses following published HMRC guidance.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
