@@ -69,6 +69,14 @@ export default function TermsOfUse() {
                   A better way to calculate home office tax for self-employed individuals 
                   and small business owners in the UK.
                 </p>
+                <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">
+                  <a 
+                    href="mailto:taxmateapp@outlook.com" 
+                    className="hover:text-[#005424] transition-colors duration-200"
+                  >
+                    taxmateapp@outlook.com
+                  </a>
+                </p>
                 <div className="flex items-center gap-4">
                   <a 
                     href="https://apps.apple.com/app/taxmate" 
