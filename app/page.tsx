@@ -532,7 +532,7 @@ export default function Home() {
       <footer className="bg-gradient-to-b from-gray-50 to-white border-t border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="py-10 sm:py-12 md:py-16">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12 mb-8 sm:mb-10 md:mb-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12 mb-4 sm:mb-6 md:mb-8">
               {/* Brand Section */}
               <div className="sm:col-span-2 lg:col-span-2">
                 <div className="flex items-center gap-3 mb-4 sm:mb-6">
@@ -542,6 +542,14 @@ export default function Home() {
                 <p className="text-gray-600 mb-4 sm:mb-6 max-w-md leading-relaxed text-sm sm:text-base">
                   A better way to calculate home office tax for self-employed individuals 
                   and small business owners in the UK.
+                </p>
+                <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">
+                  <a 
+                    href="mailto:taxmateapp@outlook.com" 
+                    className="hover:text-[#005424] transition-colors duration-200"
+                  >
+                    taxmateapp@outlook.com
+                  </a>
                 </p>
                 <div className="flex items-center gap-4">
                   <a 
