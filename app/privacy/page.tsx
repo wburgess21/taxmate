@@ -272,7 +272,7 @@ export default function PrivacyPolicy() {
                 </p>
                 <div className="flex items-center gap-4">
                   <a 
-                    href="https://apps.apple.com/app/taxmate" 
+                    href="https://apps.apple.com/gb/app/taxmate-home-office-tax/id6757307991" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-4 py-2 bg-[#005424] text-white rounded-lg hover:bg-[#004020] transition-all duration-200 shadow-sm hover:shadow-md text-sm font-medium"
