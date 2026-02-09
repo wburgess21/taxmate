@@ -1,14 +1,6 @@
-            <div className="hidden md:flex items-center gap-8">
-              <Link href="#features" className="text-gray-600 hover:text-gray-900 transition-colors">
-                Features
-              </Link>
-              <Link href="#how-it-works" className="text-gray-600 hover:text-gray-900 transition-colors">
-                How It Works
-              </Link>
-              <Link href="#faq" className="text-gray-600 hover:text-gray-900 transition-colors">
-                FAQ
-              </Link>
-              <ContactSupportButton />
+            {/* Mobile Navigation */}
+            <div className="md:hidden flex items-center gap-2">
+              <ContactSupportButton variant="compact" />
               <a 
                 href="https://apps.apple.com/gb/app/taxmate-home-office-tax/id6757307991" 
                 target="_blank" 
