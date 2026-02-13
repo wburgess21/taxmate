@@ -1,5 +1,4 @@
-            <Card className="border-2 hover:border-[#005424] transition-colors">
-              <CardHeader>
-                <Image src="/logo.png" alt="TaxMate logo - green circular icon with calculator symbol" width={60} height={60} className="rounded-lg shadow-md mb-4" />
-                <CardTitle>Both Methods Calculated</CardTitle>
-              </CardHeader>
+              <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                <Image src="/logo.png" alt="TaxMate logo - green circular icon with calculator symbol" width={60} height={60} className="rounded-xl shadow-lg" />
+                <span className="text-xl sm:text-2xl font-bold text-gray-900">TaxMate</span>
+              </div>
