@@ -1,125 +1,375 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+/* Follows the system appearance, like the app. */
+@custom-variant dark (@media (prefers-color-scheme: dark));
 
+/* Tokens mirror the iOS app's AppColors.swift (see taxmate-ios Documentation/Design.md). */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
+
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-hairline: var(--hairline);
+  --color-ink: var(--ink);
   --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  --color-brand: var(--brand);
+  --color-brand-deep: var(--brand-deep);
+  --color-gold: var(--gold);
+  --color-accent: var(--accent);
+  --color-income: var(--tool-income);
+  --color-claims: var(--tool-claims);
+  --color-planning: var(--tool-planning);
+  --color-pension: var(--pay-pension);
+  --color-loan: var(--pay-loan);
+
+  /* shadcn primitives */
+  --color-background: var(--canvas);
+  --color-foreground: var(--ink);
+  --color-primary: var(--brand);
+  --color-primary-foreground: #fff;
+  --color-secondary: var(--surface);
+  --color-secondary-foreground: var(--ink);
+  --color-muted-foreground: var(--muted);
+  --color-accent-foreground: var(--ink);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--ink);
+  --color-border: var(--hairline);
+  --color-input: var(--hairline);
+  --color-ring: var(--tool-income);
+  --color-destructive: #c4372b;
+
+  --radius-hero: 28px;
+  --radius-card: 22px;
+  --radius-tile: 20px;
+  --radius-button: 18px;
+  --radius-well: 14px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.31 0.12 154);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.145 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.31 0.12 154);
-  --accent-foreground: oklch(1 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.31 0.12 154);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.31 0.12 154);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.145 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --canvas: #f4f3ee;
+  --surface: #ffffff;
+  --hairline: rgb(28 43 34 / 0.07);
+  --ink: #111813;
+  --muted: #5e6862;
+  --brand: #005424;
+  --brand-deep: #00351a;
+  --gold: #ddad44;
+  --accent: #005424;
+  --tool-income: #1b7a46;
+  --tool-claims: #a8741a;
+  --tool-planning: #22708a;
+  --pay-pension: #6b4fa0;
+  --pay-loan: #9a5b3c;
+  /* Line-art coins on the page: deep green in light mode, the income tint in dark (CoinInk.green). */
+  --coin-ink: #1d4a2a;
+  --glow: rgb(27 122 70 / 0.12);
+  color-scheme: light;
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas: #0a0f0c;
+    --surface: #151c18;
+    --hairline: rgb(255 255 255 / 0.07);
+    --ink: #eef2ef;
+    --muted: #9aa8a0;
+    --accent: #ffffff;
+    --tool-income: #6fd49a;
+    --tool-claims: #e7bd5e;
+    --tool-planning: #72c4de;
+    --pay-pension: #b69ce6;
+    --pay-loan: #e2a586;
+    --coin-ink: #6fd49a;
+    --glow: rgb(111 212 154 / 0.14);
+    color-scheme: dark;
+  }
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 88px;
   }
+  body {
+    background: var(--canvas);
+    color: var(--ink);
+    -webkit-tap-highlight-color: transparent;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--gold) 45%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@layer components {
+  /* AppBackdrop: canvas with a faint radial glow at the top-left. */
+  .app-backdrop {
+    background:
+      radial-gradient(900px 640px at 0% 0%, var(--glow), transparent 70%),
+      var(--canvas);
+  }
+
+  /* .surfaceCard(): raised surface, hairline border, soft shadow. */
+  .surface-card {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-card);
+    box-shadow: 0 6px 16px rgb(0 0 0 / 0.04);
+  }
+
+  /* .brandHeroCard(): green gradient, top-right highlight and a green shadow. */
+  .hero-card {
+    position: relative;
+    isolation: isolate;
+    color: #fff;
+    border-radius: var(--radius-hero);
+    background:
+      radial-gradient(120% 90% at 100% 0%, rgb(255 255 255 / 0.13), transparent 55%),
+      linear-gradient(135deg, var(--brand), var(--brand-deep));
+    box-shadow: 0 10px 20px rgb(0 84 36 / 0.28);
+  }
+
+  /* Eyebrows on hero cards are gold. */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9375rem;
+    color: var(--gold);
+  }
+
+  /* Liquid Glass capsule, as the app's tags and hero secondary actions. */
+  .glass {
+    background: rgb(255 255 255 / 0.12);
+    border: 0.5px solid rgb(255 255 255 / 0.35);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+  }
+  .glass-light {
+    background: color-mix(in srgb, var(--surface) 70%, transparent);
+    border: 1px solid var(--hairline);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+  }
+
+  /* PrimaryActionButton: green gradient. */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3.5rem;
+    padding: 0 1.5rem;
+    border-radius: var(--radius-button);
+    color: #fff;
+    font-weight: 500;
+    font-size: 1.0625rem;
+    background: linear-gradient(135deg, var(--brand), var(--brand-deep));
+    box-shadow: 0 6px 14px rgb(0 84 36 / 0.22);
+    transition: transform 0.2s cubic-bezier(0.3, 0.7, 0.4, 1.4), box-shadow 0.2s;
+  }
+  /* HeroActionButton: gold glass inside hero cards, with green text. */
+  .btn-gold {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3.25rem;
+    padding: 0 1.5rem;
+    border-radius: 999px;
+    color: var(--brand-deep);
+    font-weight: 600;
+    font-size: 1.0625rem;
+    background: linear-gradient(180deg, #e8bf62, var(--gold));
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.5), 0 6px 16px rgb(0 0 0 / 0.18);
+    transition: transform 0.2s cubic-bezier(0.3, 0.7, 0.4, 1.4), box-shadow 0.2s;
+  }
+  .btn-glass {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3.25rem;
+    padding: 0 1.5rem;
+    border-radius: 999px;
+    color: #fff;
+    font-weight: 500;
+    font-size: 1.0625rem;
+    transition: transform 0.2s cubic-bezier(0.3, 0.7, 0.4, 1.4), background 0.2s;
+  }
+  .btn-glass:hover {
+    background: rgb(255 255 255 / 0.2);
+  }
+  /* PressScaleButtonStyle: scale to 0.96 on press. */
+  .press:active {
+    transform: scale(0.96);
+  }
+  .press:hover {
+    transform: translateY(-1px);
+  }
+
+  /* ToolBadge: 44pt tinted rounded square, soft (14% tint) by default. */
+  .tool-badge {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    color: var(--tint);
+    background: color-mix(in srgb, var(--tint) 14%, transparent);
+  }
+  .tool-badge[data-filled] {
+    color: #fff;
+    background: var(--tint);
+  }
+
+  /* RowHighlightButtonStyle: faint fill on press/hover for rows inside cards. */
+  .badge-row {
+    transition: background 0.15s;
+  }
+  .badge-row:hover {
+    background: color-mix(in srgb, var(--tint) 6%, transparent);
+  }
+
+  .disclosure-card summary {
+    list-style: none;
+    cursor: pointer;
+  }
+  .disclosure-card summary::-webkit-details-marker {
+    display: none;
+  }
+  .disclosure-card[open] .chevron {
+    transform: rotate(90deg);
+  }
+
+  /* Scroll-in reveal (progressive: content is visible without JavaScript). */
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+      transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .js [data-reveal][data-shown] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Legal pages */
+  .legal h2 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin: 0 0 1rem;
+  }
+  .legal h3 {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin: 1.5rem 0 0.75rem;
+  }
+  .legal p,
+  .legal li {
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .legal a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+@keyframes coin-wobble {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: rotate(-12deg) scale(1.06);
+  }
+  60% {
+    transform: rotate(6deg);
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* Salary slider: brand track, white thumb with a green ring. */
+.salary-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 28px;
+  background: transparent;
+  cursor: pointer;
+}
+.salary-range::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--tool-income) var(--fill), var(--canvas) var(--fill));
+}
+.salary-range::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--tool-income) var(--fill), var(--canvas) var(--fill));
+}
+.salary-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  margin-top: -11px;
+  border-radius: 50%;
+  background: #fff;
+  border: 0.5px solid rgb(0 0 0 / 0.06);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.18);
+  transition: transform 0.15s;
+}
+.salary-range::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #fff;
+  border: 0.5px solid rgb(0 0 0 / 0.06);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.18);
+}
+.salary-range:active::-webkit-slider-thumb {
+  transform: scale(1.12);
+}
+.salary-range:focus-visible {
+  outline: 2px solid var(--tool-income);
+  outline-offset: 4px;
+  border-radius: 999px;
 }

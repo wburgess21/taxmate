@@ -1,17 +1,21 @@
 # TaxMate
 
-TaxMate is the marketing and legal website for the TaxMate iOS app, a UK home office tax calculator for self-employed people, sole traders, and small business owners.
+TaxMate is the marketing and legal website for the TaxMate iOS app: UK tax calculators for iPhone and iPad covering take-home pay, self-employed tax, combined income, home office, business expenses, mileage, pensions, tax savings, VAT, Making Tax Digital and annual summaries.
 
-The site explains how the app compares HMRC's simplified flat rate method with a detailed actual-cost calculation, links visitors to the App Store, and hosts the public privacy policy and terms pages.
+The site follows the app's design language (`taxmate-ios/Documentation/Design.md`): the canvas and surface colours, green and gold hero cards, and the three tool-group tints, in light and dark mode.
 
 ## Features
 
-- Responsive landing page for the TaxMate iOS app
-- App Store calls to action throughout the page
-- Product sections for features, how it works, target users, FAQ, and tax disclaimer
-- Privacy policy page at `/privacy`
-- Terms of use page at `/terms`
-- Shared footer and navigation styling
+- Landing page with App Store calls to action
+- The app's coin animations, ported to canvas (`lib/coins`):
+  - Hero: the launch animation (coins slide together, stars pop), then tap to spin like the home logo
+  - How it works: the onboarding coin stack, which grows as you scroll through the steps
+  - Closing call to action: coins to hover, tap and toss
+- Interactive take-home pay estimate using the app's 2026/27 bands (England, Wales & NI, and Scotland)
+- Live countdown to the next HMRC key date
+- Tool catalogue grouped as in the app, TaxMate Plus, privacy and FAQ sections
+- Respects `prefers-reduced-motion` and `prefers-color-scheme`; animations pause off-screen
+- Privacy policy at `/privacy` and terms of use at `/terms`
 - Vercel Analytics integration
 
 ## Tech Stack
