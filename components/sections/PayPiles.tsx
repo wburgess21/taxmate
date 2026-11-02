@@ -72,7 +72,7 @@ export function PayPiles() {
       const unit = W / (cols + gaps * 0.9 + 0.4);
       const R = Math.min(unit * 0.43, (H - 40) / (Geometry.stackRise(1) / 100 * (PER_COLUMN - 1) + 2.2) );
       const rise = Geometry.stackRise(R / 100);
-      const base = H - R * 0.95;
+      const base = H - R * 1.25;
       const starts: Record<Cat, number> = { keep: 0, tax: 0, ni: 0 };
       let x = unit * 0.2;
       for (const c of CATS) { starts[c.id] = x; x += c.columns * unit + unit * 0.9; }
@@ -129,11 +129,11 @@ export function PayPiles() {
           c.snap(p.x + rand(-6, 6), reduce ? p.y : p.y - size.height * 0.55 - rand(0, 60), p.s);
           c.snapAngles({ wx: Geometry.lying - (reduce ? 0 : rand(0.3, 0.8)), wy: rand(-1, 1), lz: rand(-0.6, 0.6) });
           c.setInk(inks[cat.id], true);
-          c.kp = [190, 15]; c.kr = [120, 14]; c.ks = [150, 19];
+          c.kp = [190, 25]; c.kr = [120, 20]; c.ks = [150, 23];
         } else if (!c.arrived) {
           // Moving between piles: a hop on the way, and its ink changes to the new pile's.
-          c.kp = [110, 16];
-          if (!reduce) c.v.y -= 380;
+          c.kp = [110, 19];
+          if (!reduce) c.v.y -= 160;
           c.setInk(inks[cat.id]); c.inkRate = 4;
         }
         c.arrived = true;
@@ -164,7 +164,7 @@ export function PayPiles() {
       let hit = false;
       for (const cat of CATS) for (const c of piles[cat.id]) {
         const d = Math.hypot(c.p.x - x, (c.p.y - y) * 0.5);
-        if (d < 140) { c.v.y -= (1 - d / 140) * 520 * rand(0.7, 1.1); c.v.wy += rand(-3, 3) * (1 - d / 140); hit = true; }
+        if (d < 140) { c.v.y -= (1 - d / 140) * 380 * rand(0.7, 1.1); c.v.wy += rand(-3, 3) * (1 - d / 140); hit = true; }
       }
       if (hit) stars.burst(x, y, 5, 180, [3, 6], "#ddad44");
       loop.wake();

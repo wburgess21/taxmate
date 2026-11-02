@@ -331,7 +331,9 @@ export class StoryStage {
     }
 
     if (next === "home" || next === "estimate" || next === "result") {
-      if (this.personalise.running) { this.personalise.speed = 2.6; return; }
+      // Scrolled on before it finished: on the home screen let it finish a little quicker; past it, land at once.
+      if (this.personalise.running && next === "home") { this.personalise.speed = 1.4; return; }
+      if (this.personalise.running) { this.landNow(); this.onPersonalise("done"); return; }
       if (order(prev) < order("personalising")) this.landNow();
     }
   }
@@ -397,8 +399,8 @@ export class StoryStage {
     const fire = (phase: PersonalisePhase) => { if (!P.fired.has(phase)) { P.fired.add(phase); this.onPersonalise(phase); } };
     const lp = this.loaderPlace();
     if (t < 0.35) return;
-    if (t < 1.0) {
-      if (!P.fired.has("covered") && t >= 0.6) fire("covered");
+    if (t < 0.9) {
+      if (!P.fired.has("covered") && t >= 0.55) fire("covered");
       // Gather: the back coin grows out of the hero, the stack and satellites fly into the middle.
       if (this.back.t.s === 0 || this.back.p.s < 0.01) {
         this.back.p.x = this.front.p.x; this.back.p.y = this.front.p.y; this.back.p.s = 0.05 * this.k; this.back.copyAngles(this.front);
@@ -410,12 +412,12 @@ export class StoryStage {
       const c = this.loaderCentre();
       for (const coin of [...this.stack, ...this.sats]) { coin.place(c.x, c.y, 0); coin.kp = [120, 18]; coin.ks = [60, 14]; }
       this.stackCount = 0; this.satCount = 0;
-      if (t >= 0.9 && !P.fired.has("text")) { this.stars.burst(c.x, c.y, 6, 150 * this.k, [3 * this.k, 6 * this.k]); fire("text"); }
+      if (t >= 0.8 && !P.fired.has("text")) { this.stars.burst(c.x, c.y, 6, 150 * this.k, [3 * this.k, 6 * this.k]); fire("text"); }
       return;
     }
-    if (t < 2.6) {
-      // The loader: the pair swaps places about its midpoint, a half-turn every 0.8 s, the front coin staying in front.
-      const u = (t - 1.0) / 0.8, swaps = Math.floor(u), theta = (swaps + easeInOutCubic(u - swaps)) * Math.PI;
+    if (t < 2.1) {
+      // The loader: the pair swaps places about its midpoint, a half-turn every 0.6 s, the front coin staying in front.
+      const u = (t - 0.9) / 0.6, swaps = Math.floor(u), theta = (swaps + easeInOutCubic(u - swaps)) * Math.PI;
       const mid = { x: (lp.front.x + lp.back.x) / 2, y: (lp.front.y + lp.back.y) / 2 };
       const rot = (p: { x: number; y: number }) => {
         const x = p.x - mid.x, y = p.y - mid.y, c = Math.cos(theta), s = Math.sin(theta);
@@ -424,18 +426,18 @@ export class StoryStage {
       const a = rot(lp.front), b = rot(lp.back);
       this.front.snap(a.x, a.y, lp.scale); this.back.snap(b.x, b.y, lp.scale);
       this.restPose(true);
-      if (t > 2.45) fire("untext");
+      if (t > 1.95) fire("untext");
       return;
     }
     // Land in the logo.
     fire("landing");
-    const u = clamp((t - 2.6) / 0.8), e = easeInOutCubic(u);
+    const u = clamp((t - 2.1) / 0.7), e = easeInOutCubic(u);
     const to = this.logoPlace();
     const arc = Math.sin(Math.PI * u) * 36 * this.k;
     this.front.snap(lerp(lp.front.x, to.front.x, e), lerp(lp.front.y, to.front.y, e) - arc, lerp(lp.scale, to.scale, e));
     this.back.snap(lerp(lp.back.x, to.back.x, e), lerp(lp.back.y, to.back.y, e) - arc, lerp(lp.scale, to.scale, e));
-    if (t >= 2.75 && this.flood.opening) this.closeFlood(this.logoCentre, 0.55);
-    if (t >= 3.0) this.allInk(ink("launch", this.dark));
+    if (t >= 2.22 && this.flood.opening) this.closeFlood(this.logoCentre, 0.5);
+    if (t >= 2.45) this.allInk(ink("launch", this.dark));
     if (u >= 1) {
       P.running = false;
       for (const c of this.coins) c.inkRate = 6;

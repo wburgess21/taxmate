@@ -34,11 +34,11 @@ export function CoinHeap() {
           const n = rows + 1 - row;
           for (let i = 0; i < n; i++) {
             const x = cx + (i - (n - 1) / 2) * R * 1.85 + rand(-4, 4);
-            out.push({ x, y: H - R * 0.9 - row * R * 1.05, s: (R / 100) * rand(0.92, 1.05), lying: row === 0 || Math.random() < 0.4 });
+            out.push({ x, y: H - R * 1.2 - row * R * 1.05, s: (R / 100) * rand(0.92, 1.05), lying: row === 0 || Math.random() < 0.4 });
           }
         }
         // One coin stands on its edge against each mound.
-        out.push({ x: cx + side * -R * 2.8, y: H - R * 1.25, s: R / 100, lying: false });
+        out.push({ x: cx + side * -R * 2.8, y: H - R * 1.5, s: R / 100, lying: false });
       }
       return out;
     };
@@ -69,7 +69,7 @@ export function CoinHeap() {
         queue.push({ at: time + (reduce ? 0 : 0.06 * i + rand(0, 0.12)), run: () => {
           c.snap(p.x + rand(-30, 30), reduce ? p.y : -80 - rand(0, 160), p.s);
           c.snapAngles({ wx: rand(-1, 1), wy: rand(-2, 2), lz: rand(-1, 1) });
-          c.kp = [70, 9]; c.kr = [60, 10];
+          c.kp = [70, 15]; c.kr = [60, 13];
           settle(c, p);
           if (!reduce) setTimeout(() => stars.burst(p.x, p.y, 2, 90, [3, 5], "#ddad44"), 900);
         } });
@@ -83,7 +83,7 @@ export function CoinHeap() {
       const r = card.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
       const hit = [...heap].reverse().find((c) => Math.hypot(c.p.x - x, c.p.y - y) < 100 * c.p.s * 1.1);
       if (hit) {
-        if (!reduce) { hit.t.wy += TAU; hit.v.y -= 320; }
+        if (!reduce) { hit.t.wy += TAU; hit.v.y -= 220; }
         stars.burst(hit.p.x, hit.p.y, 6, 200, [3, 7], "#ddad44");
       } else if (!reduce) {
         const c = tossed.find((t) => !t.flight) ?? (tossed.length < 14 ? (tossed.push(new Coin()), tossed[tossed.length - 1]) : null);

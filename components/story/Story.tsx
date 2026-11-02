@@ -11,16 +11,16 @@ import { nextKeyDate } from "@/lib/keyDates";
 
 /** Scroll length of each beat, in viewport heights. */
 const BEATS: { id: BeatId; len: number }[] = [
-  { id: "hero", len: 0.3 },
-  { id: "morph", len: 0.9 },
-  { id: "welcome", len: 0.55 },
-  { id: "q0", len: 0.7 },
-  { id: "q1", len: 0.7 },
-  { id: "q2", len: 0.8 },
-  { id: "personalising", len: 0.9 },
-  { id: "home", len: 0.85 },
-  { id: "estimate", len: 0.9 },
-  { id: "result", len: 1.0 },
+  { id: "hero", len: 0.35 },
+  { id: "morph", len: 1.1 },
+  { id: "welcome", len: 0.9 },
+  { id: "q0", len: 1.0 },
+  { id: "q1", len: 1.0 },
+  { id: "q2", len: 1.2 },
+  { id: "personalising", len: 1.7 },
+  { id: "home", len: 1.2 },
+  { id: "estimate", len: 1.3 },
+  { id: "result", len: 1.2 },
 ];
 const TOTAL = BEATS.reduce((a, b) => a + b.len, 0);
 const STARTS = BEATS.reduce<number[]>((acc, b, i) => [...acc, i === 0 ? 0 : acc[i - 1] + BEATS[i - 1].len], []);
@@ -265,7 +265,7 @@ export function Story() {
   return (
     <section ref={sectionRef} className="story" style={{ height: `${(TOTAL + 1) * 100}lvh` }} aria-label="A tour of the TaxMate app">
       {/* Where the tour's first screen (the phone's welcome) sits centred: the target of "Tour" links. */}
-      <div id="tour" className="story-anchor" style={{ top: `${(MORPH.start + MORPH.len + 0.2) * 100}lvh` }} aria-hidden />
+      <div id="tour" className="story-anchor" style={{ top: `${(MORPH.start + MORPH.len + BEATS[2].len * 0.4) * 100}lvh` }} aria-hidden />
       <div ref={stageRef} className="story-stage" data-beat={beat}>
         <div className="story-phone" style={{ opacity: 0 }}>
           <Phone tone="light">

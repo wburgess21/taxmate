@@ -34,6 +34,7 @@ export function YearTimeline() {
   const [count, setCount] = useState(0);
   const trackRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const lineRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setS(taxYear(new Date())));
@@ -68,11 +69,13 @@ export function YearTimeline() {
     const loop = runLoop(canvas, (dt, t) => {
       time = t;
       const { ctx, width, height } = fitCanvas(canvas);
-      const R = Math.min(28, height * 0.42), y = height / 2, x0 = R + 2, x1 = width - R - 2;
+      const R = Math.min(28, height * 0.42), y = height / 2;
       if (rolling < 0) return false;
       rolling = Math.min(1, rolling + dt / (reduce ? 0.001 : 2.1));
       const u = smooth(rolling);
-      const distance = (x1 - x0) * target, x = x0 + distance * u;
+      // The coin and the line share this clock, and the markers' positioning, so the coin leads the line exactly.
+      const distance = width * target, x = Math.max(R, distance * u);
+      if (lineRef.current) lineRef.current.style.width = `${(distance * u).toFixed(1)}px`;
       // Rolls (nearly) without slipping, adjusted to a whole number of turns so the £ comes to rest upright.
       const turns = Math.max(1, Math.round(distance / R / (2 * Math.PI)));
       coin.snap(x, y - Math.abs(Math.sin(u * Math.PI * 6)) * 3 * (1 - u), R / 100);
@@ -106,7 +109,7 @@ export function YearTimeline() {
         </div>
         <div className="relative mt-3 h-16">
           <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-hairline" />
-          {s && <div className="absolute left-0 top-1/2 h-[3px] -translate-y-1/2 rounded-full bg-[var(--tool-income)] transition-[width] duration-[2100ms] ease-[cubic-bezier(.45,0,.2,1)]" style={{ width: count || next?.days === 0 ? `${pct(s, s.today)}%` : 0 }} />}
+          {s && <div ref={lineRef} className="absolute left-0 top-1/2 h-[3px] w-0 -translate-y-1/2 rounded-full bg-[var(--tool-income)]" />}
           {s?.marks.map((m) => (
             <span
               key={+m.at}
