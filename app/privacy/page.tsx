@@ -20,9 +20,9 @@ const SUMMARY = [
 
 export default function PrivacyPolicy() {
   return (
-    <div className="app-backdrop min-h-screen">
+    <div className="min-h-screen bg-[radial-gradient(1000px_700px_at_0%_0%,var(--glow),transparent_70%)]">
       <Nav />
-      <main className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
+      <main className="mx-auto max-w-3xl px-4 pb-16 pt-32 sm:px-6 sm:pb-24 sm:pt-40">
         <h1 className="text-4xl font-light tracking-tight sm:text-5xl">Privacy Policy</h1>
         <p className="mt-3 text-muted">Last updated: {LAST_UPDATED}</p>
 

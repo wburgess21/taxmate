@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { RevealOnScroll } from "@/components/site/Reveal";
 import { SITE_URL } from "@/lib/site";
@@ -9,6 +9,16 @@ const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
+
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+});
+
+/** Decides before first paint whether the launch intro plays: once a session, from the top of the home page. */
+const introScript = `try{var d=document.documentElement;d.classList.add("js");if(location.pathname==="/"&&!location.hash&&!sessionStorage.getItem("tm-intro")&&!matchMedia("(prefers-reduced-motion: reduce)").matches&&!(history.state&&history.state.__NA))d.dataset.intro="1"}catch(e){}`;
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -55,8 +65,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-GB">
-      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
+    <html lang="en-GB" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: introScript }} />
+      </head>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} font-sans antialiased`}>
         {children}
         <RevealOnScroll />
         <Analytics />

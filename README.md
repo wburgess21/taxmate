@@ -6,15 +6,14 @@ The site follows the app's design language (`taxmate-ios/Documentation/Design.md
 
 ## Features
 
-- Landing page with App Store calls to action
-- The app's coin animations, ported to canvas (`lib/coins`):
-  - Hero: the launch animation (coins slide together, stars pop), then tap to spin like the home logo
-  - How it works: the onboarding coin stack, which grows as you scroll through the steps
-  - Closing call to action: coins to hover, tap and toss
-- Interactive take-home pay estimate using the app's 2026/27 bands (England, Wales & NI, and Scotland)
-- Live countdown to the next HMRC key date
-- Tool catalogue grouped as in the app, TaxMate Plus, privacy and FAQ sections
-- Respects `prefers-reduced-motion` and `prefers-color-scheme`; animations pause off-screen
+The home page is a tour of the app's first run, told with the app's own coins (`lib/coins` is a canvas port of the iOS coin renderer and spring physics, with cut-out holes so coins can sit over anything):
+
+- **Story** (`components/story`): a pinned, scroll-driven sequence. It opens with the launch animation (once a session), then the green floods out and the hero shrinks into an HTML iPhone. Onboarding questions follow (answers land on coins, the stack grows, goals orbit as satellites), then the personalising loader, the coins landing in the home logo, a live estimate and the result sheet. App screens are built at native point sizes from the app's `Design.md`.
+- **Your pay, in coins**: drag a salary and watch it split into piles of £1,000 coins (2026/27 bands, England, Wales & NI or Scotland).
+- **Tools**: the eleven tools in their three tinted groups, each with a coin badge that flips on hover.
+- **Key dates**: the current tax year with a coin rolling to today and a live countdown to the next HMRC date.
+- Privacy, TaxMate Plus, FAQ and a closing coin heap to play with.
+- Light and dark mode follow the system; animations respect `prefers-reduced-motion` and pause off-screen.
 - Privacy policy at `/privacy` and terms of use at `/terms`
 - Canonical URLs, sitemap, robots and a generated share image for https://www.taxmate-app.com
 - Vercel Analytics integration

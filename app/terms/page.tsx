@@ -10,9 +10,9 @@ export const metadata = {
 
 export default function TermsOfUse() {
   return (
-    <div className="app-backdrop min-h-screen">
+    <div className="min-h-screen bg-[radial-gradient(1000px_700px_at_0%_0%,var(--glow),transparent_70%)]">
       <Nav />
-      <main className="mx-auto max-w-3xl px-4 py-20 sm:px-6 sm:py-28">
+      <main className="mx-auto max-w-3xl px-4 pb-20 pt-36 sm:px-6 sm:pb-28 sm:pt-44">
         <div className="surface-card p-8 text-center sm:p-12" style={{ ["--tint" as string]: "var(--tool-planning)" }}>
           <span className="tool-badge mx-auto"><FileText className="h-5 w-5" aria-hidden /></span>
           <h1 className="mt-6 text-4xl font-light tracking-tight sm:text-5xl">Terms of Use</h1>
