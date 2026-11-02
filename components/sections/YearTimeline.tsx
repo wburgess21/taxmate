@@ -45,10 +45,15 @@ export function YearTimeline() {
     const canvas = canvasRef.current!, track = trackRef.current!;
     const reduce = prefersReducedMotion();
     const coin = new Coin();
-    coin.face = "£";
+    coin.face = "@pound-sterling";
     coin.idle = false;
-    coin.snapAngles({ wx: 0.12, wy: 0.18, lz: 0 });
-    const ink = () => coin.setInk(cssColor(canvas, "var(--coin-ink)"), true);
+    coin.snapAngles({ wx: 0.1, wy: 0.16, lz: 0 });
+    // A solid face in the page colour, so the track and its markers don't show through the coin.
+    let hole = "";
+    const ink = () => {
+      coin.setInk(cssColor(canvas, "var(--coin-ink)"), true);
+      hole = `rgb(${cssColor(canvas, "var(--canvas)").join(" ")})`;
+    };
     ink();
     const next = s.marks.find((m) => m.next);
     let rolling = -1, time = 0;
@@ -63,15 +68,16 @@ export function YearTimeline() {
     const loop = runLoop(canvas, (dt, t) => {
       time = t;
       const { ctx, width, height } = fitCanvas(canvas);
-      const R = Math.min(22, height * 0.32), y = height / 2, x0 = R + 2, x1 = width - R - 2;
+      const R = Math.min(28, height * 0.42), y = height / 2, x0 = R + 2, x1 = width - R - 2;
       if (rolling < 0) return false;
       rolling = Math.min(1, rolling + dt / (reduce ? 0.001 : 2.1));
       const u = smooth(rolling);
-      const x = x0 + (x1 - x0) * target * u;
-      // Rolling without slipping: the turn matches the distance travelled.
+      const distance = (x1 - x0) * target, x = x0 + distance * u;
+      // Rolls (nearly) without slipping, adjusted to a whole number of turns so the £ comes to rest upright.
+      const turns = Math.max(1, Math.round(distance / R / (2 * Math.PI)));
       coin.snap(x, y - Math.abs(Math.sin(u * Math.PI * 6)) * 3 * (1 - u), R / 100);
-      coin.p.lz = coin.t.lz = (x - x0) / R;
-      drawCoin(ctx, coin, { time, reduceMotion: reduce });
+      coin.p.lz = coin.t.lz = u * turns * 2 * Math.PI;
+      drawCoin(ctx, coin, { time, reduceMotion: reduce, hole });
       if (next) setCount(Math.round(next.days * u));
       return rolling < 1;
     });
@@ -98,7 +104,7 @@ export function YearTimeline() {
         <div className="grid grid-cols-12 text-[0.75rem] text-muted">
           {MONTHS.map((m, i) => <span key={m} className={i % 2 ? "max-sm:invisible" : ""}>{m}</span>)}
         </div>
-        <div className="relative mt-3 h-14">
+        <div className="relative mt-3 h-16">
           <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-hairline" />
           {s && <div className="absolute left-0 top-1/2 h-[3px] -translate-y-1/2 rounded-full bg-[var(--tool-income)] transition-[width] duration-[2100ms] ease-[cubic-bezier(.45,0,.2,1)]" style={{ width: count || next?.days === 0 ? `${pct(s, s.today)}%` : 0 }} />}
           {s?.marks.map((m) => (

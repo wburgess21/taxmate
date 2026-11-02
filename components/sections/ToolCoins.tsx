@@ -52,6 +52,7 @@ export function ToolCoins() {
     const coins = rows.map((row) => {
       const c = new Coin();
       c.face = `@${row.dataset.icon}`;
+      c.tiltOuter = true;
       c.snapAngles(REST);
       c.kr = [90, 11];
       return c;

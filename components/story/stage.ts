@@ -99,7 +99,7 @@ export class StoryStage {
   }
   heroBox() {
     const r = this.env.hero;
-    return r ? { x: r.x + r.w / 2, y: r.y + r.h / 2, h: Math.min(r.h, r.w * 1.02) * 0.9 } : { x: this.env.width / 2, y: this.env.height / 2, h: 300 };
+    return r ? { x: r.x + r.w / 2, y: r.y + r.h / 2, h: Math.min(r.h, r.w * 1.02) * 0.8 } : { x: this.env.width / 2, y: this.env.height / 2, h: 300 };
   }
   heroPlace() { const b = this.heroBox(); return Geometry.artCoins(b.x, b.y, b.h); }
   welcomePlace() { return this.place(this.env.welcome, 112 * this.k); }
@@ -512,12 +512,12 @@ export class StoryStage {
   private layout(dt: number) {
     const b = this.beat;
     if (b === "hero" || (b === "morph" && this.env.m <= 0.001)) {
-      const p = this.heroPlace(), ptr = this.env.pointer;
-      const nx = ptr.active ? ptr.x : 0, ny = ptr.active ? ptr.y : 0, shift = (p.scale * 100) * 0.08;
-      this.front.place(p.front.x + nx * shift, p.front.y + ny * shift, p.scale);
-      this.back.place(p.back.x + nx * shift * 0.6, p.back.y + ny * shift * 0.6, p.scale);
-      this.front.pose({ wx: Geometry.frontRest.wx + ny * 0.22, wy: Geometry.frontRest.wy + nx * 0.3 });
-      this.back.pose({ wx: Geometry.backRest.wx + ny * 0.22, wy: Geometry.backRest.wy + nx * 0.3 });
+      // The pair floats as one: no per-coin bob or pointer tilt, so the two coins never shift against each other.
+      const p = this.heroPlace(), f = this.float(p.scale);
+      this.front.place(p.front.x, p.front.y + f, p.scale);
+      this.back.place(p.back.x, p.back.y + f, p.scale);
+      this.front.pose(Geometry.frontRest); this.back.pose(Geometry.backRest);
+      this.front.idle = this.back.idle = false;
       this.twinkle(dt, p);
     } else if (b === "morph") {
       // Scrubbed: the pair shrinks from the hero into the phone's welcome space.
@@ -526,8 +526,10 @@ export class StoryStage {
       this.back.snap(lerp(a.back.x, w.back.x, e), lerp(a.back.y, w.back.y, e), lerp(a.scale, w.scale, e));
       this.front.pose(Geometry.frontRest); this.back.pose(Geometry.backRest);
     } else if (b === "welcome") {
-      const w = this.welcomePlace();
-      this.setPair(w);
+      const w = this.welcomePlace(), f = this.float(w.scale);
+      this.front.place(w.front.x, w.front.y + f, w.scale);
+      this.back.place(w.back.x, w.back.y + f, w.scale);
+      this.front.idle = this.back.idle = false;
       this.twinkle(dt, w);
     } else if (Q_INDEX[b] !== undefined) {
       this.layoutQuestion(dt);
@@ -564,6 +566,9 @@ export class StoryStage {
     });
     this.front.z = 20;
   }
+
+  /** A slow shared rise and fall for the pair, a few percent of a coin's radius. */
+  private float(scale: number) { return this.reduce ? 0 : Math.sin(this.time * 0.85) * scale * 100 * 0.045; }
 
   private twinkle(dt: number, p: ReturnType<typeof Geometry.artCoins>) {
     if (this.reduce) return;

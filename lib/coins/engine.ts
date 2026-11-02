@@ -15,8 +15,10 @@ type Spring = [number, number];
 export const TAU = Math.PI * 2;
 const pose = (g = 1): Pose => ({ x: 0, y: 0, s: 0, wx: 0, wy: 0, lz: 0, g });
 
-/** A face is text ("£", "VAT") or an icon written as "@name". The back face always shows the brand star. */
+/** A face is text ("£", "VAT"), an icon written as "@name", or `STAR`. The back face always shows the brand star. */
 export type Face = string | null;
+/** The brand's four-point star, as on every coin's back. */
+export const STAR = "*star";
 
 export class Coin {
   p = pose();
@@ -37,6 +39,11 @@ export class Coin {
   inkTarget: RGB = [0, 0, 0];
   inkRate = 6;
   opacity = 1;
+  /**
+   * Applies the tilt (wx) outermost instead of the app's yaw-first order, so a spin (wy) turns the coin about its own
+   * axis and the visible face keeps the same tilt all the way round, rather than mirroring after half a turn.
+   */
+  tiltOuter = false;
 
   place(x: number, y: number, s?: number) {
     this.t.x = x; this.t.y = y;
@@ -228,9 +235,10 @@ export function drawCoin(ctx: CanvasRenderingContext2D, c: Coin, o: DrawOptions)
   const wy = c.p.wy + bob * Math.sin(time * 0.7 + c.phase) * 0.03;
   const lz = c.p.lz;
   const cx = Math.cos(wx), sx = Math.sin(wx), cy = Math.cos(wy), sy = Math.sin(wy), cz = Math.cos(lz), sz = Math.sin(lz);
-  const m00 = cy * cz + sy * sx * sz, m01 = -cy * sz + sy * sx * cz, m02 = sy * cx;
-  const m10 = cx * sz, m11 = cx * cz, m12 = -sx;
-  const m20 = -sy * cz + cy * sx * sz, m21 = sy * sz + cy * sx * cz, m22 = cy * cx;
+  // Ry(wy)·Rx(wx)·Rz(lz) as in the app, or Rx(wx)·Ry(wy)·Rz(lz) for coins that spin about their own axis.
+  const [m00, m01, m02, m10, m11, m12, m20, m21, m22] = c.tiltOuter
+    ? [cy * cz, -cy * sz, sy, cx * sz + sx * sy * cz, cx * cz - sx * sy * sz, -sx * cy, sx * sz - cx * sy * cz, sx * cz + cx * sy * sz, cx * cy]
+    : [cy * cz + sy * sx * sz, -cy * sz + sy * sx * cz, sy * cx, cx * sz, cx * cz, -sx, -sy * cz + cy * sx * sz, sy * sz + cy * sx * cz, cy * cx];
   const tk = Geometry.thickness * R, X = c.p.x, Y = c.p.y + bob * Math.sin(time * 1.25 + c.phase) * 1.2 * Math.min(1, R / 30);
   const ink = rgb(c.ink);
   const cut = o.hole === undefined;
@@ -318,7 +326,7 @@ export function drawCoin(ctx: CanvasRenderingContext2D, c: Coin, o: DrawOptions)
       ctx.transform(sg * m00, sg * m10, m01, m11, X + (m02 * sg * tk) / 2, Y + (m12 * sg * tk) / 2);
       ctx.scale(c.p.g, c.p.g);
       ctx.fillStyle = ink; ctx.strokeStyle = ink;
-      if (sg < 0) { starPath(ctx, R * RING * 0.5); ctx.fill(); }
+      if (sg < 0 || c.face === STAR) { starPath(ctx, R * RING * 0.5); ctx.fill(); }
       else if (c.face?.startsWith("@")) {
         const k = (R * RING * 1.02) / 24;
         ctx.scale(k, k);

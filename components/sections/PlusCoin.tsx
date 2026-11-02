@@ -1,9 +1,15 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Coin, Stars, TAU, drawCoin, fitCanvas, hex, prefersReducedMotion, runLoop } from "@/lib/coins/engine";
+import { Coin, STAR, Stars, drawCoin, fitCanvas, hex, prefersReducedMotion, runLoop } from "@/lib/coins/engine";
 
-/** A large gold coin turning slowly on the Plus card. Tap it for a quick spin. */
+/** Gentle turn, in radians a second. */
+const CRUISE = 1.1;
+
+/**
+ * A large gold coin with the brand star on both faces, turning steadily about its own axis. Its tilt stays the same
+ * all the way round. Tap it to flick it faster; it eases back to its cruise.
+ */
 export function PlusCoin() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
@@ -11,35 +17,42 @@ export function PlusCoin() {
     const reduce = prefersReducedMotion();
     const coin = new Coin();
     const stars = new Stars();
-    coin.face = "+";
+    coin.face = STAR;
+    coin.tiltOuter = true;
     coin.setInk(hex("#ddad44"), true);
-    coin.snapAngles({ wx: 0.32, wy: 0.4, lz: -0.1 });
-    coin.kr = [40, 9];
-    let next = 2.5, time = 0;
+    coin.snapAngles({ wx: 0.3, wy: 0.35, lz: 0 });
+    let boost = 0, time = 0;
     const size = () => {
       const w = canvas.clientWidth, h = canvas.clientHeight;
-      coin.snap(w / 2, h / 2, Math.min(w, h) * 0.34 / 100);
+      coin.snap(w / 2, h / 2, (Math.min(w, h) * 0.34) / 100);
     };
     const ro = new ResizeObserver(size);
     ro.observe(canvas);
-    const spin = () => {
+    const flick = () => {
       if (reduce) return;
-      coin.t.wy += TAU; coin.v.y -= 140;
+      boost = 16;
+      coin.v.y -= 160;
       stars.sparkle(coin, 4, "#ffffff");
       loop.wake();
     };
-    canvas.addEventListener("pointerdown", spin);
+    canvas.addEventListener("pointerdown", flick);
     const loop = runLoop(canvas, (dt, t) => {
       time = t;
-      // Every few seconds it turns over by itself, showing the brand star on its back.
-      if (!reduce && t > next) { next = t + 4.5; coin.t.wy += Math.PI; if (Math.round(coin.t.wy / Math.PI) % 2 === 0) stars.sparkle(coin, 2, "#ffffff"); }
+      if (!reduce) {
+        // Spin by hand rather than with the springs, so the turn never settles back to a set angle.
+        boost *= Math.exp(-dt * 1.6);
+        coin.p.wy += (CRUISE + boost) * dt;
+        coin.t.wy = coin.p.wy;
+        coin.v.wy = 0;
+      }
       coin.update(dt);
       stars.update(dt);
       const { ctx } = fitCanvas(canvas);
       drawCoin(ctx, coin, { time, reduceMotion: reduce });
       stars.draw(ctx, "#ffffff");
+      return !reduce || !stars.isEmpty || !coin.isSettled;
     });
-    return () => { loop.stop(); ro.disconnect(); canvas.removeEventListener("pointerdown", spin); };
+    return () => { loop.stop(); ro.disconnect(); canvas.removeEventListener("pointerdown", flick); };
   }, []);
   return <canvas ref={canvasRef} aria-hidden className="h-full w-full cursor-pointer" />;
 }

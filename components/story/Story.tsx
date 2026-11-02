@@ -169,21 +169,26 @@ export function Story() {
 
     const onMove = (e: PointerEvent) => {
       const s = stage.getBoundingClientRect(), x = e.clientX - s.left, y = e.clientY - s.top;
-      if (e.pointerType === "mouse" && S.env.hero) {
-        const h = S.env.hero;
-        pointer.x = clamp((x - (h.x + h.w / 2)) / (s.width / 2), -1, 1);
-        pointer.y = clamp((y - (h.y + h.h / 2)) / (s.height / 2), -1, 1);
-        pointer.active = !S.reduce;
-      }
+      // A soft light follows the cursor across the hero's green (the coins themselves stay put).
+      if (e.pointerType === "mouse") { stage.style.setProperty("--spot-x", `${x.toFixed(0)}px`); stage.style.setProperty("--spot-y", `${y.toFixed(0)}px`); }
       const hit = [S.front, S.back].some((c) => c.p.s > 0.02 && c.opacity > 0.5 && Math.hypot(c.p.x - x, c.p.y - y) < 100 * c.p.s * 1.25 + 8);
       stage.style.cursor = hit ? "pointer" : "";
       loop.wake();
     };
-    const onLeave = () => { pointer.active = false; };
+    const onLeave = () => { pointer.active = false; stage.style.removeProperty("--spot-x"); stage.style.removeProperty("--spot-y"); };
     const onClick = (e: MouseEvent) => {
       if ((e.target as HTMLElement).closest("a,button")) return;
       const s = stage.getBoundingClientRect();
-      if (S.tap(e.clientX - s.left, e.clientY - s.top)) loop.wake();
+      if (S.tap(e.clientX - s.left, e.clientY - s.top)) {
+        loop.wake();
+        // A ring pulses out from the coins with each spin.
+        const aura = stage.querySelector(".story-aura");
+        if (aura && (S.beat === "hero" || S.beat === "morph")) {
+          const ring = document.createElement("b");
+          aura.appendChild(ring);
+          ring.addEventListener("animationend", () => ring.remove());
+        }
+      }
     };
     stage.addEventListener("pointermove", onMove);
     stage.addEventListener("pointerleave", onLeave);
@@ -269,10 +274,12 @@ export function Story() {
         </div>
 
         <div className="story-flood" aria-hidden />
-        <div className="story-hero-anchor" aria-hidden />
+        <div className="story-spot" aria-hidden />
+        <div className="story-hero-anchor" aria-hidden>
+          <div className="story-aura">{[0, 1, 2, 3].map((i) => <i key={i} style={{ ["--i" as string]: i }} />)}</div>
+        </div>
 
         <div className="story-hero-copy">
-          <p className="story-tag"><span className="story-tag-dot" />2026/27 tax year · UK</p>
           <h1 className="story-h1">
             Your UK tax, <em>made clearer.</em>
           </h1>

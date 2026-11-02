@@ -24,7 +24,20 @@ function allocate(parts: Record<Cat, number>) {
   return { keep: out[0], tax: out[1], ni: out[2] } as Record<Cat, number>;
 }
 
-type PileCoin = Coin & { cat: Cat; leaving?: boolean };
+/**
+ * A coin in a pile. Its slot is never stored: every frame places it by its current index in its pile, so however fast
+ * the salary changes, a coin can only ever sit where the pile says it is.
+ */
+type PileCoin = Coin & {
+  cat: Cat;
+  /** When it may start moving to its slot (new coins drop in one after another). */
+  activeAt: number;
+  /** Dropped in from above yet. */
+  spawned: boolean;
+  /** Has reacted to joining its current pile (the hop and ink change when it moves between piles). */
+  arrived: boolean;
+  jitter: { dx: number; wy: number; lz: number };
+};
 
 export function PayPiles() {
   const [salary, setSalary] = useState(35_000);
@@ -50,7 +63,7 @@ export function PayPiles() {
     };
     resolveInks();
     let size = { width: 0, height: 0 };
-    let visible = false, pending: Record<Cat, number> | null = null, queue: { at: number; run: () => void }[] = [];
+    let visible = false, pending: Record<Cat, number> | null = null;
     let time = 0;
 
     const geometry = () => {
@@ -70,13 +83,10 @@ export function PayPiles() {
       const col = Math.floor(i / PER_COLUMN), row = i % PER_COLUMN;
       return { x: g.starts[cat] + (col + 0.5) * g.unit, y: g.base - row * g.rise, s: g.R / 100, z: row + col * 0.01 };
     };
-    const settle = (c: PileCoin, cat: Cat, i: number) => {
-      const p = slot(cat, i);
-      c.place(p.x + rand(-1.2, 1.2), p.y, p.s);
-      c.z = p.z;
-      c.pose({ wx: Geometry.lying, wy: rand(-0.08, 0.08), lz: rand(-0.12, 0.12) });
-    };
+    const make = (cat: Cat): PileCoin =>
+      Object.assign(new Coin(), { cat, activeAt: 0, spawned: false, arrived: false, jitter: { dx: rand(-1.2, 1.2), wy: rand(-0.08, 0.08), lz: rand(-0.12, 0.12) } });
 
+    /** Grows and shrinks the piles to `target`, always from the top. Coins leaving one pile are reused by a growing one. */
     function set(target: Record<Cat, number>) {
       if (!visible) { pending = target; return; }
       const pool: PileCoin[] = [];
@@ -88,32 +98,20 @@ export function PayPiles() {
       for (const cat of CATS) {
         const pile = piles[cat.id];
         while (pile.length < target[cat.id]) {
-          const i = pile.length;
           const reused = pool.shift();
-          const c: PileCoin = reused ?? Object.assign(new Coin(), { cat: cat.id });
-          c.cat = cat.id; c.idle = false;
-          pile.push(c);
-          const d = reduce ? 0 : delay;
+          const c = reused ?? make(cat.id);
+          c.cat = cat.id;
+          c.idle = false;
+          c.arrived = false;
+          c.activeAt = time + (reduce ? 0 : delay);
           delay += reused ? 0.03 : 0.018;
-          queue.push({ at: time + d, run: () => {
-            if (!reused) {
-              const p = slot(cat.id, i);
-              c.snap(p.x + rand(-6, 6), p.y - size.height * 0.55 - rand(0, 60), p.s);
-              c.snapAngles({ wx: Geometry.lying - rand(0.3, 0.8), wy: rand(-1, 1), lz: rand(-0.6, 0.6) });
-              c.setInk(inks[cat.id], true);
-              c.kp = [190, 15]; c.kr = [120, 14]; c.ks = [150, 19];
-              if (reduce) c.snap(p.x, p.y, p.s);
-            } else {
-              c.kp = [110, 16]; c.v.y -= 380; c.setInk(inks[cat.id]); c.inkRate = 4;
-            }
-            settle(c, cat.id, i);
-            if (reduce) { c.p = { ...c.t }; }
-          } });
+          pile.push(c);
         }
       }
-      // Coins nobody needs any more fly up and away.
+      // Coins nobody needs any more fly up and away (ones that never dropped in simply go).
       for (const c of pool) {
-        c.leaving = true; c.kp = [80, 14]; c.ks = [60, 12];
+        if (!c.spawned) continue;
+        c.kp = [80, 14]; c.ks = [60, 12];
         c.place(c.p.x + rand(-20, 20), c.p.y - 120, 0);
         leaving.push(c);
       }
@@ -121,9 +119,35 @@ export function PayPiles() {
     }
     api.current = { set };
 
+    /** Places every pile's coins by their current index; coins still waiting their turn stay where they are. */
+    function layout() {
+      for (const cat of CATS) piles[cat.id].forEach((c, i) => {
+        if (time < c.activeAt) return;
+        const p = slot(cat.id, i);
+        if (!c.spawned) {
+          c.spawned = true;
+          c.snap(p.x + rand(-6, 6), reduce ? p.y : p.y - size.height * 0.55 - rand(0, 60), p.s);
+          c.snapAngles({ wx: Geometry.lying - (reduce ? 0 : rand(0.3, 0.8)), wy: rand(-1, 1), lz: rand(-0.6, 0.6) });
+          c.setInk(inks[cat.id], true);
+          c.kp = [190, 15]; c.kr = [120, 14]; c.ks = [150, 19];
+        } else if (!c.arrived) {
+          // Moving between piles: a hop on the way, and its ink changes to the new pile's.
+          c.kp = [110, 16];
+          if (!reduce) c.v.y -= 380;
+          c.setInk(inks[cat.id]); c.inkRate = 4;
+        }
+        c.arrived = true;
+        c.place(p.x + c.jitter.dx, p.y, p.s);
+        c.z = p.z;
+        c.pose({ wx: Geometry.lying, wy: c.jitter.wy, lz: c.jitter.lz });
+        if (reduce) { c.p = { ...c.t }; c.ink = [...c.inkTarget]; }
+      });
+    }
+
     const ro = new ResizeObserver(() => {
       size = { width: canvas.clientWidth, height: canvas.clientHeight };
-      for (const cat of CATS) piles[cat.id].forEach((c, i) => { settle(c, cat.id, i); c.p.x = c.t.x; c.p.y = c.t.y; c.p.s = c.t.s; });
+      layout();
+      for (const cat of CATS) for (const c of piles[cat.id]) if (c.spawned && c.arrived) { c.p.x = c.t.x; c.p.y = c.t.y; c.p.s = c.t.s; }
       loop.wake();
     });
     ro.observe(canvas);
@@ -149,9 +173,7 @@ export function PayPiles() {
 
     const loop = runLoop(canvas, (dt, t) => {
       time = t;
-      const due = queue.filter((q) => q.at <= time);
-      queue = queue.filter((q) => q.at > time);
-      due.forEach((q) => q.run());
+      layout();
       const all = [...piles.keep, ...piles.tax, ...piles.ni];
       for (const c of all) c.update(dt);
       for (let i = leaving.length - 1; i >= 0; i--) { leaving[i].update(dt); if (leaving[i].p.s < 0.004) leaving.splice(i, 1); }
@@ -170,7 +192,8 @@ export function PayPiles() {
       for (const c of [...all, ...leaving].sort((a, b) => a.z - b.z)) drawCoin(ctx, c, { time, reduceMotion: reduce });
       stars.draw(ctx, "#ddad44");
       void width; void height;
-      return !(queue.length === 0 && leaving.length === 0 && stars.isEmpty && all.every((c) => c.isSettled));
+      const waiting = all.some((c) => !c.arrived);
+      return waiting || leaving.length > 0 || !stars.isEmpty || !all.every((c) => !c.spawned || c.isSettled);
     });
 
     return () => { loop.stop(); ro.disconnect(); io.disconnect(); offScheme(); canvas.removeEventListener("pointerdown", onTap); };
