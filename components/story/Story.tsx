@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowDown } from "lucide-react";
 import { AppStoreButton } from "@/components/site/AppStoreButton";
-import { clamp, easeInOutCubic, fitCanvas, isDark, lerp, prefersReducedMotion, runLoop } from "@/lib/coins/engine";
+import { clamp, easeInOutCubic, fitCanvas, isDark, lerp, prefersReducedMotion, runLoop, smooth } from "@/lib/coins/engine";
 import { PHONE, Phone } from "./Phone";
 import { CalculatorScreen, EXAMPLE, HomeScreen, PersonalisingScreen, QUESTIONS, QuestionScreen, ResultSheet, WelcomeScreen } from "./Screens";
 import { StoryStage, order, type BeatId, type Env, type PersonalisePhase, type Rect } from "./stage";
@@ -69,6 +69,7 @@ export function Story() {
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [beat, setBeat] = useState<BeatId>("hero");
+  const [morphLate, setMorphLate] = useState(false);
   const [pickState, setPickState] = useState({ beat: "hero" as BeatId, n: 0 });
   const [tickState, setTickState] = useState({ beat: "hero" as BeatId, n: 0 });
   const picked = pickState.beat === beat ? pickState.n : 0;
@@ -112,7 +113,7 @@ export function Story() {
     const heroFlood = q<HTMLElement>(".story-flood")!;
     const phoneFlood = q<HTMLElement>(".phone-flood")!;
     const pointer = { x: 0, y: 0, active: false };
-    let k = 1, lastBeat: BeatId = "hero";
+    let k = 1, lastBeat: BeatId = "hero", lastLate = false;
 
     // Lay the phone out for the viewport: beside the captions on wide screens, above them on narrow ones.
     const layout = () => {
@@ -203,11 +204,14 @@ export function Story() {
       const m = clamp((pos - MORPH.start) / MORPH.len);
       const e = env(b === "hero" ? 0 : b === "morph" ? m : 1);
       if (b !== lastBeat) { lastBeat = b; S.env = e; S.setBeat(b); setBeat(b); }
+      const late = b === "morph" && m > 0.6;
+      if (late !== lastLate) { lastLate = late; setMorphLate(late); }
       S.frame(dt, e);
 
       // The hero's green: a circle during the intro, then (scrubbed) it shrinks into the phone's screen.
       const W = e.width, H = e.height, sc = e.screen!;
-      const em = easeInOutCubic(e.m);
+      // The green (and the coins, in the stage) reach the phone by 80% of the shrink; the rest is the crossfade.
+      const em = easeInOutCubic(clamp(e.m / 0.8));
       if (S.heroFloodRadius !== null) {
         const c = S.heroFloodCentre;
         heroFlood.style.clipPath = `circle(${S.heroFloodRadius.toFixed(1)}px at ${c.x.toFixed(1)}px ${c.y.toFixed(1)}px)`;
@@ -217,7 +221,9 @@ export function Story() {
         const x = lerp(0, sc.x, em), y = lerp(0, sc.y, em), w = lerp(W, sc.w, em), h = lerp(H, sc.h, em), r = lerp(0, PHONE.radius * k, em);
         heroFlood.style.clipPath = `inset(${y.toFixed(1)}px ${(W - x - w).toFixed(1)}px ${(H - y - h).toFixed(1)}px ${x.toFixed(1)}px round ${r.toFixed(1)}px)`;
         heroFlood.style.backgroundPosition = `${x}px ${y}px`; heroFlood.style.backgroundSize = `${w}px ${h}px`;
-        heroFlood.style.opacity = "1";
+        // Over the last third of the shrink, the hero's green fades away to reveal the phone's own welcome screen
+        // (the same green, with its status bar, words and button) rather than swapping to it at the end.
+        heroFlood.style.opacity = String(1 - smooth((e.m - 0.7) / 0.27));
       } else heroFlood.style.opacity = "0";
       stage.style.setProperty("--m", em.toFixed(4));
       phoneWrap.style.opacity = String(clamp(e.m * 1.4));
@@ -262,7 +268,7 @@ export function Story() {
         <div className="story-phone" style={{ opacity: 0 }}>
           <Phone tone="light">
             <div className="phone-flood" />
-            <WelcomeScreen shown={beat === "welcome" || beat === "morph"} />
+            <WelcomeScreen shown={beat === "welcome" || morphLate} />
             {QUESTIONS.map((qq, i) => (
               <QuestionScreen key={qq.id} q={qq} shown={qIndex === i || (i === 2 && beat === "personalising" && !covered)} picked={qIndex === i ? picked : qq.picks.length} />
             ))}
