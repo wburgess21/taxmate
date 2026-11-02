@@ -1275,3 +1275,70 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
     radial-gradient(95% 90% at 50% 40%, transparent 32%, rgb(0 14 6 / 0.55) 100%),
     var(--green);
 }
+
+/* The closing call to action: a glass switcher between the App Store button and a code to scan. */
+.get-app-switch {
+  position: relative;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.08);
+  border: 0.5px solid rgb(255 255 255 / 0.2);
+  backdrop-filter: blur(12px);
+}
+.get-app-switch button {
+  position: relative;
+  z-index: 1;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgb(255 255 255 / 0.7);
+  transition: color 0.3s;
+}
+.get-app-switch button[aria-selected="true"] {
+  color: var(--brand-deep);
+}
+.get-app-thumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  border-radius: 999px;
+  background: #fbfaf5;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.18);
+  transition: transform 0.45s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+.get-app[data-mode="scan"] .get-app-thumb {
+  transform: translateX(100%);
+}
+/* Each panel eases its height and fades, so the area grows and shrinks smoothly between the two. */
+.get-app-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.5s cubic-bezier(0.3, 0.7, 0.2, 1),
+    opacity 0.3s ease;
+}
+.get-app-panel[data-on] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows 0.5s cubic-bezier(0.3, 0.7, 0.2, 1),
+    opacity 0.4s ease 0.12s;
+}
+@media (max-width: 1023px) {
+  .get-app-panel#get-app-store {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+}
+.get-app-qr {
+  display: block;
+  padding: 14px;
+  border-radius: 26px;
+  background: #fbfaf5;
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.6) inset, 0 18px 40px rgb(0 20 8 / 0.35);
+}

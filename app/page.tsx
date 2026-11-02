@@ -3,6 +3,7 @@ import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { AppStoreButton } from "@/components/site/AppStoreButton";
 import { AppQr } from "@/components/site/AppQr";
+import { GetTheApp } from "@/components/site/GetTheApp";
 import { Story } from "@/components/story/Story";
 import { PayPiles } from "@/components/sections/PayPiles";
 import { ToolCoins } from "@/components/sections/ToolCoins";
@@ -10,7 +11,7 @@ import { YearTimeline } from "@/components/sections/YearTimeline";
 import { PlusCoin } from "@/components/sections/PlusCoin";
 import { CoinHeap } from "@/components/sections/CoinHeap";
 import { Faq } from "@/components/sections/Faq";
-import { APP_STORE_URL, TAX_YEAR } from "@/lib/site";
+import { TAX_YEAR } from "@/lib/site";
 
 const PLUS = [
   "Home Office reports",
@@ -181,17 +182,7 @@ export default function Home() {
               Your UK tax, <em className="text-gold">made clearer.</em>
             </h2>
             <p className="mx-auto mt-6 max-w-md text-lg text-white/75">For iPhone and iPad. A few quick questions, and your tax picture in minutes.</p>
-            <div className="mt-10 flex items-center justify-center gap-7">
-              <AppStoreButton variant="gold" />
-              {/* Desktop visitors will install on their phone: a code to scan beats a link to click. */}
-              <div className="hidden items-center gap-5 text-left lg:flex">
-                <span className="text-[0.75rem] font-medium uppercase tracking-[0.18em] text-white/40">or</span>
-                <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" className="press flex items-center gap-4">
-                  <span className="rounded-[18px] bg-[#fbfaf5] p-2 shadow-[0_12px_30px_rgb(0_20_8/0.35)]"><AppQr className="block h-[96px] w-[96px]" /></span>
-                  <span className="max-w-[8.5rem] text-[0.9375rem] leading-snug text-white/75">Scan with your iPhone camera</span>
-                </a>
-              </div>
-            </div>
+            <GetTheApp qr={<AppQr className="block h-[148px] w-[148px]" />} />
             <p className="mt-6 text-[0.8125rem] text-white/45 motion-reduce:hidden" aria-hidden>Psst: tap the screen.</p>
           </div>
         </section>

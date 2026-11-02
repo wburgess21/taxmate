@@ -288,7 +288,8 @@ export function drawCoin(ctx: CanvasRenderingContext2D, c: Coin, o: DrawOptions)
   if (cut) {
     // Hide anything already drawn behind this coin, part by part (opposite windings would cancel as one path).
     ctx.globalCompositeOperation = "destination-out";
-    ctx.globalAlpha = 1;
+    // A fading coin only partly hides what's behind it.
+    ctx.globalAlpha = Math.min(1, c.opacity);
     ctx.beginPath(); disc(tk / 2, R); ctx.fill();
     ctx.beginPath(); disc(-tk / 2, R); ctx.fill();
     if (rim) { ctx.beginPath(); ctx.moveTo(...rim[0]); for (let i = 1; i < 4; i++) ctx.lineTo(...rim[i]); ctx.closePath(); ctx.fill(); }

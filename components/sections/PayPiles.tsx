@@ -13,15 +13,12 @@ const CATS = [
 ] as const;
 type Cat = (typeof CATS)[number]["id"];
 
-/** Whole coins per category, by largest remainder so they add up to the rounded total. */
+/**
+ * Whole coins per pile, each rounded on its own amount. (Sharing out a rounded total made a small pile like NI flip
+ * between counts as the others' remainders changed, though its own amount barely moved.)
+ */
 function allocate(parts: Record<Cat, number>) {
-  const total = Math.round((parts.keep + parts.tax + parts.ni) / PER_COIN);
-  const raw = CATS.map((c) => parts[c.id] / PER_COIN);
-  const out = raw.map(Math.floor);
-  let left = total - out.reduce((a, b) => a + b, 0);
-  const order = raw.map((v, i) => [v - Math.floor(v), i]).sort((a, b) => b[0] - a[0]);
-  for (let j = 0; left > 0 && j < order.length; j++, left--) out[order[j][1]]++;
-  return { keep: out[0], tax: out[1], ni: out[2] } as Record<Cat, number>;
+  return { keep: Math.round(parts.keep / PER_COIN), tax: Math.round(parts.tax / PER_COIN), ni: Math.round(parts.ni / PER_COIN) } as Record<Cat, number>;
 }
 
 /**
@@ -98,8 +95,9 @@ export function PayPiles() {
         const pile = piles[cat.id];
         while (pile.length > target[cat.id]) gone.push(pile.pop()!);
       }
-      let delay = 0;
       for (const cat of CATS) {
+        // Each pile staggers its own new coins, so a small pile never waits behind a big one.
+        let delay = 0;
         const pile = piles[cat.id];
         while (pile.length < target[cat.id]) {
           const c = make(cat.id);
@@ -109,11 +107,12 @@ export function PayPiles() {
           pile.push(c);
         }
       }
+      // Coins no longer needed lift a little and fade where they are, even one caught mid-fall.
       for (const c of gone) {
-        if (!c.spawned) continue;
+        if (!c.spawned || leaving.includes(c)) continue;
         c.drop = null;
-        c.kp = [80, 14]; c.ks = [60, 12];
-        c.place(c.p.x, c.p.y - 120, 0);
+        c.kp = [120, 20];
+        c.place(c.p.x, c.p.y - 36);
         leaving.push(c);
       }
       loop.wake();
@@ -185,7 +184,12 @@ export function PayPiles() {
           o.v.lz += rand(-0.25, 0.25) * impact * Math.pow(0.6, depth);
         }
       });
-      for (let i = leaving.length - 1; i >= 0; i--) { leaving[i].update(dt); if (leaving[i].p.s < 0.004) leaving.splice(i, 1); }
+      for (let i = leaving.length - 1; i >= 0; i--) {
+        const c = leaving[i];
+        c.update(dt);
+        c.opacity -= dt * (reduce ? 20 : 3.5);
+        if (c.opacity <= 0.02) leaving.splice(i, 1);
+      }
       stars.update(dt);
       const { ctx, width, height } = fitCanvas(canvas);
       // A soft shadow under each pile grounds it.

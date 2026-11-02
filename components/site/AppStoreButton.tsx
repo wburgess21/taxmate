@@ -11,10 +11,11 @@ function AppleGlyph({ className }: { className?: string }) {
 type Variant = "primary" | "gold" | "glass";
 
 /** "Download on the App Store" in the site's button styles. */
-export function AppStoreButton({ variant = "primary", label = "Download on the App Store", className = "" }: { variant?: Variant; label?: string; className?: string }) {
+/** `still` leaves out the hover lift and press, for places where the button should just sit. */
+export function AppStoreButton({ variant = "primary", label = "Download on the App Store", className = "", still = false }: { variant?: Variant; label?: string; className?: string; still?: boolean }) {
   const style = variant === "gold" ? "btn-gold" : variant === "glass" ? "btn-glass glass" : "btn-primary";
   return (
-    <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" className={`${style} press ${className}`}>
+    <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" className={`${style} ${still ? "" : "press"} ${className}`}>
       <AppleGlyph className="h-[1.15em] w-[1.15em] -mt-0.5" />
       {label}
     </a>
