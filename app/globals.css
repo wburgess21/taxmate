@@ -1269,3 +1269,12 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
   transform: rotateY(0deg) scale(1);
   transition-delay: 0.05s;
 }
+@media (max-width: 480px) {
+  .receipt {
+    padding: 26px 20px 22px;
+  }
+  .receipt-line {
+    font-size: 0.84rem;
+    gap: 6px;
+  }
+}

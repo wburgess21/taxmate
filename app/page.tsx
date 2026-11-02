@@ -115,13 +115,13 @@ export default function Home() {
         <section id="plus" className="px-3 py-24 sm:px-6 lg:py-32">
           <div className="green mx-auto grid max-w-[1240px] items-center gap-14 overflow-hidden rounded-[36px] px-7 py-14 sm:px-14 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-20" data-reveal>
             <div>
-              <p className="eyebrow text-gold"><Plus className="h-4 w-4" aria-hidden /> TaxMate Plus</p>
+              <p className="eyebrow !gap-2 !text-lg text-gold"><Plus className="h-5 w-5" strokeWidth={2.4} aria-hidden /> TaxMate Plus</p>
               <h2 className="display mt-5 text-[2.75rem] sm:text-6xl lg:text-7xl">
                 One payment.
                 <em className="block text-gold">Yours for life.</em>
               </h2>
               <p className="mt-6 max-w-md text-lg leading-relaxed text-white/75">
-                Every calculator gives you a free estimate. Plus unlocks every tool in full, once, for good.
+                Every estimate is free. Plus unlocks everything else.
               </p>
               <div className="mt-10 flex flex-wrap items-center gap-4">
                 <AppStoreButton variant="gold" label="Get TaxMate" />
@@ -152,7 +152,7 @@ export default function Home() {
                 </div>
               </div>
               {/* The gold coin, resting on the receipt's corner. */}
-              <div className="pointer-events-auto absolute -right-5 -top-16 h-32 w-32 sm:-right-14 sm:-top-16 sm:h-56 sm:w-56">
+              <div className="pointer-events-auto absolute -right-5 -top-20 h-32 w-32 sm:-right-14 sm:-top-24 sm:h-56 sm:w-56">
                 <PlusCoin />
               </div>
             </div>

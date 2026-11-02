@@ -48,7 +48,9 @@ export function PlusCoin() {
       coin.update(dt);
       stars.update(dt);
       const { ctx } = fitCanvas(canvas);
-      drawCoin(ctx, coin, { time, reduceMotion: reduce });
+      // A solid coin: its face and notches are painted in the card's green rather than cut out, so the receipt
+      // beneath doesn't show through.
+      drawCoin(ctx, coin, { time, reduceMotion: reduce, hole: "#004d22" });
       stars.draw(ctx, "#ffffff");
       return !reduce || !stars.isEmpty || !coin.isSettled;
     });
