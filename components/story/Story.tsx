@@ -9,12 +9,23 @@ import { CalculatorScreen, EXAMPLE, HomeScreen, PersonalisingScreen, QUESTIONS, 
 import { StoryStage, order, type BeatId, type Env, type PersonalisePhase, type Rect } from "./stage";
 import { nextKeyDate } from "@/lib/keyDates";
 
-/** The eleven tools along the foot of the hero, in their group colours (as the app's dark-mode tints, which read on green). */
-const TOOL_TICKER: [string, string][] = [
-  ["Take Home Pay", "#6fd49a"], ["Self-employed Tax", "#6fd49a"], ["Combined Income", "#6fd49a"],
-  ["Home Office", "#e7bd5e"], ["Business Expenses", "#e7bd5e"], ["Business Mileage", "#e7bd5e"], ["Pension Contribution", "#e7bd5e"],
-  ["Tax Savings Planner", "#72c4de"], ["VAT", "#72c4de"], ["Making Tax Digital", "#72c4de"], ["Annual Summary", "#72c4de"],
-];
+
+export type HeroVariant = "full" | "card" | "disc";
+/** The hero's green: the whole stage, an inset card, or a disc round the coins. */
+const HERO_VARIANT: HeroVariant = "disc";
+
+/** The hero green's resting shape, as a rounded rect, in stage pixels. */
+function heroFrame(variant: HeroVariant, W: number, H: number, S: StoryStage) {
+  if (variant === "card") {
+    const m = W < 600 ? 8 : 14;
+    return { x: m, y: m, w: W - 2 * m, h: H - 2 * m, r: W < 600 ? 30 : 40 };
+  }
+  if (variant === "disc") {
+    const hb = S.heroBox(), r = Math.min(hb.h * 0.72, W < 600 ? W * 0.44 : Infinity);
+    return { x: hb.x - r, y: hb.y - r, w: 2 * r, h: 2 * r, r };
+  }
+  return { x: 0, y: 0, w: W, h: H, r: 0 };
+}
 
 /** Scroll length of each beat, in viewport heights. */
 const BEATS: { id: BeatId; len: number }[] = [
@@ -122,6 +133,11 @@ export function Story() {
     const phoneWrap = q<HTMLElement>(".story-phone")!;
     const screenEl = q<HTMLElement>(".phone-screen")!;
     const heroFlood = q<HTMLElement>(".story-flood")!;
+    const floodFill = q<HTMLElement>(".story-flood-fill")!;
+    // Which hero to show: `?hero=card|disc|full` previews the others.
+    const asked = new URLSearchParams(location.search).get("hero");
+    stage.dataset.hero = asked === "card" || asked === "disc" || asked === "full" ? asked : HERO_VARIANT;
+    S.heroFill = stage.dataset.hero === "disc" ? 0.7 : 0.8;
     const phoneFlood = q<HTMLElement>(".phone-flood")!;
     const pointer = { x: 0, y: 0, active: false };
     let k = 1, lastBeat: BeatId = "hero", lastLate = false;
@@ -176,18 +192,16 @@ export function Story() {
     };
     const first = env(0);
     S.env = first;
-    if (introOn) S.startIntro(first);
+    if (introOn) S.startIntro(first, stage.dataset.hero === "disc");
     else { S.intro.phase = "launch"; S.finishIntro(); delete root.dataset.intro; }
 
     const onMove = (e: PointerEvent) => {
       const s = stage.getBoundingClientRect(), x = e.clientX - s.left, y = e.clientY - s.top;
-      // A soft light follows the cursor across the hero's green (the coins themselves stay put).
-      if (e.pointerType === "mouse") { stage.style.setProperty("--spot-x", `${x.toFixed(0)}px`); stage.style.setProperty("--spot-y", `${y.toFixed(0)}px`); }
       const hit = [S.front, S.back].some((c) => c.p.s > 0.02 && c.opacity > 0.5 && Math.hypot(c.p.x - x, c.p.y - y) < 100 * c.p.s * 1.25 + 8);
       stage.style.cursor = hit ? "pointer" : "";
       loop.wake();
     };
-    const onLeave = () => { pointer.active = false; stage.style.removeProperty("--spot-x"); stage.style.removeProperty("--spot-y"); };
+    const onLeave = () => { pointer.active = false; };
     const onClick = (e: MouseEvent) => {
       if ((e.target as HTMLElement).closest("a,button")) return;
       const s = stage.getBoundingClientRect();
@@ -216,19 +230,20 @@ export function Story() {
       if (late !== lastLate) { lastLate = late; setMorphLate(late); }
       S.frame(dt, e);
 
-      // The hero's green: a circle during the intro, then (scrubbed) it shrinks into the phone's screen.
+      // The hero's green has a shape (the full stage, an inset card or a disc round the coins, by variant) that is
+      // scrubbed into the phone's screen. During the intro the green floods out inside that shape from the coins.
       const W = e.width, H = e.height, sc = e.screen!;
       // The green (and the coins, in the stage) reach the phone by 80% of the shrink; the rest is the crossfade.
       const em = easeInOutCubic(clamp(e.m / 0.8));
-      if (S.heroFloodRadius !== null) {
-        const c = S.heroFloodCentre;
-        heroFlood.style.clipPath = `circle(${S.heroFloodRadius.toFixed(1)}px at ${c.x.toFixed(1)}px ${c.y.toFixed(1)}px)`;
-        heroFlood.style.opacity = "1";
-        heroFlood.style.backgroundPosition = "0 0"; heroFlood.style.backgroundSize = `${W}px ${H}px`;
-      } else if (e.m < 1) {
-        const x = lerp(0, sc.x, em), y = lerp(0, sc.y, em), w = lerp(W, sc.w, em), h = lerp(H, sc.h, em), r = lerp(0, PHONE.radius * k, em);
+      if (e.m < 1) {
+        const f = heroFrame(stage.dataset.hero as HeroVariant, W, H, S);
+        const x = lerp(f.x, sc.x, em), y = lerp(f.y, sc.y, em), w = lerp(f.w, sc.w, em), h = lerp(f.h, sc.h, em), r = lerp(f.r, PHONE.radius * k, em);
         heroFlood.style.clipPath = `inset(${y.toFixed(1)}px ${(W - x - w).toFixed(1)}px ${(H - y - h).toFixed(1)}px ${x.toFixed(1)}px round ${r.toFixed(1)}px)`;
-        heroFlood.style.backgroundPosition = `${x}px ${y}px`; heroFlood.style.backgroundSize = `${w}px ${h}px`;
+        floodFill.style.backgroundPosition = `${x}px ${y}px`; floodFill.style.backgroundSize = `${w}px ${h}px`;
+        if (S.heroFloodRadius !== null) {
+          const c = S.heroFloodCentre;
+          floodFill.style.clipPath = `circle(${S.heroFloodRadius.toFixed(1)}px at ${c.x.toFixed(1)}px ${c.y.toFixed(1)}px)`;
+        } else floodFill.style.clipPath = "none";
         // Over the last third of the shrink, the hero's green fades away to reveal the phone's own welcome screen
         // (the same green, with its status bar, words and button) rather than swapping to it at the end.
         heroFlood.style.opacity = String(1 - smooth((e.m - 0.7) / 0.27));
@@ -245,7 +260,7 @@ export function Story() {
       phoneFlood.style.clipPath = `circle(${pr.toFixed(1)}px at ${pc.x.toFixed(1)}px ${pc.y.toFixed(1)}px)`;
       const statusOnGreen = pr > 0 && Math.hypot(PHONE.width / 2 - pc.x, 22 - pc.y) < pr;
       screenEl.dataset.tone = statusOnGreen || b === "result" ? "dark" : "light";
-      root.dataset.navTone = (b === "hero" || (b === "morph" && e.m < 0.35)) && root.dataset.intro !== "1" ? "light" : "";
+      root.dataset.navTone = stage.dataset.hero !== "disc" && (b === "hero" || (b === "morph" && e.m < 0.35)) && root.dataset.intro !== "1" ? "light" : "";
 
       // At rest the idle bob needs only a gentle frame rate.
       if (S.isQuiet && time - lastDraw < 1 / 24) return;
@@ -290,21 +305,9 @@ export function Story() {
           </Phone>
         </div>
 
-        <div className="story-flood" aria-hidden />
-        <div className="story-spot" aria-hidden />
+        <div className="story-flood" aria-hidden><div className="story-flood-fill" /></div>
         <div className="story-hero-anchor" aria-hidden>
           <div className="story-aura" />
-        </div>
-        <div className="story-marquee" aria-hidden>
-          <div className="story-marquee-track">
-            {[0, 1].map((n) => (
-              <span key={n} className="story-marquee-set">
-                {TOOL_TICKER.map(([name, tint]) => (
-                  <span key={name} className="story-marquee-item"><i style={{ background: tint }} />{name}</span>
-                ))}
-              </span>
-            ))}
-          </div>
         </div>
 
         <div className="story-hero-copy">

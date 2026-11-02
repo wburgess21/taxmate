@@ -53,6 +53,8 @@ export class StoryStage {
   reduce = false;
 
   beat: BeatId = "hero";
+  /** How much of the hero's space the pair fills (a little less inside the disc, so the disc stays on screen). */
+  heroFill = 0.8;
   time = 0;
   env!: Env;
   private scheduled: { at: number; run: () => void }[] = [];
@@ -103,7 +105,7 @@ export class StoryStage {
   }
   heroBox() {
     const r = this.env.hero;
-    return r ? { x: r.x + r.w / 2, y: r.y + r.h / 2, h: Math.min(r.h, r.w * 1.02) * 0.8 } : { x: this.env.width / 2, y: this.env.height / 2, h: 300 };
+    return r ? { x: r.x + r.w / 2, y: r.y + r.h / 2, h: Math.min(r.h, r.w * 1.02) * this.heroFill } : { x: this.env.width / 2, y: this.env.height / 2, h: 300 };
   }
   heroPlace() { const b = this.heroBox(); return Geometry.artCoins(b.x, b.y, b.h); }
   welcomePlace() { return this.place(this.env.welcome, 112 * this.k); }
@@ -160,10 +162,13 @@ export class StoryStage {
   private static launchEnd = (1.65 + 0.8) * StoryStage.pace;
   private artStars = { opacity: 0, upper: 0, lower: 0 };
 
-  startIntro(env: Env) {
+  /** `inPlace` launches the pair where the hero shows it (for the disc, whose green opens round it there). */
+  startIntro(env: Env, inPlace = false) {
     this.env = env;
-    const h = Math.min(env.width, env.height) * (env.width < 700 ? 0.42 : 0.3);
-    this.intro = { phase: "launch", t: 0, centre: { x: env.width / 2, y: env.height / 2 }, height: h, box: { x: env.width / 2, y: env.height / 2, h } };
+    const hb = this.heroBox();
+    const h = inPlace ? hb.h : Math.min(env.width, env.height) * (env.width < 700 ? 0.42 : 0.3);
+    const centre = inPlace ? { x: hb.x, y: hb.y } : { x: env.width / 2, y: env.height / 2 };
+    this.intro = { phase: "launch", t: 0, centre, height: h, box: { ...centre, h } };
     this.heroFloodRadius = 0;
     this.allInk(ink("launch", env.dark), true);
     this.onIntro("launch");

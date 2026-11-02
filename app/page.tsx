@@ -1,4 +1,4 @@
-import { Bell, EyeOff, Lock, Plus, Smartphone } from "lucide-react";
+import { Bell, Check, EyeOff, Lock, Plus, Smartphone } from "lucide-react";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { AppStoreButton } from "@/components/site/AppStoreButton";
@@ -8,6 +8,7 @@ import { ToolCoins } from "@/components/sections/ToolCoins";
 import { YearTimeline } from "@/components/sections/YearTimeline";
 import { PlusCoin } from "@/components/sections/PlusCoin";
 import { CoinHeap } from "@/components/sections/CoinHeap";
+import { Faq } from "@/components/sections/Faq";
 import { TAX_YEAR } from "@/lib/site";
 
 const PLUS = [
@@ -110,28 +111,50 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Plus */}
+        {/* Plus: a receipt for a one-off payment */}
         <section id="plus" className="px-3 py-24 sm:px-6 lg:py-32">
-          <div className="green mx-auto grid max-w-[1240px] overflow-hidden rounded-[36px] lg:grid-cols-[1.25fr_0.75fr]" data-reveal>
-            <div className="p-8 sm:p-14 lg:p-20">
+          <div className="green mx-auto grid max-w-[1240px] items-center gap-14 overflow-hidden rounded-[36px] px-7 py-14 sm:px-14 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-20" data-reveal>
+            <div>
               <p className="eyebrow text-gold"><Plus className="h-4 w-4" aria-hidden /> TaxMate Plus</p>
-              <h2 className="display mt-5 text-[2.75rem] sm:text-6xl lg:text-7xl">One payment. <em className="text-gold">Yours for life.</em></h2>
-              <p className="mt-6 max-w-lg text-lg text-white/75">Every calculator gives you a free estimate. Plus unlocks every tool in full, for good. No subscription.</p>
-              <ul className="mt-10 grid gap-x-8 gap-y-3.5 sm:grid-cols-2">
-                {PLUS.map((p) => (
-                  <li key={p} className="flex items-center gap-3 text-white/90">
-                    <span className="h-1.5 w-1.5 flex-none rounded-full bg-gold" />
-                    {p}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-12 flex flex-wrap items-center gap-4">
+              <h2 className="display mt-5 text-[2.75rem] sm:text-6xl lg:text-7xl">
+                One payment.
+                <em className="block text-gold">Yours for life.</em>
+              </h2>
+              <p className="mt-6 max-w-md text-lg leading-relaxed text-white/75">
+                Every calculator gives you a free estimate. Plus unlocks every tool in full, once, for good.
+              </p>
+              <div className="mt-10 flex flex-wrap items-center gap-4">
                 <AppStoreButton variant="gold" label="Get TaxMate" />
                 <span className="text-[0.875rem] text-white/60">One-time purchase in the app</span>
               </div>
             </div>
-            <div className="relative h-72 lg:h-auto">
-              <PlusCoin />
+
+            <div className="relative mx-auto w-full max-w-[440px] pt-6 lg:mr-6">
+              <div className="receipt-wrap">
+                <div className="receipt">
+                  <p className="text-center font-mono text-[0.8125rem] font-medium tracking-[0.2em]">TAXMATE PLUS</p>
+                  <p className="mt-1 text-center text-[0.8125rem] text-[#1b221d]/55">Everything it unlocks</p>
+                  <div className="receipt-rule" />
+                  <ul>
+                    {PLUS.map((p) => (
+                      <li key={p} className="receipt-line">
+                        <span>{p}</span>
+                        <span className="leader" aria-hidden />
+                        <Check className="h-4 w-4 flex-none translate-y-[3px] text-[#1b7a46]" strokeWidth={2.6} aria-label="Included" />
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="receipt-rule" />
+                  <p className="receipt-line"><span>Monthly fee</span><span className="leader" aria-hidden /><span className="font-mono">£0.00</span></p>
+                  <p className="receipt-line"><span>Renewals</span><span className="leader" aria-hidden /><span className="font-mono">None</span></p>
+                  <p className="receipt-line text-[1.0625rem] font-semibold"><span>Yours</span><span className="leader" aria-hidden /><span>For life</span></p>
+                  <p className="mt-5 text-center text-[0.75rem] tracking-[0.2em] text-[#1b221d]/45">THANK YOU ✦</p>
+                </div>
+              </div>
+              {/* The gold coin, resting on the receipt's corner. */}
+              <div className="pointer-events-auto absolute -right-5 -top-16 h-32 w-32 sm:-right-14 sm:-top-16 sm:h-56 sm:w-56">
+                <PlusCoin />
+              </div>
             </div>
           </div>
         </section>
@@ -142,16 +165,8 @@ export default function Home() {
             <div className="lg:sticky lg:top-28 lg:self-start">
               <Heading kicker="Questions">Good <em>questions.</em></Heading>
             </div>
-            <div className="border-b border-hairline" data-reveal>
-              {FAQ.map((f) => (
-                <details key={f.q} className="faq-item border-t border-hairline">
-                  <summary className="flex items-center justify-between gap-6 py-6 text-lg font-medium sm:text-xl">
-                    {f.q}
-                    <Plus className="faq-plus h-5 w-5 flex-none text-muted" aria-hidden />
-                  </summary>
-                  <p className="-mt-1 max-w-2xl pb-7 leading-relaxed text-muted">{f.a}</p>
-                </details>
-              ))}
+            <div data-reveal>
+              <Faq items={FAQ} />
             </div>
           </div>
         </section>

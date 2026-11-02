@@ -23,7 +23,7 @@ export function Nav() {
             <Link key={l.href} href={l.href} className="nav-link">{l.label}</Link>
           ))}
         </div>
-        <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" className="btn-primary press ml-2 !min-h-10 !px-4 !text-[0.9375rem]">
+        <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" className="btn-primary nav-cta ml-2 !min-h-10 !px-4 !text-[0.9375rem]">
           Get the app
         </a>
       </nav>

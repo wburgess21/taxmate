@@ -27,7 +27,7 @@ export function CoinHeap() {
      * A loose mound in each lower corner, so the centred copy stays clear. Each slot keeps its own pose, so a resize
      * moves the coins without reshuffling them. Bottom-row coins lie flat on the card's bottom edge.
      */
-    type Slot = { side: number; row: number; i: number; n: number; jx: number; sf: number; lying: boolean; wx: number; wy: number; lz: number; edge?: boolean };
+    type Slot = { side: number; row: number; i: number; n: number; jx: number; sf: number; lying: boolean; wx: number; wy: number; lz: number };
     const plan: Slot[] = [];
     const rowsFor = (W: number) => (W < 640 ? 2 : 3);
     for (const side of [-1, 1]) {
@@ -39,21 +39,26 @@ export function CoinHeap() {
             wx: lying ? Geometry.lying + rand(-0.08, 0.08) : rand(0.15, 0.35), wy: rand(-0.4, 0.4), lz: lying ? rand(-0.15, 0.15) : rand(-0.25, 0.25) });
         }
       }
-      // One coin stands on its edge against each mound.
-      plan.push({ side, row: 0, i: 0, n: 1, jx: 0, sf: 1, lying: false, wx: 0.12, wy: rand(-0.5, 0.5), lz: side * 0.12, edge: true });
     }
     const unit = () => Math.max(22, Math.min(46, size.width / 30));
+    /**
+     * Each mound tucks into its corner: the outermost bottom coin's edge sits a few pixels in from the card's side,
+     * just clear of the 36 px rounded corner (worked out for a lying coin's ellipse against the corner's arc).
+     */
+    const moundCentre = (side: number) => {
+      const R = unit(), outer = R * 1.18 + Math.max(0, 36 - R) * 0.35, span = 1.5 * 1.86 * R;
+      return side < 0 ? outer + span : size.width - outer - span;
+    };
     /** Where a slot's coin rests: its lowest point on the card's bottom edge, or on the row below. */
     const restOf = (sl: Slot) => {
-      const W = size.width, H = size.height, R = unit() * sl.sf;
-      const cx = sl.side < 0 ? W * 0.165 : W * 0.835;
+      const H = size.height, R = unit() * sl.sf;
+      const cx = moundCentre(sl.side);
       // How far a coin reaches below its centre at this tilt: the face's half-height plus half its edge.
       const reach = R * Math.cos(sl.wx) + 0.5 * Geometry.thickness * R * Math.sin(sl.wx);
-      if (sl.edge) return { x: cx + sl.side * -unit() * 3.05, y: H - reach, s: R / 100 };
       const floorY = H - (R * Math.cos(Geometry.lying) + 0.5 * Geometry.thickness * R * Math.sin(Geometry.lying));
       return { x: cx + (sl.i - (sl.n - 1) / 2) * unit() * 1.86 + sl.jx, y: floorY - sl.row * unit() * 0.98 - (reach - R * Math.cos(Geometry.lying)) * (sl.row ? 0.5 : 0), s: R / 100 };
     };
-    const active = () => plan.filter((sl) => sl.edge || sl.row < rowsFor(size.width));
+    const active = () => plan.filter((sl) => sl.row < rowsFor(size.width));
 
     const ro = new ResizeObserver(() => {
       size = { width: card.clientWidth, height: card.clientHeight };
@@ -66,28 +71,29 @@ export function CoinHeap() {
     const io = new IntersectionObserver(([e]) => {
       if (!e.isIntersecting || started) return;
       started = true;
-      const order = active().map((sl, k) => ({ sl, k })).sort((a, b) => (a.sl.edge ? 1 : 0) - (b.sl.edge ? 1 : 0) || a.sl.row - b.sl.row || a.sl.i - b.sl.i || a.sl.side - b.sl.side);
+      const order = active().map((sl, k) => ({ sl, k })).sort((a, b) => a.sl.row - b.sl.row || a.sl.i - b.sl.i || a.sl.side - b.sl.side);
       active().forEach((sl, k) => {
         const c = new Coin();
         c.face = FACES[k % FACES.length];
         c.setInk([255, 255, 255], true);
         c.idle = false;
         // Lower rows are nearer the viewer, so they draw over the coins resting on them.
-        c.z = -sl.row * 10 + (sl.edge ? -5 : 0) + sl.i * 0.1;
+        c.z = -sl.row * 10 + sl.i * 0.1;
         c.kp = [200, 27]; c.kr = [70, 15]; c.ks = [150, 23];
         heap[k] = c;
       });
+      // A quick, slightly irregular shower, row by row so no coin lands before the ones it rests on.
       order.forEach(({ sl, k }, n) => {
-        queue.push({ at: time + (reduce ? 0 : 0.11 * n), run: () => {
+        queue.push({ at: time + (reduce ? 0 : 0.05 * n + sl.row * 0.16 + rand(0, 0.05)), run: () => {
           const c = heap[k], r = restOf(sl);
           c.place(r.x, r.y, r.s);
           c.pose({ wx: sl.wx, wy: sl.wy, lz: sl.lz });
           if (reduce) { c.snap(r.x, r.y, r.s); c.snapAngles({ wx: sl.wx, wy: sl.wy, lz: sl.lz }); return; }
-          c.snap(r.x + rand(-8, 8), -unit() * 2 - rand(0, 120), r.s);
+          c.snap(r.x + rand(-8, 8), -unit() * 2 - rand(0, 70), r.s);
           c.place(r.x, r.y, r.s);
           c.snapAngles({ wx: rand(-0.6, 0.6), wy: rand(-1.5, 1.5), lz: rand(-0.8, 0.8) });
           c.pose({ wx: sl.wx, wy: sl.wy, lz: sl.lz });
-          c.dropOnto(2600, 0.1);
+          c.dropOnto(3400, 0.1);
         } });
       });
       loop.wake();
@@ -142,7 +148,7 @@ export function CoinHeap() {
       const { ctx } = fitCanvas(canvas);
       // Soft ground shadows under each mound, inside the card.
       if (started) for (const side of [-1, 1]) {
-        const R = unit(), cx = side < 0 ? size.width * 0.165 : size.width * 0.835, cy = size.height - R * 0.32, rx = R * 4.2;
+        const R = unit(), cx = moundCentre(side), cy = size.height - R * 0.32, rx = R * 4.2;
         const n = heap.filter((c, i) => c && active()[i]?.side === side && !c.drop && c.p.s > 0.01).length;
         if (!n) continue;
         ctx.save();
