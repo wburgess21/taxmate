@@ -119,7 +119,7 @@ export function Story() {
     const floodFill = q<HTMLElement>(".story-flood-fill")!;
     const phoneFlood = q<HTMLElement>(".phone-flood")!;
     const pointer = { x: 0, y: 0, active: false };
-    let k = 1, lastBeat: BeatId = "hero", lastLate = false, mSmooth = 0;
+    let k = 1, lastBeat: BeatId = "hero", lastLate = false;
 
     // Lay the phone out for the viewport: beside the captions on wide screens, above them on narrow ones.
     const layout = () => {
@@ -196,11 +196,7 @@ export function Story() {
       if (introOn && pos > 0.03) { S.finishIntro(); introOn = false; }
       if (S.intro.phase === "none") introOn = false;
       const b = beatAt(pos);
-      // The shrink eases towards the scroll position rather than tracking every wheel step, so it glides.
-      const mTarget = b === "hero" ? 0 : b === "morph" ? clamp((pos - MORPH.start) / MORPH.len) : 1;
-      mSmooth = b === "morph" ? mSmooth + (mTarget - mSmooth) * (1 - Math.exp(-dt * 6)) : mTarget;
-      if (Math.abs(mTarget - mSmooth) > 1e-4) loop.wake();
-      const m = mSmooth;
+      const m = b === "hero" ? 0 : b === "morph" ? clamp((pos - MORPH.start) / MORPH.len) : 1;
       const e = env(m);
       if (b !== lastBeat) {
         // Reset each beat's own state in the same render as the change, so a screen never shows a stale frame.
@@ -246,7 +242,8 @@ export function Story() {
       root.dataset.navTone = (b === "hero" || (b === "morph" && e.m < 0.35)) && root.dataset.intro !== "1" ? "light" : "";
 
       // At rest the idle bob needs only a gentle frame rate.
-      if (S.isQuiet && time - lastDraw < 1 / 24) return;
+      // (Never while the hero shrinks: the coins must move every frame with the green.)
+      if (S.isQuiet && b !== "morph" && time - lastDraw < 1 / 24) return;
       lastDraw = time;
       const { ctx } = fitCanvas(canvas);
       S.draw(ctx);
