@@ -1237,7 +1237,7 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
   transform: none;
 }
 
-/* "Get the app": on hover the button widens and the coin mark slides in, turning over once. */
+/* "Get the app": on hover the button widens and the coins slide in (their spin is drawn by SpinCoins). */
 .nav-cta {
   gap: 0 !important;
   transition: padding 0.4s cubic-bezier(0.3, 0.7, 0.2, 1), box-shadow 0.3s;
@@ -1247,27 +1247,16 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
   width: 0;
   margin-right: 0;
   opacity: 0;
-  perspective: 120px;
   transition:
     width 0.4s cubic-bezier(0.3, 0.7, 0.2, 1),
     margin-right 0.4s cubic-bezier(0.3, 0.7, 0.2, 1),
     opacity 0.25s ease;
-}
-.nav-cta-coin svg {
-  flex: none;
-  transform: rotateY(-180deg) scale(0.6);
-  transition: transform 0.6s cubic-bezier(0.3, 0.7, 0.3, 1.25);
 }
 .nav-cta:hover .nav-cta-coin,
 .nav-cta:focus-visible .nav-cta-coin {
   width: 1.15em;
   margin-right: 0.5rem;
   opacity: 1;
-}
-.nav-cta:hover .nav-cta-coin svg,
-.nav-cta:focus-visible .nav-cta-coin svg {
-  transform: rotateY(0deg) scale(1);
-  transition-delay: 0.05s;
 }
 @media (max-width: 480px) {
   .receipt {

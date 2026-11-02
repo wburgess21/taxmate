@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowDown } from "lucide-react";
 import { AppStoreButton } from "@/components/site/AppStoreButton";
-import { clamp, easeInOutCubic, fitCanvas, isDark, lerp, prefersReducedMotion, runLoop, smooth } from "@/lib/coins/engine";
+import { clamp, fitCanvas, isDark, lerp, prefersReducedMotion, runLoop, smooth } from "@/lib/coins/engine";
 import { PHONE, Phone } from "./Phone";
 import { CalculatorScreen, EXAMPLE, HomeScreen, PersonalisingScreen, QUESTIONS, QuestionScreen, ResultSheet, WelcomeScreen } from "./Screens";
 import { StoryStage, order, type BeatId, type Env, type PersonalisePhase, type Rect } from "./stage";
@@ -13,7 +13,7 @@ import { nextKeyDate } from "@/lib/keyDates";
 /** Scroll length of each beat, in viewport heights. */
 const BEATS: { id: BeatId; len: number }[] = [
   { id: "hero", len: 0.35 },
-  { id: "morph", len: 1.2 },
+  { id: "morph", len: 1.6 },
   { id: "welcome", len: 1.0 },
   // The questions share one screen and change only their content, so each gets plenty of room.
   { id: "q0", len: 1.5 },
@@ -119,7 +119,7 @@ export function Story() {
     const floodFill = q<HTMLElement>(".story-flood-fill")!;
     const phoneFlood = q<HTMLElement>(".phone-flood")!;
     const pointer = { x: 0, y: 0, active: false };
-    let k = 1, lastBeat: BeatId = "hero", lastLate = false;
+    let k = 1, lastBeat: BeatId = "hero", lastLate = false, mSmooth = 0;
 
     // Lay the phone out for the viewport: beside the captions on wide screens, above them on narrow ones.
     const layout = () => {
@@ -196,8 +196,12 @@ export function Story() {
       if (introOn && pos > 0.03) { S.finishIntro(); introOn = false; }
       if (S.intro.phase === "none") introOn = false;
       const b = beatAt(pos);
-      const m = clamp((pos - MORPH.start) / MORPH.len);
-      const e = env(b === "hero" ? 0 : b === "morph" ? m : 1);
+      // The shrink eases towards the scroll position rather than tracking every wheel step, so it glides.
+      const mTarget = b === "hero" ? 0 : b === "morph" ? clamp((pos - MORPH.start) / MORPH.len) : 1;
+      mSmooth = b === "morph" ? mSmooth + (mTarget - mSmooth) * (1 - Math.exp(-dt * 6)) : mTarget;
+      if (Math.abs(mTarget - mSmooth) > 1e-4) loop.wake();
+      const m = mSmooth;
+      const e = env(m);
       if (b !== lastBeat) {
         // Reset each beat's own state in the same render as the change, so a screen never shows a stale frame.
         // Coming back up from the result, the calculator stays complete rather than replaying.
@@ -213,7 +217,7 @@ export function Story() {
       // from the coins.
       const W = e.width, H = e.height, sc = e.screen!;
       // The green (and the coins, in the stage) reach the phone by 80% of the shrink; the rest is the crossfade.
-      const em = easeInOutCubic(clamp(e.m / 0.8));
+      const em = smooth(e.m / 0.8);
       if (e.m < 1) {
         const f = { x: 0, y: 0, w: W, h: H, r: 0 };
         const x = lerp(f.x, sc.x, em), y = lerp(f.y, sc.y, em), w = lerp(f.w, sc.w, em), h = lerp(f.h, sc.h, em), r = lerp(f.r, PHONE.radius * k, em);

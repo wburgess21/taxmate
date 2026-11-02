@@ -4,7 +4,7 @@
 
 import { bezier, keyframes } from "@/lib/coins/easing";
 import {
-  Coin, Geometry, Stars, TAU, clamp, drawCoin, easeInOutCubic, hex, lerp, rand, starPath, type Face, type RGB,
+  Coin, Geometry, Stars, TAU, clamp, drawCoin, easeInOutCubic, hex, lerp, rand, smooth, starPath, type Face, type RGB,
 } from "@/lib/coins/engine";
 
 export type BeatId = "hero" | "morph" | "welcome" | "q0" | "q1" | "q2" | "personalising" | "home" | "estimate" | "result";
@@ -536,7 +536,7 @@ export class StoryStage {
       this.twinkle(dt, p);
     } else if (b === "morph") {
       // Scrubbed: the pair shrinks from the hero into the phone's welcome space.
-      const a = this.heroPlace(), w = this.welcomePlace(), e = easeInOutCubic(clamp(this.env.m / 0.8));
+      const a = this.heroPlace(), w = this.welcomePlace(), e = smooth(this.env.m / 0.8);
       this.front.snap(lerp(a.front.x, w.front.x, e), lerp(a.front.y, w.front.y, e), lerp(a.scale, w.scale, e));
       this.back.snap(lerp(a.back.x, w.back.x, e), lerp(a.back.y, w.back.y, e), lerp(a.scale, w.scale, e));
       this.front.pose(Geometry.frontRest); this.back.pose(Geometry.backRest);
