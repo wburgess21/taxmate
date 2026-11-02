@@ -1267,3 +1267,11 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
     gap: 6px;
   }
 }
+
+/* The closing card, lit like the hero: light gathered behind the headline, edges falling into deep forest. */
+.green-lit {
+  background:
+    radial-gradient(42% 52% at 50% 36%, rgb(255 255 255 / 0.08), transparent 72%),
+    radial-gradient(95% 90% at 50% 40%, transparent 32%, rgb(0 14 6 / 0.55) 100%),
+    var(--green);
+}

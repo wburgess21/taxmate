@@ -2,6 +2,7 @@ import { Bell, Check, EyeOff, Lock, Plus, Smartphone } from "lucide-react";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { AppStoreButton } from "@/components/site/AppStoreButton";
+import { AppQr } from "@/components/site/AppQr";
 import { Story } from "@/components/story/Story";
 import { PayPiles } from "@/components/sections/PayPiles";
 import { ToolCoins } from "@/components/sections/ToolCoins";
@@ -9,7 +10,7 @@ import { YearTimeline } from "@/components/sections/YearTimeline";
 import { PlusCoin } from "@/components/sections/PlusCoin";
 import { CoinHeap } from "@/components/sections/CoinHeap";
 import { Faq } from "@/components/sections/Faq";
-import { TAX_YEAR } from "@/lib/site";
+import { APP_STORE_URL, TAX_YEAR } from "@/lib/site";
 
 const PLUS = [
   "Home Office reports",
@@ -173,15 +174,25 @@ export default function Home() {
 
         {/* Finale */}
         <section className="px-3 pb-6 sm:px-6">
-          <div className="green relative mx-auto max-w-[1400px] overflow-hidden rounded-[36px] px-6 pb-56 pt-28 text-center sm:pb-64 sm:pt-36">
+          <div className="green green-lit relative mx-auto max-w-[1400px] overflow-hidden rounded-[36px] px-6 pb-56 pt-28 text-center sm:pb-64 sm:pt-36">
             <CoinHeap />
             <p className="eyebrow justify-center text-gold">Free on the App Store</p>
             <h2 className="display mx-auto mt-6 max-w-4xl text-[3rem] sm:text-7xl lg:text-[6.5rem]">
               Your UK tax, <em className="text-gold">made clearer.</em>
             </h2>
             <p className="mx-auto mt-6 max-w-md text-lg text-white/75">For iPhone and iPad. A few quick questions, and your tax picture in minutes.</p>
-            <div className="mt-10 flex justify-center"><AppStoreButton variant="gold" /></div>
-            <p className="mt-6 text-[0.8125rem] text-white/45 motion-reduce:hidden" aria-hidden>Psst: tap the card.</p>
+            <div className="mt-10 flex items-center justify-center gap-7">
+              <AppStoreButton variant="gold" />
+              {/* Desktop visitors will install on their phone: a code to scan beats a link to click. */}
+              <div className="hidden items-center gap-5 text-left lg:flex">
+                <span className="text-[0.75rem] font-medium uppercase tracking-[0.18em] text-white/40">or</span>
+                <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" className="press flex items-center gap-4">
+                  <span className="rounded-[18px] bg-[#fbfaf5] p-2 shadow-[0_12px_30px_rgb(0_20_8/0.35)]"><AppQr className="block h-[96px] w-[96px]" /></span>
+                  <span className="max-w-[8.5rem] text-[0.9375rem] leading-snug text-white/75">Scan with your iPhone camera</span>
+                </a>
+              </div>
+            </div>
+            <p className="mt-6 text-[0.8125rem] text-white/45 motion-reduce:hidden" aria-hidden>Psst: tap the screen.</p>
           </div>
         </section>
       </main>

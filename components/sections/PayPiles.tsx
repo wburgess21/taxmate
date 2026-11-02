@@ -86,34 +86,34 @@ export function PayPiles() {
     const make = (cat: Cat): PileCoin =>
       Object.assign(new Coin(), { cat, activeAt: 0, spawned: false, arrived: false, jitter: { dx: rand(-1.2, 1.2), wy: rand(-0.08, 0.08), lz: rand(-0.12, 0.12) } });
 
-    /** Grows and shrinks the piles to `target`, always from the top. Coins leaving one pile are reused by a growing one. */
+    /**
+     * Grows and shrinks the piles to `target`, always from the top. Coins are never carried across from another pile
+     * (they would fly in sideways over the others): spare coins float up and away where they are, and every new coin
+     * drops in from directly above its own pile.
+     */
     function set(target: Record<Cat, number>) {
       if (!visible) { pending = target; return; }
-      const pool: PileCoin[] = [];
+      const gone: PileCoin[] = [];
       for (const cat of CATS) {
         const pile = piles[cat.id];
-        while (pile.length > target[cat.id]) pool.push(pile.pop()!);
+        while (pile.length > target[cat.id]) gone.push(pile.pop()!);
       }
       let delay = 0;
       for (const cat of CATS) {
         const pile = piles[cat.id];
         while (pile.length < target[cat.id]) {
-          const reused = pool.shift();
-          const c = reused ?? make(cat.id);
-          c.cat = cat.id;
+          const c = make(cat.id);
           c.idle = false;
-          c.arrived = false;
           c.activeAt = time + (reduce ? 0 : delay);
-          delay += reused ? 0.03 : 0.018;
+          delay += 0.018;
           pile.push(c);
         }
       }
-      // Coins nobody needs any more fly up and away (ones that never dropped in simply go).
-      for (const c of pool) {
+      for (const c of gone) {
         if (!c.spawned) continue;
         c.drop = null;
         c.kp = [80, 14]; c.ks = [60, 12];
-        c.place(c.p.x + rand(-20, 20), c.p.y - 120, 0);
+        c.place(c.p.x, c.p.y - 120, 0);
         leaving.push(c);
       }
       loop.wake();
@@ -133,11 +133,6 @@ export function PayPiles() {
           c.kp = [190, 25]; c.kr = [120, 20]; c.ks = [150, 23];
           // Falls under gravity onto the pile (placed below), rather than springing there.
           if (!reduce) { c.place(p.x + c.jitter.dx, p.y, p.s); c.dropOnto(2600, 0.06); }
-        } else if (!c.arrived) {
-          // Moving between piles: a hop on the way, and its ink changes to the new pile's.
-          c.kp = [110, 19];
-          if (!reduce) c.v.y -= 160;
-          c.setInk(inks[cat.id]); c.inkRate = 4;
         }
         c.arrived = true;
         c.place(p.x + c.jitter.dx, p.y, p.s);
