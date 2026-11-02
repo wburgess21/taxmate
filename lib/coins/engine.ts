@@ -44,6 +44,13 @@ export class Coin {
    * axis and the visible face keeps the same tilt all the way round, rather than mirroring after half a turn.
    */
   tiltOuter = false;
+  /** Falling under gravity onto its target height (`t.y`) instead of springing there. */
+  drop: { vy: number; gravity: number; bounce: number } | null = null;
+  /** The speed it hit at, on the frame it lands (0 otherwise), so a scene can knock the coins it lands on. */
+  landed = 0;
+
+  /** Lets go of the coin from where it is, to fall onto its target. */
+  dropOnto(gravity = 2600, bounce = 0.08, vy = Math.max(0, this.v.y)) { this.drop = { vy, gravity, bounce }; }
 
   place(x: number, y: number, s?: number) {
     this.t.x = x; this.t.y = y;
@@ -98,8 +105,21 @@ export class Coin {
       v[key] += (s[0] * (t[key] - p[key]) - s[1] * v[key]) * h;
       p[key] += v[key] * h;
     };
+    this.landed = 0;
+    const d = this.drop;
+    if (d) {
+      // Free fall until it meets its resting height, then a small rebound handed to the spring.
+      d.vy += d.gravity * dt;
+      p.y += d.vy * dt;
+      if (p.y >= t.y) {
+        p.y = t.y;
+        v.y = -d.vy * d.bounce;
+        this.landed = d.vy;
+        this.drop = null;
+      }
+    }
     for (let i = 0; i < 2; i++) {
-      spring("x", this.kp); spring("y", this.kp);
+      spring("x", this.kp); if (!this.drop) spring("y", this.kp);
       spring("s", this.ks);
       spring("wx", this.kr); spring("lz", this.kr);
       if (this.spinning) { v.wy += (this.spinRate - v.wy) * Math.min(1, 5 * h); p.wy += v.wy * h; }
@@ -109,7 +129,7 @@ export class Coin {
   }
 
   get isSettled() {
-    if (this.flight || this.spinning) return false;
+    if (this.flight || this.spinning || this.drop) return false;
     const { p, v, t } = this;
     const near = Math.abs(t.x - p.x) < 0.05 && Math.abs(t.y - p.y) < 0.05 && Math.abs(t.s - p.s) < 0.0005
       && Math.abs(t.wx - p.wx) < 0.002 && Math.abs(t.wy - p.wy) < 0.002 && Math.abs(t.lz - p.lz) < 0.002 && Math.abs(t.g - p.g) < 0.002;

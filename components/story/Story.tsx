@@ -19,15 +19,16 @@ const TOOL_TICKER: [string, string][] = [
 /** Scroll length of each beat, in viewport heights. */
 const BEATS: { id: BeatId; len: number }[] = [
   { id: "hero", len: 0.35 },
-  { id: "morph", len: 1.1 },
-  { id: "welcome", len: 0.9 },
-  { id: "q0", len: 1.0 },
-  { id: "q1", len: 1.0 },
-  { id: "q2", len: 1.2 },
-  { id: "personalising", len: 1.7 },
-  { id: "home", len: 1.2 },
-  { id: "estimate", len: 1.3 },
-  { id: "result", len: 1.2 },
+  { id: "morph", len: 1.2 },
+  { id: "welcome", len: 1.0 },
+  // The questions share one screen and change only their content, so each gets plenty of room.
+  { id: "q0", len: 1.5 },
+  { id: "q1", len: 1.5 },
+  { id: "q2", len: 1.7 },
+  { id: "personalising", len: 1.8 },
+  { id: "home", len: 1.3 },
+  { id: "estimate", len: 1.6 },
+  { id: "result", len: 1.3 },
 ];
 const TOTAL = BEATS.reduce((a, b) => a + b.len, 0);
 const STARTS = BEATS.reduce<number[]>((acc, b, i) => [...acc, i === 0 ? 0 : acc[i - 1] + BEATS[i - 1].len], []);
@@ -80,10 +81,12 @@ export function Story() {
   const [pickState, setPickState] = useState({ beat: "hero" as BeatId, n: 0 });
   const [tickState, setTickState] = useState({ beat: "hero" as BeatId, n: 0 });
   const picked = pickState.beat === beat ? pickState.n : 0;
-  const ticks = beat === "result" ? 3 : tickState.beat === beat ? tickState.n : 0;
+  const ticks = tickState.beat === beat ? tickState.n : beat === "result" ? 3 : 0;
   const [phase, setPhase] = useState<PersonalisePhase | null>(null);
   const [keyDate, setKeyDate] = useState({ title: "Self Assessment deadline", days: 90, date: "31 January 2027", detail: "File your online return and pay the tax you owe." });
   const stageHandle = useRef<StoryStage | null>(null);
+  /** The beat before this one, so the estimate only plays its ticks when arriving from above. */
+  const fromBeat = useRef<BeatId>("hero");
 
   useEffect(() => {
     // Worked out in the visitor's browser, so a statically built page never shows a stale countdown.
@@ -99,7 +102,8 @@ export function Story() {
     if (qi !== undefined) {
       QUESTIONS[qi].picks.forEach((_, i) => at(750 + i * 420, () => { setPickState({ beat, n: i + 1 }); stageHandle.current?.pick(i + 1); }));
     }
-    if (beat === "estimate") [1, 2, 3].forEach((n) => at(450 + n * 520, () => setTickState({ beat, n })));
+    if (beat === "estimate" && fromBeat.current !== "result") [1, 2, 3].forEach((n) => at(450 + n * 650, () => setTickState({ beat, n })));
+    fromBeat.current = beat;
     if (order(beat) < order("personalising")) at(0, () => setPhase(null));
     if (order(beat) > order("personalising")) at(0, () => setPhase((p) => (p === null || p === "covered" || p === "text" || p === "untext" || p === "landing" ? "done" : p)));
     return () => timers.forEach(clearTimeout);
@@ -201,7 +205,13 @@ export function Story() {
       const b = beatAt(pos);
       const m = clamp((pos - MORPH.start) / MORPH.len);
       const e = env(b === "hero" ? 0 : b === "morph" ? m : 1);
-      if (b !== lastBeat) { lastBeat = b; S.env = e; S.setBeat(b); setBeat(b); }
+      if (b !== lastBeat) {
+        // Reset each beat's own state in the same render as the change, so a screen never shows a stale frame.
+        // Coming back up from the result, the calculator stays complete rather than replaying.
+        setTickState({ beat: b, n: b === "result" || (b === "estimate" && lastBeat === "result") ? 3 : 0 });
+        setPickState({ beat: b, n: 0 });
+        lastBeat = b; S.env = e; S.setBeat(b); setBeat(b);
+      }
       const late = b === "morph" && m > 0.6;
       if (late !== lastLate) { lastLate = late; setMorphLate(late); }
       S.frame(dt, e);
@@ -259,6 +269,7 @@ export function Story() {
   const homeState = beat === "estimate" ? "behind" : beat === "home" || (beat === "personalising" && covered) ? "shown" : "hidden";
   const calcState = beat === "estimate" || beat === "result" ? "shown" : "hidden";
   const amount = useTween(ticks === 0 ? 0 : ticks === 1 ? EXAMPLE.beforeExpenses.total : EXAMPLE.final.total);
+  const percent = useTween((ticks / 3) * 100);
 
   return (
     <section ref={sectionRef} className="story" style={{ height: `${(TOTAL + 1) * 100}lvh` }} aria-label="A tour of the TaxMate app">
@@ -273,7 +284,7 @@ export function Story() {
               <QuestionScreen key={qq.id} q={qq} shown={qIndex === i || (i === 2 && beat === "personalising" && !covered)} picked={qIndex === i ? picked : qq.picks.length} />
             ))}
             <HomeScreen state={homeState} keyDate={keyDate} />
-            <CalculatorScreen state={calcState} ticks={ticks} amount={amount} />
+            <CalculatorScreen state={calcState} ticks={ticks} amount={amount} percent={percent} />
             <PersonalisingScreen shown={phase === "text"} />
             <ResultSheet shown={beat === "result"} />
           </Phone>

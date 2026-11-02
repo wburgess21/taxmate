@@ -975,7 +975,8 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
   background: var(--tint);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.25s ease-out;
+  /* Matches the figures' 650 ms ease-out, so a segment fills as the amount and percentage change. */
+  transition: transform 0.65s cubic-bezier(0.33, 1, 0.68, 1);
 }
 .app-step[data-done]::after {
   transform: none;

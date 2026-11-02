@@ -255,7 +255,7 @@ export const EXAMPLE = (() => {
 })();
 
 /** Self-employed Tax, with its live estimate. `ticks` is how many sections have been reviewed (0–3). */
-export function CalculatorScreen({ state, ticks, amount }: { state: "shown" | "behind" | "hidden"; ticks: number; amount: number }) {
+export function CalculatorScreen({ state, ticks, amount, percent }: { state: "shown" | "behind" | "hidden"; ticks: number; amount: number; percent: number }) {
   const est = ticks >= 2 ? EXAMPLE.final : EXAMPLE.beforeExpenses;
   const keep = est.kept / est.profit;
   const rows: [LucideIcon, string, string][] = [
@@ -294,7 +294,7 @@ export function CalculatorScreen({ state, ticks, amount }: { state: "shown" | "b
         </div>
 
         <div className="mt-[30px]">
-          <SectionHeading icon={ClipboardList} tint="var(--tool-income)" title="Your details" trailing={<span className="app-secondary text-[15px] tabular-nums">{Math.round((ticks / 3) * 100)}%</span>} />
+          <SectionHeading icon={ClipboardList} tint="var(--tool-income)" title="Your details" trailing={<span className="app-secondary text-[15px] tabular-nums">{Math.round(percent)}%</span>} />
           <StepProgress total={3} done={ticks} message={ticks === 3 ? "Ready to calculate" : `${3 - ticks} to review`} />
           <div className="app-card mt-[14px] overflow-hidden">
             {rows.map(([icon, title, sub], i) => (

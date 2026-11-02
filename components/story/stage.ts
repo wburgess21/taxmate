@@ -87,7 +87,11 @@ export class StoryStage {
     this.sats.forEach((c) => { c.idle = false; });
   }
 
-  private after(delay: number, run: () => void) { this.scheduled.push({ at: this.time + delay, run }); }
+  /** Runs `run` after `delay` on the stage's clock, but only if the same beat is still showing by then. */
+  private after(delay: number, run: () => void) {
+    const beat = this.beat;
+    this.scheduled.push({ at: this.time + delay, run: () => { if (this.beat === beat) run(); } });
+  }
   private get k() { return this.env.k; }
   private get dark() { return this.env.dark; }
 
@@ -262,6 +266,11 @@ export class StoryStage {
     // Leaving the logo's screens.
     this.pairOpacity = next === "estimate" || next === "result" ? 0 : 1;
 
+    if (next === "hero" || next === "morph" || next === "welcome") {
+      // The pair never wears a question's answer outside the questions.
+      this.front.setFace(null, false); this.back.setFace(null, false);
+      this.stackCount = 0; this.satCount = 0;
+    }
     if (next === "hero" || next === "morph") {
       this.front.kp = this.back.kp = [90, 16];
       this.back.t.s = this.front.t.s;
@@ -513,6 +522,9 @@ export class StoryStage {
 
   private layout(dt: number) {
     const b = this.beat;
+    if (Q_INDEX[b] === undefined && !this.personalise.running) {
+      for (const c of [...this.stack, ...this.sats]) { c.place(this.front.p.x, this.front.p.y, 0); c.ks = [260, 30]; }
+    }
     if (b === "hero" || (b === "morph" && this.env.m <= 0.001)) {
       // The pair floats as one: no per-coin bob or pointer tilt, so the two coins never shift against each other.
       const p = this.heroPlace(), f = this.float(p.scale);
