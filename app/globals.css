@@ -368,12 +368,25 @@ html[data-intro="flood"] .site-nav {
   pointer-events: none;
   will-change: clip-path;
 }
+/* The hero's green, lit like a stage: light gathers round the coins and the edges fall away into deep forest, so
+   the eye goes to the pair rather than to an even field of colour. */
 .story-flood-fill {
   position: absolute;
   inset: 0;
-  background: var(--green);
+  background:
+    radial-gradient(34% 44% at var(--lx, 70%) var(--ly, 52%), rgb(255 255 255 / 0.08), transparent 72%),
+    radial-gradient(95% 85% at var(--lx, 70%) var(--ly, 52%), transparent 30%, rgb(0 14 6 / 0.62) 100%),
+    var(--green);
   background-repeat: no-repeat;
   will-change: clip-path;
+}
+.story-stage[data-layout="wide"] {
+  --lx: calc(50% + min(25vw, 420px));
+  --ly: calc(50% + 26px);
+}
+.story-stage[data-layout="narrow"] {
+  --lx: 50%;
+  --ly: calc(74px + min(39vw, 20svh));
 }
 .story-flood-fill::after {
   content: "";
@@ -387,41 +400,6 @@ html[data-intro="1"] .story-flood-fill {
   clip-path: circle(0 at 50% 50%);
 }
 
-/* Disc and card heroes sit on the page; with the disc, the words are dark on the light page. */
-.story-stage[data-hero="disc"] .story-hero-copy {
-  color: var(--ink);
-}
-.story-stage[data-hero="disc"] .story-h1 em {
-  color: var(--brand);
-}
-.story-stage[data-hero="disc"] .story-lede {
-  color: var(--muted);
-}
-.story-stage[data-hero="disc"] .story-hero-copy .btn-gold {
-  color: #fff;
-  background: linear-gradient(135deg, var(--brand), var(--brand-deep));
-  box-shadow: 0 1px 0 rgb(255 255 255 / 0.15) inset, 0 10px 24px rgb(0 84 36 / 0.25);
-}
-.story-stage[data-hero="disc"] .story-hero-copy .btn-glass {
-  color: var(--ink);
-  background: color-mix(in srgb, var(--surface) 70%, transparent);
-  border-color: var(--hairline);
-}
-@media (prefers-color-scheme: dark) {
-  .story-stage[data-hero="disc"] .story-h1 em {
-    color: var(--gold);
-  }
-}
-.story-stage[data-hero="disc"][data-layout="narrow"] .story-hero-anchor {
-  top: 92px;
-}
-/* The disc is the coins' spotlight, so it needs no extra light of its own. */
-.story-stage[data-hero="disc"] .story-aura {
-  display: none;
-}
-.story-stage[data-hero="card"][data-layout="wide"] .story-hero-copy {
-  translate: 24px -46%;
-}
 .story-phone {
   position: absolute;
   left: 0;
@@ -1237,4 +1215,57 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
 .receipt-rule {
   margin: 14px 0;
   border-top: 1.5px dashed rgb(27 34 29 / 0.2);
+}
+
+/* Self-employed Tax's hero: the prompt and the estimate are stacked and crossfade once. */
+.app-hero .calc-prompt,
+.app-hero .calc-estimate {
+  transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.app-hero .calc-estimate {
+  position: absolute;
+  inset: 20px;
+  opacity: 0;
+  transform: translateY(8px);
+}
+.app-hero[data-ready] .calc-prompt {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+.app-hero[data-ready] .calc-estimate {
+  opacity: 1;
+  transform: none;
+}
+
+/* "Get the app": on hover the button widens and the coin mark slides in, turning over once. */
+.nav-cta {
+  gap: 0 !important;
+  transition: padding 0.4s cubic-bezier(0.3, 0.7, 0.2, 1), box-shadow 0.3s;
+}
+.nav-cta-coin {
+  display: inline-flex;
+  width: 0;
+  margin-right: 0;
+  opacity: 0;
+  perspective: 120px;
+  transition:
+    width 0.4s cubic-bezier(0.3, 0.7, 0.2, 1),
+    margin-right 0.4s cubic-bezier(0.3, 0.7, 0.2, 1),
+    opacity 0.25s ease;
+}
+.nav-cta-coin svg {
+  flex: none;
+  transform: rotateY(-180deg) scale(0.6);
+  transition: transform 0.6s cubic-bezier(0.3, 0.7, 0.3, 1.25);
+}
+.nav-cta:hover .nav-cta-coin,
+.nav-cta:focus-visible .nav-cta-coin {
+  width: 1.15em;
+  margin-right: 0.5rem;
+  opacity: 1;
+}
+.nav-cta:hover .nav-cta-coin svg,
+.nav-cta:focus-visible .nav-cta-coin svg {
+  transform: rotateY(0deg) scale(1);
+  transition-delay: 0.05s;
 }

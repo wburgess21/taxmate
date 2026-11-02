@@ -256,7 +256,7 @@ export const EXAMPLE = (() => {
 
 /** Self-employed Tax, with its live estimate. `ticks` is how many sections have been reviewed (0–3). */
 export function CalculatorScreen({ state, ticks, amount, percent }: { state: "shown" | "behind" | "hidden"; ticks: number; amount: number; percent: number }) {
-  const est = ticks >= 2 ? EXAMPLE.final : EXAMPLE.beforeExpenses;
+  const est = EXAMPLE.final, ready = ticks === 3;
   const keep = est.kept / est.profit;
   const rows: [LucideIcon, string, string][] = [
     [Banknote, "Business income", "£48,000 turnover"],
@@ -271,26 +271,24 @@ export function CalculatorScreen({ state, ticks, amount, percent }: { state: "sh
         <p className="mt-[12px] text-[36px] font-light leading-[42px]">Self-employed Tax</p>
         <p className="app-secondary mt-[4px] text-[17px]">Understand your annual business tax</p>
 
-        <div className="app-hero mt-[22px] min-h-[206px]">
-          {ticks === 0 ? (
-            <>
-              <p className="flex items-center gap-[6px] text-[15px] text-gold"><Sparkles size={16} strokeWidth={2.2} /> Start here</p>
-              <p className="mt-[12px] text-[20px] text-white">What will you owe?</p>
-              <p className="mt-[4px] text-[15px] leading-[20px] text-white/75">Add your business income to see a live estimate.</p>
-              <span className="app-hero-button mt-[18px]">Add income <ChevronRight size={16} strokeWidth={3} /></span>
-            </>
-          ) : (
-            <>
-              <p className="flex items-center gap-[6px] text-[15px] text-gold"><Sparkles size={16} strokeWidth={2.2} /> Live estimate</p>
-              <p className="mt-[10px] text-[36px] font-light leading-[42px] text-white tabular-nums">{gbp2(amount)}</p>
-              <p className="text-[20px] leading-[25px] text-white">tax and NI for 2026/27</p>
-              <p className="mt-[4px] text-[15px] text-white/75">On {gbp2(est.profit).replace(".00", "")} profit · England</p>
-              <div className="mt-[14px] flex h-[8px] gap-[2px] overflow-hidden rounded-full">
-                <span className="h-full rounded-full bg-white transition-[width] duration-700" style={{ width: `${keep * 100}%` }} />
-                <span className="h-full flex-1 rounded-full bg-gold" />
-              </div>
-            </>
-          )}
+        {/* The prompt until every section is reviewed, then (one crossfade) the estimate, counting up. */}
+        <div className="app-hero mt-[22px] min-h-[206px]" data-ready={ready || undefined}>
+          <div className="calc-prompt">
+            <p className="flex items-center gap-[6px] text-[15px] text-gold"><Sparkles size={16} strokeWidth={2.2} /> Start here</p>
+            <p className="mt-[12px] text-[20px] text-white">What will you owe?</p>
+            <p className="mt-[4px] text-[15px] leading-[20px] text-white/75">Review your details to see a live estimate.</p>
+            <span className="app-hero-button mt-[18px]">Add income <ChevronRight size={16} strokeWidth={3} /></span>
+          </div>
+          <div className="calc-estimate">
+            <p className="flex items-center gap-[6px] text-[15px] text-gold"><Sparkles size={16} strokeWidth={2.2} /> Live estimate</p>
+            <p className="mt-[10px] text-[36px] font-light leading-[42px] text-white tabular-nums">{gbp2(amount)}</p>
+            <p className="text-[20px] leading-[25px] text-white">tax and NI for 2026/27</p>
+            <p className="mt-[4px] text-[15px] text-white/75">On {gbp2(est.profit).replace(".00", "")} profit · England</p>
+            <div className="mt-[14px] flex h-[8px] gap-[2px] overflow-hidden rounded-full">
+              <span className="h-full rounded-full bg-white transition-[width] duration-[900ms] ease-out" style={{ width: `${ready ? keep * 100 : 0}%` }} />
+              <span className="h-full flex-1 rounded-full bg-gold" />
+            </div>
+          </div>
         </div>
 
         <div className="mt-[30px]">

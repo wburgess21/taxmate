@@ -24,6 +24,8 @@ export function Nav() {
           ))}
         </div>
         <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" className="btn-primary nav-cta ml-2 !min-h-10 !px-4 !text-[0.9375rem]">
+          {/* On hover the button widens and the coins slide in, turning over once as they arrive. */}
+          <span className="nav-cta-coin" aria-hidden><CoinMark className="h-[1.15em] w-[1.15em]" /></span>
           Get the app
         </a>
       </nav>

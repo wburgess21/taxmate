@@ -10,23 +10,6 @@ import { StoryStage, order, type BeatId, type Env, type PersonalisePhase, type R
 import { nextKeyDate } from "@/lib/keyDates";
 
 
-export type HeroVariant = "full" | "card" | "disc";
-/** The hero's green: the whole stage, an inset card, or a disc round the coins. */
-const HERO_VARIANT: HeroVariant = "disc";
-
-/** The hero green's resting shape, as a rounded rect, in stage pixels. */
-function heroFrame(variant: HeroVariant, W: number, H: number, S: StoryStage) {
-  if (variant === "card") {
-    const m = W < 600 ? 8 : 14;
-    return { x: m, y: m, w: W - 2 * m, h: H - 2 * m, r: W < 600 ? 30 : 40 };
-  }
-  if (variant === "disc") {
-    const hb = S.heroBox(), r = Math.min(hb.h * 0.72, W < 600 ? W * 0.44 : Infinity);
-    return { x: hb.x - r, y: hb.y - r, w: 2 * r, h: 2 * r, r };
-  }
-  return { x: 0, y: 0, w: W, h: H, r: 0 };
-}
-
 /** Scroll length of each beat, in viewport heights. */
 const BEATS: { id: BeatId; len: number }[] = [
   { id: "hero", len: 0.35 },
@@ -134,10 +117,6 @@ export function Story() {
     const screenEl = q<HTMLElement>(".phone-screen")!;
     const heroFlood = q<HTMLElement>(".story-flood")!;
     const floodFill = q<HTMLElement>(".story-flood-fill")!;
-    // Which hero to show: `?hero=card|disc|full` previews the others.
-    const asked = new URLSearchParams(location.search).get("hero");
-    stage.dataset.hero = asked === "card" || asked === "disc" || asked === "full" ? asked : HERO_VARIANT;
-    S.heroFill = stage.dataset.hero === "disc" ? 0.7 : 0.8;
     const phoneFlood = q<HTMLElement>(".phone-flood")!;
     const pointer = { x: 0, y: 0, active: false };
     let k = 1, lastBeat: BeatId = "hero", lastLate = false;
@@ -192,7 +171,7 @@ export function Story() {
     };
     const first = env(0);
     S.env = first;
-    if (introOn) S.startIntro(first, stage.dataset.hero === "disc");
+    if (introOn) S.startIntro(first);
     else { S.intro.phase = "launch"; S.finishIntro(); delete root.dataset.intro; }
 
     const onMove = (e: PointerEvent) => {
@@ -230,13 +209,13 @@ export function Story() {
       if (late !== lastLate) { lastLate = late; setMorphLate(late); }
       S.frame(dt, e);
 
-      // The hero's green has a shape (the full stage, an inset card or a disc round the coins, by variant) that is
-      // scrubbed into the phone's screen. During the intro the green floods out inside that shape from the coins.
+      // The hero's green fills the stage and is scrubbed into the phone's screen; during the intro it floods out
+      // from the coins.
       const W = e.width, H = e.height, sc = e.screen!;
       // The green (and the coins, in the stage) reach the phone by 80% of the shrink; the rest is the crossfade.
       const em = easeInOutCubic(clamp(e.m / 0.8));
       if (e.m < 1) {
-        const f = heroFrame(stage.dataset.hero as HeroVariant, W, H, S);
+        const f = { x: 0, y: 0, w: W, h: H, r: 0 };
         const x = lerp(f.x, sc.x, em), y = lerp(f.y, sc.y, em), w = lerp(f.w, sc.w, em), h = lerp(f.h, sc.h, em), r = lerp(f.r, PHONE.radius * k, em);
         heroFlood.style.clipPath = `inset(${y.toFixed(1)}px ${(W - x - w).toFixed(1)}px ${(H - y - h).toFixed(1)}px ${x.toFixed(1)}px round ${r.toFixed(1)}px)`;
         floodFill.style.backgroundPosition = `${x}px ${y}px`; floodFill.style.backgroundSize = `${w}px ${h}px`;
@@ -260,7 +239,7 @@ export function Story() {
       phoneFlood.style.clipPath = `circle(${pr.toFixed(1)}px at ${pc.x.toFixed(1)}px ${pc.y.toFixed(1)}px)`;
       const statusOnGreen = pr > 0 && Math.hypot(PHONE.width / 2 - pc.x, 22 - pc.y) < pr;
       screenEl.dataset.tone = statusOnGreen || b === "result" ? "dark" : "light";
-      root.dataset.navTone = stage.dataset.hero !== "disc" && (b === "hero" || (b === "morph" && e.m < 0.35)) && root.dataset.intro !== "1" ? "light" : "";
+      root.dataset.navTone = (b === "hero" || (b === "morph" && e.m < 0.35)) && root.dataset.intro !== "1" ? "light" : "";
 
       // At rest the idle bob needs only a gentle frame rate.
       if (S.isQuiet && time - lastDraw < 1 / 24) return;
@@ -283,7 +262,8 @@ export function Story() {
   const covered = phase !== null && order(beat) >= order("personalising");
   const homeState = beat === "estimate" ? "behind" : beat === "home" || (beat === "personalising" && covered) ? "shown" : "hidden";
   const calcState = beat === "estimate" || beat === "result" ? "shown" : "hidden";
-  const amount = useTween(ticks === 0 ? 0 : ticks === 1 ? EXAMPLE.beforeExpenses.total : EXAMPLE.final.total);
+  // The estimate counts up once, from £0 to the final figure, when the last section is reviewed.
+  const amount = useTween(ticks === 3 ? EXAMPLE.final.total : 0, 1000);
   const percent = useTween((ticks / 3) * 100);
 
   return (
