@@ -5,6 +5,7 @@ import { Footer } from "@/components/site/Footer";
 export const metadata = {
   title: "Terms of Use",
   description: "Terms of use for TaxMate, the UK tax calculator app for iPhone and iPad.",
+  alternates: { canonical: "/terms" },
 };
 
 export default function TermsOfUse() {

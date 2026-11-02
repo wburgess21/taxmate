@@ -16,6 +16,7 @@ The site follows the app's design language (`taxmate-ios/Documentation/Design.md
 - Tool catalogue grouped as in the app, TaxMate Plus, privacy and FAQ sections
 - Respects `prefers-reduced-motion` and `prefers-color-scheme`; animations pause off-screen
 - Privacy policy at `/privacy` and terms of use at `/terms`
+- Canonical URLs, sitemap, robots and a generated share image for https://www.taxmate-app.com
 - Vercel Analytics integration
 
 ## Tech Stack
