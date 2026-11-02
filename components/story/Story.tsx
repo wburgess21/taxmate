@@ -236,7 +236,7 @@ export function Story() {
       }
       phoneFlood.style.clipPath = `circle(${pr.toFixed(1)}px at ${pc.x.toFixed(1)}px ${pc.y.toFixed(1)}px)`;
       const statusOnGreen = pr > 0 && Math.hypot(PHONE.width / 2 - pc.x, 22 - pc.y) < pr;
-      screenEl.dataset.tone = statusOnGreen ? "dark" : "light";
+      screenEl.dataset.tone = statusOnGreen || b === "result" ? "dark" : "light";
       root.dataset.navTone = (b === "hero" || (b === "morph" && e.m < 0.35)) && root.dataset.intro !== "1" ? "light" : "";
 
       // At rest the idle bob needs only a gentle frame rate.
@@ -258,12 +258,14 @@ export function Story() {
   const chapter = CHAPTER[beat];
   const qIndex = { q0: 0, q1: 1, q2: 2 }[beat as "q0"];
   const covered = phase !== null && order(beat) >= order("personalising");
-  const homeState = beat === "estimate" || beat === "result" ? "behind" : beat === "home" || (beat === "personalising" && covered) ? "shown" : "hidden";
+  const homeState = beat === "estimate" ? "behind" : beat === "home" || (beat === "personalising" && covered) ? "shown" : "hidden";
   const calcState = beat === "estimate" || beat === "result" ? "shown" : "hidden";
   const amount = useTween(ticks === 0 ? 0 : ticks === 1 ? EXAMPLE.beforeExpenses.total : EXAMPLE.final.total);
 
   return (
     <section ref={sectionRef} className="story" style={{ height: `${(TOTAL + 1) * 100}lvh` }} aria-label="A tour of the TaxMate app">
+      {/* Where the tour's first screen (the phone's welcome) sits centred: the target of "Tour" links. */}
+      <div id="tour" className="story-anchor" style={{ top: `${(MORPH.start + MORPH.len + 0.2) * 100}lvh` }} aria-hidden />
       <div ref={stageRef} className="story-stage" data-beat={beat}>
         <div className="story-phone" style={{ opacity: 0 }}>
           <Phone tone="light">
@@ -294,13 +296,13 @@ export function Story() {
           </p>
           <div className="story-ctas">
             <AppStoreButton variant="gold" />
-            <a href="#tour" className="btn-glass glass press" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: (sectionRef.current?.offsetTop ?? 0) + window.innerHeight * (MORPH.start + MORPH.len + 0.1), behavior: "smooth" }); }}>
+            <a href="#tour" className="btn-glass glass press">
               Take the tour <ArrowDown className="h-4 w-4" aria-hidden />
             </a>
           </div>
         </div>
 
-        <div className="story-captions" id="tour">
+        <div className="story-captions">
           <div className="story-chapters" aria-hidden>
             {CHAPTERS.map((c, i) => (
               <span key={c} data-done={i <= chapter || undefined} data-on={i === chapter || undefined}>

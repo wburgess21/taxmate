@@ -3,20 +3,33 @@ import type { ReactNode } from "react";
 /** iPhone 17 Pro proportions in points. The phone is drawn at this size and scaled as a whole. */
 export const PHONE = { width: 393, height: 852, radius: 55, bezel: 11 };
 
+/** An annular sector of the Wi-Fi fan, centred on (cx, cy), between radii r0 and r1, 45° either side of straight up. */
+function fanBand(cx: number, cy: number, r0: number, r1: number) {
+  const a0 = (-135 * Math.PI) / 180, a1 = (-45 * Math.PI) / 180;
+  const p = (r: number, a: number) => `${(cx + r * Math.cos(a)).toFixed(2)} ${(cy + r * Math.sin(a)).toFixed(2)}`;
+  if (r0 === 0) return `M${cx} ${cy}L${p(r1, a0)}A${r1} ${r1} 0 0 1 ${p(r1, a1)}Z`;
+  return `M${p(r1, a0)}A${r1} ${r1} 0 0 1 ${p(r1, a1)}L${p(r0, a1)}A${r0} ${r0} 0 0 0 ${p(r0, a0)}Z`;
+}
+
+/** The iOS status bar's cellular, Wi-Fi and battery glyphs, drawn to their proportions at 17 pt. */
 function StatusIcons() {
   return (
     <span className="flex items-center gap-[6px]">
       <svg width="18" height="12" viewBox="0 0 18 12" aria-hidden fill="currentColor">
-        <rect x="0" y="8" width="3" height="4" rx="1" /><rect x="5" y="5.5" width="3" height="6.5" rx="1" />
-        <rect x="10" y="3" width="3" height="9" rx="1" /><rect x="15" y="0" width="3" height="12" rx="1" />
+        <rect x="0" y="7.5" width="3.2" height="4.5" rx="1" />
+        <rect x="4.9" y="5" width="3.2" height="7" rx="1" />
+        <rect x="9.8" y="2.5" width="3.2" height="9.5" rx="1" />
+        <rect x="14.7" y="0" width="3.2" height="12" rx="1" />
       </svg>
-      <svg width="16" height="12" viewBox="0 0 16 12" aria-hidden fill="currentColor">
-        <path d="M8 2.6c2.3 0 4.4.9 6 2.4l1.1-1.2A10.2 10.2 0 0 0 8 1 10.2 10.2 0 0 0 .9 3.8L2 5a8.6 8.6 0 0 1 6-2.4Zm0 3.3c1.4 0 2.6.5 3.6 1.4l1.1-1.2A6.9 6.9 0 0 0 8 4.3a6.9 6.9 0 0 0-4.7 1.8l1.1 1.2c1-.9 2.2-1.4 3.6-1.4Zm0 3.3c.6 0 1.1.2 1.5.6L8 11.5 6.5 9.8c.4-.4.9-.6 1.5-.6Z" />
+      <svg width="16" height="12" viewBox="0 0 16 12" aria-hidden fill="currentColor" stroke="currentColor" strokeWidth="0.6" strokeLinejoin="round">
+        <path d={fanBand(8, 11.3, 0, 3.4)} />
+        <path d={fanBand(8, 11.3, 5.1, 7.6)} />
+        <path d={fanBand(8, 11.3, 9.3, 11.6)} />
       </svg>
       <svg width="27" height="13" viewBox="0 0 27 13" aria-hidden>
-        <rect x="0.5" y="0.5" width="23" height="12" rx="3.8" fill="none" stroke="currentColor" strokeOpacity="0.4" />
-        <rect x="2" y="2" width="20" height="9" rx="2.5" fill="currentColor" />
-        <path d="M25 4.5v4c.8-.3 1.3-1.1 1.3-2s-.5-1.7-1.3-2Z" fill="currentColor" fillOpacity="0.45" />
+        <rect x="0.5" y="0.5" width="24" height="12" rx="3.8" fill="none" stroke="currentColor" strokeOpacity="0.35" />
+        <rect x="2" y="2" width="21" height="9" rx="2.4" fill="currentColor" />
+        <path d="M25.6 4.4v4.2c.85-.36 1.4-1.18 1.4-2.1s-.55-1.74-1.4-2.1Z" fill="currentColor" fillOpacity="0.4" />
       </svg>
     </span>
   );

@@ -89,7 +89,16 @@
     @apply border-border outline-ring/50;
   }
   html {
-    scroll-padding-top: 96px;
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  /* Sections carry their own top padding; the FAQ starts tight, so it keeps clear of the floating nav. */
+  #faq {
+    scroll-margin-top: 88px;
   }
   body {
     background: var(--canvas);
@@ -326,6 +335,13 @@ html[data-intro="flood"] .site-nav {
 .story {
   position: relative;
 }
+.story-anchor {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
 .story-stage {
   position: sticky;
   top: 0;
@@ -558,6 +574,8 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
 .story-captions {
   position: absolute;
   z-index: 20;
+  /* Captions are text only; they overlap the hero copy while hidden, so they must never take its clicks. */
+  pointer-events: none;
   opacity: clamp(0, calc(var(--m, 0) * 5 - 4), 1);
 }
 .story-stage[data-layout="wide"] .story-captions {
@@ -1069,10 +1087,19 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
   transform: none;
   transition-delay: calc(0.5s + var(--d, 0s));
 }
+/* A sheet over the calculator, as iOS presents it: the page behind shrinks onto black just below the status bar. */
+.phone-screen {
+  transition: background-color 0.5s;
+}
+.story-stage[data-beat="result"] .phone-screen {
+  background: #000;
+}
 .story-stage[data-beat="result"] .app-push[data-state="shown"] {
-  transform: scale(0.93) translateY(-10px);
-  filter: brightness(0.82);
+  transform-origin: 50% 0;
+  transform: translateY(50px) scale(0.92);
+  filter: brightness(0.7);
   border-radius: 40px;
+  overflow: hidden;
 }
 
 /* ───────────── Sections ───────────── */
