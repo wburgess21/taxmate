@@ -9,6 +9,13 @@ import { CalculatorScreen, EXAMPLE, HomeScreen, PersonalisingScreen, QUESTIONS, 
 import { StoryStage, order, type BeatId, type Env, type PersonalisePhase, type Rect } from "./stage";
 import { nextKeyDate } from "@/lib/keyDates";
 
+/** The eleven tools along the foot of the hero, in their group colours (as the app's dark-mode tints, which read on green). */
+const TOOL_TICKER: [string, string][] = [
+  ["Take Home Pay", "#6fd49a"], ["Self-employed Tax", "#6fd49a"], ["Combined Income", "#6fd49a"],
+  ["Home Office", "#e7bd5e"], ["Business Expenses", "#e7bd5e"], ["Business Mileage", "#e7bd5e"], ["Pension Contribution", "#e7bd5e"],
+  ["Tax Savings Planner", "#72c4de"], ["VAT", "#72c4de"], ["Making Tax Digital", "#72c4de"], ["Annual Summary", "#72c4de"],
+];
+
 /** Scroll length of each beat, in viewport heights. */
 const BEATS: { id: BeatId; len: number }[] = [
   { id: "hero", len: 0.35 },
@@ -180,16 +187,7 @@ export function Story() {
     const onClick = (e: MouseEvent) => {
       if ((e.target as HTMLElement).closest("a,button")) return;
       const s = stage.getBoundingClientRect();
-      if (S.tap(e.clientX - s.left, e.clientY - s.top)) {
-        loop.wake();
-        // A ring pulses out from the coins with each spin.
-        const aura = stage.querySelector(".story-aura");
-        if (aura && (S.beat === "hero" || S.beat === "morph")) {
-          const ring = document.createElement("b");
-          aura.appendChild(ring);
-          ring.addEventListener("animationend", () => ring.remove());
-        }
-      }
+      if (S.tap(e.clientX - s.left, e.clientY - s.top)) loop.wake();
     };
     stage.addEventListener("pointermove", onMove);
     stage.addEventListener("pointerleave", onLeave);
@@ -284,7 +282,18 @@ export function Story() {
         <div className="story-flood" aria-hidden />
         <div className="story-spot" aria-hidden />
         <div className="story-hero-anchor" aria-hidden>
-          <div className="story-aura">{[0, 1, 2, 3].map((i) => <i key={i} style={{ ["--i" as string]: i }} />)}</div>
+          <div className="story-aura" />
+        </div>
+        <div className="story-marquee" aria-hidden>
+          <div className="story-marquee-track">
+            {[0, 1].map((n) => (
+              <span key={n} className="story-marquee-set">
+                {TOOL_TICKER.map(([name, tint]) => (
+                  <span key={name} className="story-marquee-item"><i style={{ background: tint }} />{name}</span>
+                ))}
+              </span>
+            ))}
+          </div>
         </div>
 
         <div className="story-hero-copy">

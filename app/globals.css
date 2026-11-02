@@ -393,50 +393,21 @@ html[data-intro="1"] .story-flood {
   z-index: 12;
   pointer-events: none;
 }
-/* Behind the hero's coins: a soft glow and slow rings spreading out from them, echoing the flood that opened the
-   page. They fade as the hero shrinks into the phone. */
+/* Behind the hero's coins: a soft glow. It fades as the hero shrinks into the phone. */
 .story-aura {
   position: absolute;
   inset: 0;
   opacity: calc(1 - var(--m, 0) * 3);
   transition: opacity 1.2s ease;
 }
+/* Light falling on the pair from above, as in a product shot (its shadow is drawn with the coins). */
 .story-aura::before {
   content: "";
   position: absolute;
-  inset: -10%;
-  border-radius: 50%;
+  inset: -45% -25% -5%;
   background:
-    radial-gradient(closest-side, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.03) 55%, transparent),
-    radial-gradient(closest-side at 62% 40%, rgb(221 173 68 / 0.12), transparent 70%);
-}
-.story-aura i,
-.story-aura b {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  border: 1px solid rgb(255 255 255 / 0.22);
-  translate: -50% -50%;
-  opacity: 0;
-  animation: aura-ring 12s cubic-bezier(0.2, 0.5, 0.4, 1) infinite;
-  animation-delay: calc(var(--i) * -3s);
-}
-.story-aura b {
-  border-color: rgb(221 173 68 / 0.75);
-  border-width: 1.5px;
-  animation: aura-burst 1.6s cubic-bezier(0.15, 0.6, 0.3, 1) forwards;
-}
-@keyframes aura-ring {
-  0% { scale: 0.55; opacity: 0; }
-  15% { opacity: 0.9; }
-  100% { scale: 2.6; opacity: 0; }
-}
-@keyframes aura-burst {
-  0% { scale: 0.6; opacity: 0.9; }
-  100% { scale: 1.9; opacity: 0; }
+    radial-gradient(42% 58% at 50% 46%, rgb(255 255 255 / 0.11), rgb(255 255 255 / 0.035) 55%, transparent 78%),
+    radial-gradient(30% 34% at 56% 38%, rgb(221 173 68 / 0.1), transparent 75%);
 }
 html[data-intro] .story-aura {
   opacity: 0;
@@ -445,15 +416,73 @@ html[data-intro="flood"] .story-aura {
   opacity: 1;
   transition-delay: 1s;
 }
-@media (prefers-reduced-motion: reduce) {
-  .story-aura i,
-  .story-aura b {
-    display: none;
-  }
-}
 .story-stage:not([data-beat="hero"]):not([data-beat="morph"]) .story-aura {
   display: none;
 }
+html[data-intro] .story-marquee {
+  opacity: 0;
+}
+html[data-intro="flood"] .story-marquee {
+  opacity: 1;
+  transition-delay: 1.2s;
+}
+.story-stage:not([data-beat="hero"]):not([data-beat="morph"]) .story-marquee {
+  visibility: hidden;
+}
+
+/* The eleven tools, gliding along the foot of the hero. */
+.story-marquee {
+  position: absolute;
+  z-index: 19;
+  left: 0;
+  right: 0;
+  bottom: 30px;
+  overflow: hidden;
+  opacity: calc(1 - var(--m, 0) * 3);
+  transition: opacity 1.2s ease;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+.story-stage[data-layout="narrow"] .story-marquee {
+  display: none;
+}
+.story-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 60s linear infinite;
+}
+.story-marquee:hover .story-marquee-track {
+  animation-play-state: paused;
+}
+.story-marquee-set {
+  display: flex;
+  gap: 40px;
+  padding-right: 40px;
+}
+.story-marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9375rem;
+  color: rgb(255 255 255 / 0.62);
+  white-space: nowrap;
+}
+.story-marquee-item i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (max-height: 760px) {
+  .story-marquee {
+    display: none;
+  }
+}
+
 /* A soft light on the green that follows the cursor. */
 .story-spot {
   position: absolute;

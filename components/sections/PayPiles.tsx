@@ -184,10 +184,16 @@ export function PayPiles() {
       for (const cat of CATS) for (let col = 0; col < cat.columns; col++) {
         const n = Math.min(PER_COLUMN, Math.max(0, piles[cat.id].length - col * PER_COLUMN));
         if (!n) continue;
-        const x = g.starts[cat.id] + (col + 0.5) * g.unit, y = g.base + g.R * 0.5;
-        const grd = ctx.createRadialGradient(x, y, 0, x, y, g.R * 1.4);
-        grd.addColorStop(0, "rgb(0 0 0 / 0.1)"); grd.addColorStop(1, "rgb(0 0 0 / 0)");
-        ctx.fillStyle = grd; ctx.fillRect(x - g.R * 1.5, y - g.R, g.R * 3, g.R * 2);
+        // A flattened ellipse that fades out inside its own bounds and stays within the canvas, so nothing clips it.
+        const x = g.starts[cat.id] + (col + 0.5) * g.unit, y = g.base + g.R * 0.42, rx = g.R * 1.25, ry = g.R * 0.32;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.scale(1, ry / rx);
+        const grd = ctx.createRadialGradient(0, 0, 0, 0, 0, rx);
+        grd.addColorStop(0, "rgb(0 0 0 / 0.12)"); grd.addColorStop(0.6, "rgb(0 0 0 / 0.05)"); grd.addColorStop(1, "rgb(0 0 0 / 0)");
+        ctx.fillStyle = grd;
+        ctx.beginPath(); ctx.arc(0, 0, rx, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
       }
       for (const c of [...all, ...leaving].sort((a, b) => a.z - b.z)) drawCoin(ctx, c, { time, reduceMotion: reduce });
       stars.draw(ctx, "#ddad44");

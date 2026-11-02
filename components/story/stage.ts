@@ -588,6 +588,7 @@ export class StoryStage {
 
   draw(ctx: CanvasRenderingContext2D) {
     const opts = { time: this.time, reduceMotion: this.reduce };
+    if (this.intro.phase === "none" && (this.beat === "hero" || this.beat === "morph")) this.drawContactShadow(ctx);
     const visible = this.coins.filter((c) => c.p.s > 0.004).sort((a, b) => a.z - b.z);
     for (const c of visible) drawCoin(ctx, c, opts);
     if (this.sheen.t >= 0) this.drawSheen(ctx);
@@ -609,6 +610,30 @@ export class StoryStage {
     }
     const onGreen = this.beat === "hero" || this.beat === "morph" || this.beat === "welcome" || this.personalise.running;
     this.stars.draw(ctx, onGreen ? "#ddad44" : starInk);
+  }
+
+  /**
+   * The pair's soft shadow on the green, as in a product shot. It follows the coins' real height, so it tightens and
+   * darkens as the pair floats down and softens when it lifts (or hops on a tap). It fades as the hero shrinks away.
+   */
+  private drawContactShadow(ctx: CanvasRenderingContext2D) {
+    const hb = this.heroBox(), rest = this.heroPlace();
+    const fade = 1 - clamp(this.env.m * 3);
+    if (fade <= 0) return;
+    const lift = clamp(-((this.front.p.y + this.back.p.y) / 2 - (rest.front.y + rest.back.y) / 2) / (hb.h * 0.25), -0.2, 1);
+    const cx = (this.front.p.x + this.back.p.x) / 2 + hb.h * 0.04, cy = hb.y + hb.h * 0.56;
+    const w = hb.h * 0.42 * (1 + lift * 0.25), h = hb.h * 0.06 * (1 + lift * 0.2);
+    const alpha = 0.34 * (1 - lift * 0.55) * fade;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(1, h / w);
+    const g = ctx.createRadialGradient(0, 0, 0, 0, 0, w);
+    g.addColorStop(0, `rgb(0 20 8 / ${alpha.toFixed(3)})`);
+    g.addColorStop(0.45, `rgb(0 20 8 / ${(alpha * 0.55).toFixed(3)})`);
+    g.addColorStop(1, "rgb(0 20 8 / 0)");
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(0, 0, w, 0, TAU); ctx.fill();
+    ctx.restore();
   }
 
   /** Lights only the pixels already drawn (the coins), with a soft band sweeping diagonally across the pair. */
