@@ -2,7 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { RevealOnScroll } from "@/components/site/Reveal";
-import { SITE_URL } from "@/lib/site";
+import { ClickTracker } from "@/components/site/ClickTracker";
+import { APP_STORE_ID, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -51,7 +52,12 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image", title: "TaxMate: Your UK tax, made clearer", description },
   appleWebApp: { title: "TaxMate" },
-  itunes: { appId: "6757307991" },
+  itunes: { appId: APP_STORE_ID },
+  // Search Console and Bing Webmaster Tools (Bing also feeds Copilot and ChatGPT search). Set the codes in Vercel.
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+    other: process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : undefined,
+  },
 };
 
 export const viewport: Viewport = {
@@ -76,6 +82,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} font-sans antialiased`}>
         {children}
         <RevealOnScroll />
+        <ClickTracker />
         <Analytics />
       </body>
     </html>

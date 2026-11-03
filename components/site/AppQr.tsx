@@ -1,14 +1,15 @@
 import QRCode from "qrcode";
 import { backCoin, frontCoin, frontSilhouette } from "@/lib/coins/paths";
-import { APP_STORE_URL } from "@/lib/site";
+import { appStoreUrl } from "@/lib/site";
 
 /**
  * The App Store link as a QR code in the brand's style: rounded dots and soft-cornered finder squares in deep green,
  * with the coin mark on a gold disc at the centre (high error correction leaves room for it). Drawn as SVG at build
  * time.
  */
-export function AppQr({ className = "" }: { className?: string }) {
-  const qr = QRCode.create(APP_STORE_URL, { errorCorrectionLevel: "H" });
+export function AppQr({ className = "", campaign }: { className?: string; campaign: string }) {
+  // Scans can't be seen by the site, so the code carries its own campaign for App Store Connect.
+  const qr = QRCode.create(appStoreUrl(campaign), { errorCorrectionLevel: "H" });
   const n = qr.modules.size, data = qr.modules.data;
   // A clear disc in the middle for the mark.
   const hole = Math.round(n * 0.24) | 1, lo = Math.floor((n - hole) / 2), hi = lo + hole;

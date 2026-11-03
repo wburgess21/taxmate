@@ -126,7 +126,7 @@ export default function Home() {
                 Every estimate is free. Plus unlocks everything else.
               </p>
               <div className="mt-10 flex flex-wrap items-center gap-4">
-                <AppStoreButton variant="gold" label="Get TaxMate" />
+                <AppStoreButton variant="gold" label="Get TaxMate" placement="home-plus" />
                 <span className="text-[0.875rem] text-white/60">One-time purchase in the app</span>
               </div>
             </div>
@@ -182,7 +182,7 @@ export default function Home() {
               Your UK tax, <em className="text-gold">made clearer.</em>
             </h2>
             <p className="mx-auto mt-6 max-w-md text-lg text-white/75">For iPhone and iPad. A few quick questions, and your tax picture in minutes.</p>
-            <GetTheApp qr={<AppQr className="block h-[148px] w-[148px]" />} />
+            <GetTheApp placement="home-finale" qr={<AppQr campaign="home-finale-qr" className="block h-[148px] w-[148px]" />} />
             <p className="mt-6 text-[0.8125rem] text-white/45 motion-reduce:hidden" aria-hidden>Psst: tap the screen.</p>
           </div>
         </section>

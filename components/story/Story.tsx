@@ -323,7 +323,7 @@ export function Story() {
             Eleven simple calculators for your pay, your business and your tax bill. Tailored to you, with answers that update as you type.
           </p>
           <div className="story-ctas">
-            <AppStoreButton variant="gold" />
+            <AppStoreButton variant="gold" placement="home-hero" />
             <a href="#tour" className="btn-glass glass press">
               Take the tour <ArrowDown className="h-4 w-4" aria-hidden />
             </a>

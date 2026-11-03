@@ -18,6 +18,13 @@ The home page is a tour of the app's first run, told with the app's own coins (`
 - Canonical URLs, sitemap, robots and a generated share image for https://www.taxmate-app.com
 - Vercel Analytics integration
 
+## Measurement
+
+- Every App Store link carries a campaign (`ct`), such as `home-hero`, `nav` or `home-finale-qr`, built by `appStoreUrl()` in `lib/site.ts`. Set `NEXT_PUBLIC_APP_STORE_PROVIDER_TOKEN` (App Store Connect → Analytics → Campaigns) and installs from each placement show up under Sources in App Store Connect. QR codes carry their own campaign, since scans never touch the site.
+- Clicks on anything marked `data-cta` are sent to Vercel Analytics as an `App Store click` event with the placement and page (`components/site/ClickTracker.tsx`). Switching the closing call to action to its QR code sends `QR shown`. Custom events need a Vercel Pro plan.
+- `GOOGLE_SITE_VERIFICATION` and `BING_SITE_VERIFICATION` add the Search Console and Bing Webmaster Tools meta tags. Submit `/sitemap.xml` in both.
+- See `.env.example` for every variable.
+
 ## Tech Stack
 
 - [Next.js](https://nextjs.org/) 16 with the App Router
