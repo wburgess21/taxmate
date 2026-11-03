@@ -3,6 +3,8 @@ import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { RevealOnScroll } from "@/components/site/Reveal";
 import { ClickTracker } from "@/components/site/ClickTracker";
+import { JsonLd } from "@/components/site/JsonLd";
+import { siteSchema } from "@/lib/schema";
 import { APP_STORE_ID, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
@@ -80,6 +82,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: introScript }} />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} font-sans antialiased`}>
+        <JsonLd data={siteSchema()} />
         {children}
         <RevealOnScroll />
         <ClickTracker />
