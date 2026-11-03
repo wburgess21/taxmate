@@ -1,12 +1,15 @@
 import { llmsTxt } from "@/lib/llms";
 import { CALCULATORS } from "@/lib/calculators";
 import { AUDIENCES } from "@/lib/audiences";
+import { getPostIndex } from "@/lib/sanity";
 import { calcUrl } from "@/lib/calcSchema";
 import { SITE_URL, TAX_YEAR } from "@/lib/site";
 
-export const dynamic = "force-static";
+/** Rebuilt hourly (and on publish) so new posts are listed. */
+export const revalidate = 3600;
 
-export function GET() {
+export async function GET() {
+  const posts = (await getPostIndex()).filter((p) => !p.noindex);
   const body = llmsTxt([
     {
       title: "Free web calculators",
@@ -14,6 +17,10 @@ export function GET() {
         { title: "All calculators", url: `${SITE_URL}/calculators` },
         ...CALCULATORS.map((c) => ({ title: `${c.name} calculator`, url: calcUrl(c.slug), note: c.description })),
       ],
+    },
+    {
+      title: "Blog",
+      links: posts.map((p) => ({ title: p.title, url: `${SITE_URL}/blog/${p.slug}`, note: p.excerpt })),
     },
     {
       title: "Guides by situation",

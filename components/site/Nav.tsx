@@ -4,10 +4,10 @@ import { SpinCoins } from "./SpinCoins";
 import { appStoreUrl } from "@/lib/site";
 
 const links = [
-  { href: "/#tour", label: "Tour" },
   { href: "/calculators", label: "Calculators" },
   { href: "/tax-rates", label: "Tax rates" },
   { href: "/key-dates", label: "Key dates" },
+  { href: "/blog", label: "Blog" },
   { href: "/#plus", label: "Plus" },
 ];
 

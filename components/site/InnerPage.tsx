@@ -17,7 +17,10 @@ export function InnerPage({ tint = "var(--tool-income)", crumbs, children }: { t
             <ol className="crumbs">
               <li><Link href="/">Home</Link></li>
               {crumbs.map(([name, href], i) => (
-                <li key={href}>{i === crumbs.length - 1 ? <span aria-current="page" className="text-ink">{name}</span> : <Link href={href}>{name}</Link>}</li>
+                i === crumbs.length - 1
+                  // The current page can be a long post title: one line, cut short with an ellipsis.
+                  ? <li key={href} className="flex min-w-0 max-w-full"><span aria-current="page" className="truncate text-ink">{name}</span></li>
+                  : <li key={href}><Link href={href}>{name}</Link></li>
               ))}
             </ol>
           </nav>

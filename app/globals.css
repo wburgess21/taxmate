@@ -1611,14 +1611,14 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
   color: var(--ink);
   font-weight: 500;
 }
-.prose-tm a {
+.prose-tm a:not(.link-card) {
   color: var(--accent);
   text-decoration: underline;
   text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
   text-underline-offset: 3px;
   transition: text-decoration-color 0.2s;
 }
-.prose-tm a:hover {
+.prose-tm a:not(.link-card):hover {
   text-decoration-color: currentColor;
 }
 .prose-tm ul,
@@ -1779,4 +1779,10 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
 .calc-save:focus-visible {
   outline: 2px solid var(--tint);
   outline-offset: 2px;
+}
+
+.check[data-active] {
+  color: var(--ink);
+  border-color: color-mix(in srgb, var(--tint, var(--tool-income)) 50%, transparent);
+  background: color-mix(in srgb, var(--tint, var(--tool-income)) 12%, var(--surface));
 }

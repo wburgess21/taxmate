@@ -26,6 +26,23 @@ The home page is a tour of the app's first run, told with the app's own coins (`
 - `lib/calculators.ts`: each page's copy, FAQ and what the app adds.
 - `components/calculators`: the interactive calculators. Inputs are mirrored in the address bar (`?salary=45000`), so results can be shared.
 
+## Blog (Sanity)
+
+Posts are written in Sanity and published at `/blog`, with category pages, an RSS feed at `/blog/rss.xml`, BlogPosting and FAQ structured data, and entries in the sitemap and `llms.txt`. Until a Sanity project is connected the blog shows a "coming soon" page (kept out of search), so the site builds and runs without it.
+
+**The Studio** lives in `studio/`, with its own dependencies:
+
+1. Create a project at [sanity.io/manage](https://www.sanity.io/manage) and note its project ID.
+2. `cd studio && cp .env.example .env`, set `SANITY_STUDIO_PROJECT_ID`, then `npm install` and `npm run dev` to write locally, or `npm run deploy` to host it at https://taxmate.sanity.studio.
+3. In the project's API settings, add `https://www.taxmate-app.com` and `http://localhost:3333` as CORS origins.
+
+**The site** needs, in Vercel:
+
+- `NEXT_PUBLIC_SANITY_PROJECT_ID` and `NEXT_PUBLIC_SANITY_DATASET` (usually `production`).
+- `SANITY_REVALIDATE_SECRET`, any long random string. In Sanity → API → Webhooks, add a webhook for `post`, `category` and `author` documents on create, update and delete, sending `POST https://www.taxmate-app.com/api/revalidate` with the header `Authorization: Bearer <secret>`. New posts then go live at once; without it, pages refresh within an hour.
+
+Each post has a title, slug, excerpt, category, author, dates, the tax year it covers, an image, a body (headings, lists, links, images, callouts and calculator cards), questions (published as FAQ structured data), up to three related calculators, and search title, description and noindex settings.
+
 ## Measurement
 
 - Every App Store link carries a campaign (`ct`), such as `home-hero`, `nav` or `home-finale-qr`, built by `appStoreUrl()` in `lib/site.ts`. Set `NEXT_PUBLIC_APP_STORE_PROVIDER_TOKEN` (App Store Connect → Analytics → Campaigns) and installs from each placement show up under Sources in App Store Connect. QR codes carry their own campaign, since scans never touch the site.
