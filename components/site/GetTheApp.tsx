@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AppStoreButton } from "./AppStoreButton";
 import { APP_STORE_URL } from "@/lib/site";
 
@@ -13,9 +13,26 @@ type Mode = "store" | "scan";
  */
 export function GetTheApp({ qr }: { qr: ReactNode }) {
   const [mode, setMode] = useState<Mode>("store");
+  const ref = useRef<HTMLDivElement>(null);
+
+  // The card keeps its height: whatever the code adds over the button comes out of the card's bottom padding, so
+  // switching only moves the lines below down into the space above the coins.
+  useEffect(() => {
+    const root = ref.current!, card = root.closest<HTMLElement>(".finale-card");
+    if (!card) return;
+    const inner = (id: string) => root.querySelector<HTMLElement>(`#${id} > div`)!;
+    const update = () => {
+      const grow = mode === "scan" ? Math.max(0, inner("get-app-scan").scrollHeight - inner("get-app-store").scrollHeight) : 0;
+      card.style.setProperty("--cta-grow", `${grow}px`);
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(root);
+    return () => ro.disconnect();
+  }, [mode]);
   const tabs: [Mode, string][] = [["store", "App Store"], ["scan", "Scan with iPhone"]];
   return (
-    <div className="get-app mt-10 flex flex-col items-center" data-mode={mode}>
+    <div ref={ref} className="get-app mt-10 flex flex-col items-center" data-mode={mode}>
       <div role="tablist" aria-label="How to get TaxMate" className="get-app-switch hidden lg:grid">
         <span className="get-app-thumb" aria-hidden />
         {tabs.map(([m, label]) => (

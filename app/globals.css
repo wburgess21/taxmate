@@ -1342,3 +1342,14 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
   background: #fbfaf5;
   box-shadow: 0 1px 0 rgb(255 255 255 / 0.6) inset, 0 18px 40px rgb(0 20 8 / 0.35);
 }
+
+/* The closing card's bottom leaves room for the coin heap; the QR panel borrows from it rather than growing the card. */
+.finale-card {
+  padding-bottom: calc(14rem - var(--cta-grow, 0px));
+  transition: padding-bottom 0.5s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+@media (min-width: 640px) {
+  .finale-card {
+    padding-bottom: calc(16rem - var(--cta-grow, 0px));
+  }
+}

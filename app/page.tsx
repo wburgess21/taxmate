@@ -175,7 +175,7 @@ export default function Home() {
 
         {/* Finale */}
         <section className="px-3 pb-6 sm:px-6">
-          <div className="green green-lit relative mx-auto max-w-[1400px] overflow-hidden rounded-[36px] px-6 pb-56 pt-28 text-center sm:pb-64 sm:pt-36">
+          <div className="green green-lit finale-card relative mx-auto max-w-[1400px] overflow-hidden rounded-[36px] px-6 pt-28 text-center sm:pt-36">
             <CoinHeap />
             <p className="eyebrow justify-center text-gold">Free on the App Store</p>
             <h2 className="display mx-auto mt-6 max-w-4xl text-[3rem] sm:text-7xl lg:text-[6.5rem]">
