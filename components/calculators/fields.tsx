@@ -23,6 +23,7 @@ export function NumberField({ label, hint, value, onChange, prefix = "£", suffi
   const id = useId();
   const [text, setText] = useState(() => fmt(value, decimals));
   const focused = useRef(false);
+  const justFocused = useRef(false);
   // Follow outside changes (such as a value from the address bar) unless someone is typing.
   useEffect(() => { if (!focused.current) setText(fmt(value, decimals)); }, [value, decimals]);
   return (
@@ -40,7 +41,18 @@ export function NumberField({ label, hint, value, onChange, prefix = "£", suffi
           value={text}
           placeholder="0"
           aria-describedby={hint ? `${id}-hint` : undefined}
-          onFocus={() => { focused.current = true; setText(value ? String(value) : ""); }}
+          onFocus={(e) => {
+            focused.current = true;
+            // Show the plain number while editing, all selected, so typing replaces it rather than appending.
+            const el = e.currentTarget;
+            el.value = value ? String(value) : "";
+            setText(el.value);
+            el.select();
+            justFocused.current = true;
+          }}
+          // The mouseup that follows a click would otherwise drop the selection made on focus.
+          onMouseUp={(e) => { if (justFocused.current) { e.preventDefault(); justFocused.current = false; } }}
+          onKeyDown={() => { justFocused.current = false; }}
           onBlur={() => { focused.current = false; setText(fmt(value, decimals)); }}
           onChange={(e) => {
             setText(e.target.value);
