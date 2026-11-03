@@ -276,8 +276,8 @@ export function CalculatorScreen({ state, ticks, amount, percent }: { state: "sh
           <div className="calc-prompt">
             <p className="flex items-center gap-[6px] text-[15px] text-gold"><Sparkles size={16} strokeWidth={2.2} /> Start here</p>
             <p className="mt-[12px] text-[20px] text-white">What will you owe?</p>
-            <p className="mt-[4px] text-[15px] leading-[20px] text-white/75">Review your details to see a live estimate.</p>
-            <span className="app-hero-button mt-[18px]">Add income <ChevronRight size={16} strokeWidth={3} /></span>
+            <p className="mt-[4px] text-[15px] leading-[20px] text-white/75">Add your business income and your estimate appears here as you go.</p>
+            <span className="app-hero-button mt-[18px]">Add your income <ChevronRight size={16} strokeWidth={3} /></span>
           </div>
           <div className="calc-estimate">
             <p className="flex items-center gap-[6px] text-[15px] text-gold"><Sparkles size={16} strokeWidth={2.2} /> Live estimate</p>

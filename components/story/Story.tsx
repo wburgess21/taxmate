@@ -28,18 +28,18 @@ const TOTAL = BEATS.reduce((a, b) => a + b.len, 0);
 const STARTS = BEATS.reduce<number[]>((acc, b, i) => [...acc, i === 0 ? 0 : acc[i - 1] + BEATS[i - 1].len], []);
 const MORPH = { start: STARTS[1], len: BEATS[1].len };
 
-const CHAPTERS = ["Welcome", "About you", "Your picture", "Live estimate", "Results"];
+const CHAPTERS = ["Get started", "About you", "Made for you", "Live estimate", "Your result"];
 const CHAPTER: Record<BeatId, number> = { hero: -1, morph: 0, welcome: 0, q0: 1, q1: 1, q2: 1, personalising: 2, home: 2, estimate: 3, result: 4 };
 
 const CAPTIONS: Partial<Record<BeatId, { title: string; body: string }>> = {
-  welcome: { title: "It begins with a hello.", body: "Two coins, a splash of green and a few friendly questions. No account to create, no forms to fill." },
-  q0: { title: "Tell it what you do.", body: "Employed, self-employed, director, landlord, or a mix of them. Every answer lands on a coin, and TaxMate reshapes itself around it." },
-  q1: { title: "Where you pay tax.", body: "Scotland sets its own Income Tax bands. Choose once, and every estimate follows." },
-  q2: { title: "What you’d like help with.", body: "Pick up to three goals and the right tools step forward." },
-  personalising: { title: "Then it gets personal.", body: "Your answers become your key dates, your Making Tax Digital status and the tools that fit you." },
-  home: { title: "What matters, first.", body: "The next HMRC date that applies to you counts down on the home screen, with the tool to prepare for it one tap away." },
-  estimate: { title: "The answer, before you finish.", body: "Every calculator opens with a live estimate that sharpens as you complete each section." },
-  result: { title: "And where every pound goes.", body: "Results break down your tax, National Insurance and what you keep, saved privately on your device." },
+  welcome: { title: "Set up in a minute.", body: "A few quick questions tailor TaxMate to you. No account, no sign-up, no long forms." },
+  q0: { title: "Tell it how you earn.", body: "Employed, self-employed, director, landlord or a mix. What fits you comes first." },
+  q1: { title: "And where you live.", body: "Scotland has its own Income Tax rates, so every estimate uses the right ones for you." },
+  q2: { title: "Pick what matters to you.", body: "Choose up to three goals, and the tools that help most come first." },
+  personalising: { title: "Built around you.", body: "Your home screen fills with your deadlines, your Making Tax Digital status and your tools." },
+  home: { title: "Never miss a tax deadline.", body: "Your next HMRC deadline counts down on screen, with the tool to prepare one tap away." },
+  estimate: { title: "Answers as you type.", body: "Your estimate appears as soon as you add your details, and updates with every change." },
+  result: { title: "Where every pound goes.", body: "Tax, National Insurance and what you keep, clearly broken down and saved on your phone." },
 };
 
 function beatAt(pos: number): BeatId {
@@ -296,7 +296,7 @@ export function Story() {
             Your UK tax, <em>made clearer.</em>
           </h1>
           <p className="story-lede">
-            Eleven calculators for your pay, your business and the year ahead. Personalised to you, with the answer before you’ve finished typing.
+            Eleven simple calculators for your pay, your business and your tax bill. Tailored to you, with answers that update as you type.
           </p>
           <div className="story-ctas">
             <AppStoreButton variant="gold" />
