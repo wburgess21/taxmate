@@ -50,7 +50,7 @@ export default async function CalculatorPage({ params }: Props) {
         </p>
       </section>
 
-      <div className="mx-auto mt-20 grid max-w-[1240px] gap-16 px-5 sm:px-8 lg:mt-28 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-20">
+      <div className="mx-auto mt-20 grid max-w-[1240px] grid-cols-[minmax(0,1fr)] gap-16 px-5 sm:px-8 lg:mt-28 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-20">
         <article className="min-w-0">
           <Blocks blocks={c.body} />
           {hasExamples(c.slug) && <div className="mt-14"><Examples slug={c.slug} /></div>}

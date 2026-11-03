@@ -1735,3 +1735,12 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
 .page-glow {
   background: radial-gradient(1000px 700px at 0% 0%, color-mix(in srgb, var(--tint, var(--tool-income)) 13%, transparent), transparent 70%);
 }
+@media (max-width: 639px) {
+  .data-table td:not(.num) {
+    white-space: normal;
+  }
+  .data-table th,
+  .data-table td {
+    padding: 12px 10px;
+  }
+}

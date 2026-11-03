@@ -6,8 +6,8 @@ import { appStoreUrl } from "@/lib/site";
 const links = [
   { href: "/#tour", label: "Tour" },
   { href: "/calculators", label: "Calculators" },
+  { href: "/tax-rates", label: "Tax rates" },
   { href: "/#plus", label: "Plus" },
-  { href: "/#faq", label: "FAQ" },
 ];
 
 export function Nav() {
