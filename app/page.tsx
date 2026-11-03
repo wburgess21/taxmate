@@ -61,14 +61,14 @@ export default function Home() {
         <div id="after-story" />
 
         {/* Your pay, in coins */}
-        <section id="pay" className="mx-auto max-w-[1240px] px-5 pb-28 pt-28 sm:px-8 lg:pb-40 lg:pt-36">
+        <section id="pay" className="mx-auto max-w-[1240px] px-5 pb-20 pt-20 sm:px-8 sm:pb-28 sm:pt-28 lg:pb-40 lg:pt-36">
           <Heading kicker="Your pay, in coins" body="Every coin is a thousand pounds of salary. Drag it and watch what you keep, and what goes in tax, worked out the way TaxMate does it.">
             Drag the salary. <em>Watch it split.</em>
           </Heading>
-          <div className="mt-16 lg:mt-20" data-reveal>
+          <div className="mt-12 sm:mt-16 lg:mt-20" data-reveal>
             <PayPiles />
           </div>
-          <p className="mt-10 max-w-2xl text-[0.8125rem] text-muted">
+          <p className="mt-8 max-w-2xl text-[0.8125rem] text-muted sm:mt-10">
             A rough guide from salary alone, using {TAX_YEAR} bands for someone under State Pension age. In the app, Take Home Pay adds pensions, student loans, tax codes and payroll extras.
           </p>
         </section>

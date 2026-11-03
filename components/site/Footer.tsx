@@ -36,8 +36,10 @@ export function Footer() {
           </nav>
         ))}
       </div>
-      <p className="mt-16 border-t border-hairline pt-6 text-[0.8125rem] leading-relaxed text-muted">
-        © {new Date().getFullYear()} TaxMate. Estimates use {TAX_YEAR} HMRC rates and are for planning only, not tax advice. TaxMate is independent and not affiliated with HMRC.
+      {/* On phones the independence note sits above the rule, apart from the copyright line. */}
+      <p className="mt-14 text-[0.8125rem] leading-relaxed text-muted md:hidden">TaxMate is independent and not affiliated with HMRC.</p>
+      <p className="mt-6 border-t border-hairline pt-6 text-[0.8125rem] leading-relaxed text-muted md:mt-16">
+        © {new Date().getFullYear()} TaxMate. Estimates use {TAX_YEAR} HMRC rates and are for planning only, not tax advice.<span className="hidden md:inline"> TaxMate is independent and not affiliated with HMRC.</span>
       </p>
     </footer>
   );

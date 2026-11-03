@@ -17,8 +17,12 @@ const instrumentSerif = Instrument_Serif({
   style: ["normal", "italic"],
 });
 
-/** Decides before first paint whether the launch intro plays: once a session, from the top of the home page. */
-const introScript = `try{var d=document.documentElement;d.classList.add("js");if(location.pathname==="/"&&!location.hash&&!sessionStorage.getItem("tm-intro")&&!matchMedia("(prefers-reduced-motion: reduce)").matches&&!(history.state&&history.state.__NA))d.dataset.intro="1"}catch(e){}`;
+/**
+ * Decides before first paint whether the launch intro plays, from the top of the home page. On desktop it plays once a
+ * session. On phones a browser tab can last for weeks (and a reload keeps it), so there it plays whenever the page is
+ * opened or reloaded, and is skipped only when coming back to it.
+ */
+const introScript = `try{var d=document.documentElement;d.classList.add("js");var n=performance.getEntriesByType&&performance.getEntriesByType("navigation")[0],m=matchMedia("(max-width: 959px)").matches,again=m?!!(n&&n.type==="back_forward"):!!(sessionStorage.getItem("tm-intro")||(history.state&&history.state.__NA));if(location.pathname==="/"&&!location.hash&&!again&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.dataset.intro="1"}catch(e){}`;
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",

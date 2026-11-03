@@ -121,24 +121,46 @@ export function Story() {
     const pointer = { x: 0, y: 0, active: false };
     let k = 1, lastBeat: BeatId = "hero", lastLate = false;
 
+    const svhProbe = q<HTMLElement>(".story-svh")!;
+    const navBottom = () => {
+      const bar = document.querySelector(".site-nav-bar");
+      return bar ? Math.max(0, bar.getBoundingClientRect().bottom) : 68;
+    };
+    // The tallest caption (with the progress bars above it), so the phone never jumps between beats.
+    const captionHeight = () => {
+      const chapters = q<HTMLElement>(".story-chapters"), caps = stage.querySelectorAll<HTMLElement>(".story-caption");
+      const tallest = Array.from(caps).reduce((a, c) => Math.max(a, c.offsetHeight), 0);
+      return (chapters ? chapters.offsetHeight + parseFloat(getComputedStyle(chapters).marginBottom) : 18) + (tallest || 120);
+    };
+
     // Lay the phone out for the viewport: beside the captions on wide screens, above them on narrow ones.
     const layout = () => {
       const W = stage.clientWidth, H = stage.clientHeight, wide = W >= 960;
+      stage.dataset.layout = wide ? "wide" : "narrow";
       if (wide) {
         k = Math.min((H - 132) / (PHONE.height + 22), ((W * 0.5) - 40) / (PHONE.width + 22), 1);
         const cx = W * 0.5 + Math.min(W * 0.25, 420) , cy = H / 2 + 26;
         phoneWrap.style.transform = `translate(${cx - (PHONE.width * k) / 2}px, ${cy - (PHONE.height * k) / 2}px) scale(${k})`;
       } else {
-        const capH = Math.min(196, H * 0.25);
-        k = Math.min((H - 74 - capH - 10) / (PHONE.height + 22), (W - 56) / (PHONE.width + 22), 1);
-        phoneWrap.style.transform = `translate(${W / 2 - (PHONE.width * k) / 2}px, ${74}px) scale(${k})`;
-        stage.style.setProperty("--cap-top", `${74 + PHONE.height * k + 18}px`);
+        // The stage runs the full (large) viewport so the hero's green reaches the bottom of the screen; the tour is
+        // laid out within the part that's always visible, between the nav and any browser toolbar.
+        const safeH = Math.min(H, svhProbe.clientHeight || H);
+        const top = navBottom() + 24, bottom = 20, gap = Math.max(30, Math.min(44, safeH * 0.045));
+        const capH = captionHeight();
+        const room = safeH - top - bottom;
+        k = Math.min((room - gap - capH) / (PHONE.height + 22), (W - 56) / (PHONE.width + 22), 1);
+        const block = PHONE.height * k + gap + capH;
+        const y = top + Math.max(0, (room - block) / 2);
+        phoneWrap.style.transform = `translate(${W / 2 - (PHONE.width * k) / 2}px, ${y}px) scale(${k})`;
+        stage.style.setProperty("--cap-top", `${y + PHONE.height * k + gap}px`);
       }
-      stage.dataset.layout = wide ? "wide" : "narrow";
     };
     layout();
     const ro = new ResizeObserver(layout);
     ro.observe(stage);
+    // Caption heights change once the web fonts arrive.
+    let alive = true;
+    document.fonts?.ready.then(() => { if (alive) layout(); });
 
     const rel = (el: Element | null): Rect | undefined => {
       if (!el) return undefined;
@@ -171,7 +193,8 @@ export function Story() {
     };
     const first = env(0);
     S.env = first;
-    if (introOn) S.startIntro(first);
+    // The launch is centred in the always-visible part of the stage (on phones the stage runs under the toolbar).
+    if (introOn) S.startIntro({ ...first, height: Math.min(first.height, svhProbe.clientHeight || first.height) });
     else { S.intro.phase = "launch"; S.finishIntro(); delete root.dataset.intro; }
 
     const onMove = (e: PointerEvent) => {
@@ -250,7 +273,7 @@ export function Story() {
     });
 
     return () => {
-      loop.stop(); ro.disconnect();
+      alive = false; loop.stop(); ro.disconnect();
       stage.removeEventListener("pointermove", onMove);
       stage.removeEventListener("pointerleave", onLeave);
       stage.removeEventListener("click", onClick);
@@ -272,6 +295,7 @@ export function Story() {
       {/* Where the tour's first screen (the phone's welcome) sits centred: the target of "Tour" links. */}
       <div id="tour" className="story-anchor" style={{ top: `${(MORPH.start + MORPH.len + BEATS[2].len * 0.4) * 100}lvh` }} aria-hidden />
       <div ref={stageRef} className="story-stage" data-beat={beat}>
+        <div className="story-svh" aria-hidden />
         <div className="story-phone" style={{ opacity: 0 }}>
           <Phone tone="light">
             <div className="phone-flood" />

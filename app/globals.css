@@ -352,6 +352,22 @@ html[data-intro="flood"] .site-nav {
     radial-gradient(1000px 700px at 0% 0%, var(--glow), transparent 70%),
     var(--canvas);
 }
+/* On phones the stage runs the full large viewport, so the hero's green reaches the bottom of the screen behind the
+   browser's toolbar; the probe gives the always-visible height to lay the tour out within. */
+@media (max-width: 959px) {
+  .story-stage {
+    height: 100lvh;
+  }
+}
+.story-svh {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100svh;
+  visibility: hidden;
+  pointer-events: none;
+}
 .story-canvas {
   position: absolute;
   inset: 0;
@@ -474,7 +490,7 @@ html[data-intro="flood"] .story-aura {
 .story-stage[data-layout="narrow"] .story-hero-copy {
   left: 24px;
   right: 24px;
-  bottom: max(28px, env(safe-area-inset-bottom));
+  bottom: calc(100lvh - 100svh + max(28px, env(safe-area-inset-bottom)));
   text-align: left;
 }
 .story-h1 {
@@ -681,7 +697,7 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
   .story-stage[data-layout="narrow"] .story-hero-copy {
     left: 48px;
     right: 48px;
-    bottom: 48px;
+    bottom: calc(100lvh - 100svh + 48px);
   }
 }
 
