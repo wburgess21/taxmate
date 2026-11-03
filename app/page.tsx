@@ -14,6 +14,7 @@ import { CoinHeap } from "@/components/sections/CoinHeap";
 import { Faq } from "@/components/sections/Faq";
 import { TAX_YEAR } from "@/lib/site";
 import { FAQ, PLUS } from "@/lib/content";
+import { AUDIENCES } from "@/lib/audiences";
 import { JsonLd } from "@/components/site/JsonLd";
 import { faqSchema } from "@/lib/schema";
 
@@ -154,6 +155,14 @@ export default function Home() {
           <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
             <div className="lg:sticky lg:top-28 lg:self-start">
               <Heading kicker="Questions">Good <em>questions.</em></Heading>
+              <nav aria-label="Guides by situation" className="mt-10 hidden lg:block" data-reveal>
+                <p className="text-[0.9375rem] text-muted">Guides for how you work</p>
+                <ul className="mt-3 flex flex-wrap gap-2">
+                  {AUDIENCES.map((a) => (
+                    <li key={a.slug}><Link href={`/for/${a.slug}`} className="check" style={{ ["--tint" as string]: a.tint }}>{a.label}</Link></li>
+                  ))}
+                </ul>
+              </nav>
             </div>
             <div data-reveal>
               <Faq items={FAQ} />

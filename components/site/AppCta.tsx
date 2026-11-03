@@ -8,7 +8,7 @@ import { AppQr } from "./AppQr";
  */
 export function AppCta({ title, body, points, placement }: { title: [string, string]; body: string; points?: string[]; placement: string }) {
   return (
-    <section className="px-3 py-16 sm:px-6 lg:py-24">
+    <section className="px-3 pb-4 pt-16 sm:px-6 lg:pb-6 lg:pt-24">
       <div className="green mx-auto grid max-w-[1240px] items-center gap-12 overflow-hidden rounded-[36px] px-7 py-12 sm:px-14 sm:py-16 lg:grid-cols-[1fr_auto] lg:px-20" data-reveal>
         <div>
           <p className="eyebrow text-gold">Free on the App Store</p>

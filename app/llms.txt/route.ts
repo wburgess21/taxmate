@@ -1,5 +1,6 @@
 import { llmsTxt } from "@/lib/llms";
 import { CALCULATORS } from "@/lib/calculators";
+import { AUDIENCES } from "@/lib/audiences";
 import { calcUrl } from "@/lib/calcSchema";
 import { SITE_URL, TAX_YEAR } from "@/lib/site";
 
@@ -13,6 +14,10 @@ export function GET() {
         { title: "All calculators", url: `${SITE_URL}/calculators` },
         ...CALCULATORS.map((c) => ({ title: `${c.name} calculator`, url: calcUrl(c.slug), note: c.description })),
       ],
+    },
+    {
+      title: "Guides by situation",
+      links: AUDIENCES.map((a) => ({ title: a.title, url: `${SITE_URL}/for/${a.slug}`, note: a.description })),
     },
     {
       title: "Reference",
