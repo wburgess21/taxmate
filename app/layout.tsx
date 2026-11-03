@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next"
+import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { RevealOnScroll } from "@/components/site/Reveal";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -8,19 +10,53 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+});
+
+/** Decides before first paint whether the launch intro plays: once a session, from the top of the home page. */
+const introScript = `try{var d=document.documentElement;d.classList.add("js");if(location.pathname==="/"&&!location.hash&&!sessionStorage.getItem("tm-intro")&&!matchMedia("(prefers-reduced-motion: reduce)").matches&&!(history.state&&history.state.__NA))d.dataset.intro="1"}catch(e){}`;
+
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
+const description =
+  "Eleven UK tax calculators for iPhone and iPad: take-home pay, self-employed tax, home office, expenses, mileage, pensions, VAT, Making Tax Digital and more. Personalised to you, with live estimates and your calculations kept on your device.";
+
 export const metadata: Metadata = {
-  title: "TaxMate - A Better Way to Calculate Home Office Tax",
-  description: "Calculate your home office tax deduction accurately using HMRC-approved methods. Compare flat rate vs actual costs and claim what you're entitled to with confidence.",
+  metadataBase: new URL(SITE_URL),
+  alternates: { canonical: "/" },
+  title: {
+    default: "TaxMate: Your UK tax, made clearer",
+    template: "%s · TaxMate",
+  },
+  description,
+  applicationName: "TaxMate",
+  openGraph: {
+    title: "TaxMate: Your UK tax, made clearer",
+    description,
+    type: "website",
+    locale: "en_GB",
+    siteName: "TaxMate",
+    url: SITE_URL,
+  },
+  twitter: { card: "summary_large_image", title: "TaxMate: Your UK tax, made clearer", description },
+  appleWebApp: { title: "TaxMate" },
+  itunes: { appId: "6757307991" },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f4f3ee" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0f0c" },
+  ],
 };
 
 export default function RootLayout({
@@ -29,11 +65,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="en-GB" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: introScript }} />
+      </head>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} font-sans antialiased`}>
         {children}
+        <RevealOnScroll />
         <Analytics />
       </body>
     </html>

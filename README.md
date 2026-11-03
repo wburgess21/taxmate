@@ -1,17 +1,21 @@
 # TaxMate
 
-TaxMate is the marketing and legal website for the TaxMate iOS app, a UK home office tax calculator for self-employed people, sole traders, and small business owners.
+TaxMate is the marketing and legal website for the TaxMate iOS app: UK tax calculators for iPhone and iPad covering take-home pay, self-employed tax, combined income, home office, business expenses, mileage, pensions, tax savings, VAT, Making Tax Digital and annual summaries.
 
-The site explains how the app compares HMRC's simplified flat rate method with a detailed actual-cost calculation, links visitors to the App Store, and hosts the public privacy policy and terms pages.
+The site follows the app's design language (`taxmate-ios/Documentation/Design.md`): the canvas and surface colours, green and gold hero cards, and the three tool-group tints, in light and dark mode.
 
 ## Features
 
-- Responsive landing page for the TaxMate iOS app
-- App Store calls to action throughout the page
-- Product sections for features, how it works, target users, FAQ, and tax disclaimer
-- Privacy policy page at `/privacy`
-- Terms of use page at `/terms`
-- Shared footer and navigation styling
+The home page is a tour of the app's first run, told with the app's own coins (`lib/coins` is a canvas port of the iOS coin renderer and spring physics, with cut-out holes so coins can sit over anything):
+
+- **Story** (`components/story`): a pinned, scroll-driven sequence. It opens with the launch animation (once a session), then the green floods out and the hero shrinks into an HTML iPhone. Onboarding questions follow (answers land on coins, the stack grows, goals orbit as satellites), then the personalising loader, the coins landing in the home logo, a live estimate and the result sheet. App screens are built at native point sizes from the app's `Design.md`.
+- **Your pay, in coins**: drag a salary and watch it split into piles of £1,000 coins (2026/27 bands, England, Wales & NI or Scotland).
+- **Tools**: the eleven tools in their three tinted groups, each with a coin badge that flips on hover.
+- **Key dates**: the current tax year with a coin rolling to today and a live countdown to the next HMRC date.
+- Privacy, TaxMate Plus, FAQ and a closing coin heap to play with.
+- Light and dark mode follow the system; animations respect `prefers-reduced-motion` and pause off-screen.
+- Privacy policy at `/privacy` and terms of use at `/terms`
+- Canonical URLs, sitemap, robots and a generated share image for https://www.taxmate-app.com
 - Vercel Analytics integration
 
 ## Tech Stack
