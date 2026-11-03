@@ -7,6 +7,7 @@ const links = [
   { href: "/#tour", label: "Tour" },
   { href: "/calculators", label: "Calculators" },
   { href: "/tax-rates", label: "Tax rates" },
+  { href: "/key-dates", label: "Key dates" },
   { href: "/#plus", label: "Plus" },
 ];
 

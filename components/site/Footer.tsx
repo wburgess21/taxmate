@@ -6,7 +6,7 @@ import { appStoreUrl, CONTACT_EMAIL, TAX_YEAR } from "@/lib/site";
 
 const COLUMNS: { title: string; links: [string, string][] }[] = [
   { title: "Calculators", links: [...CALCULATORS.slice(0, 6).map((c) => [`/calculators/${c.slug}`, c.name] as [string, string]), ["/calculators", "All calculators"]] },
-  { title: "Explore", links: [["/#tour", "The tour"], ["/#tools", "Tools"], ["/#plus", "TaxMate Plus"], ["/tax-rates", "Tax rates"], ["/#faq", "Questions"]] },
+  { title: "Explore", links: [["/#tour", "The tour"], ["/#tools", "Tools"], ["/#plus", "TaxMate Plus"], ["/tax-rates", "Tax rates"], ["/key-dates", "Key dates"], ["/#faq", "Questions"]] },
   { title: "Legal", links: [["/privacy", "Privacy policy"], ["/terms", "Terms of use"]] },
 ];
 
