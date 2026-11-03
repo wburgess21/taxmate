@@ -1758,3 +1758,25 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
   }
 }
 
+/* "Save this in the app", at the foot of a calculator's results. */
+.calc-save {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 4px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  color: var(--tint);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--tint) 25%, transparent);
+  transition: transform 0.35s cubic-bezier(0.3, 0.7, 0.3, 1.3), box-shadow 0.3s;
+}
+.calc-save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgb(0 0 0 / 0.06);
+}
+.calc-save:focus-visible {
+  outline: 2px solid var(--tint);
+  outline-offset: 2px;
+}

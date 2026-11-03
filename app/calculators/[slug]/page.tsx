@@ -6,6 +6,7 @@ import { faqSchema } from "@/lib/schema";
 import { TOOLS } from "@/lib/tools";
 import { TAX_YEAR } from "@/lib/site";
 import { CALCULATOR_COMPONENTS } from "@/components/calculators/registry";
+import { CalcProvider } from "@/components/calculators/shared";
 import { Examples, hasExamples } from "@/components/calculators/Examples";
 import { InnerPage, PageHeading, SectionHeading } from "@/components/site/InnerPage";
 import { JsonLd } from "@/components/site/JsonLd";
@@ -44,7 +45,7 @@ export default async function CalculatorPage({ params }: Props) {
       <PageHeading kicker={`${tool.group.title} · Free calculator`} h1={c.h1} lede={c.lede} />
 
       <section aria-label="Calculator" className="mx-auto mt-10 max-w-[1240px] px-3 sm:mt-14 sm:px-8">
-        <Calculator />
+        <CalcProvider placement={`calc-${c.slug}`} tool={c.tool}><Calculator /></CalcProvider>
         <p className="mt-4 px-2 text-[0.8125rem] leading-relaxed text-muted sm:px-0">
           Uses {TAX_YEAR} HMRC rates and thresholds. An estimate for planning, not tax advice. Nothing you enter leaves your browser.
         </p>

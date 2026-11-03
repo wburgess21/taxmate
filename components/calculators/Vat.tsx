@@ -4,7 +4,7 @@ import { RULES, gbp, vatSplit } from "@/lib/taxRules";
 import { Note, NumberField, ResultHero, ResultRows, Segmented, useQueryState } from "./fields";
 import { Calc } from "./shared";
 
-const RATES: [string, string][] = [["0.2", "20% standard"], ["0.05", "5% reduced"], ["0", "0% zero"]];
+const RATES: [string, string][] = [["0.2", "20%"], ["0.05", "5%"], ["0", "0%"]];
 
 export function VatCalculator() {
   const [s, set] = useQueryState({ mode: "add" as "add" | "remove", amount: 1_000, rate: "0.2", turnover: 70_000 });
@@ -16,7 +16,7 @@ export function VatCalculator() {
         inputs={<>
           <Segmented name="mode" label="I want to" value={s.mode} onChange={set("mode")} options={[["add", "Add VAT"], ["remove", "Remove VAT"]]} />
           <NumberField name="amount" label={s.mode === "add" ? "Price before VAT" : "Price including VAT"} value={s.amount} onChange={set("amount")} />
-          <Segmented name="rate" label="VAT rate" value={s.rate} onChange={set("rate")} options={RATES} />
+          <Segmented name="rate" label="VAT rate" hint="Standard, reduced or zero rate." value={s.rate} onChange={set("rate")} options={RATES} />
         </>}
         results={<>
           <ResultHero label={s.mode === "add" ? "Price with VAT" : "Price before VAT"} value={gbp(s.mode === "add" ? r.gross : r.net, true)} sub={`VAT: ${gbp(r.vat, true)}`} />
@@ -29,6 +29,7 @@ export function VatCalculator() {
         </>}
       />
       <Calc
+        cta={false}
         inputs={<>
           <NumberField name="turnover" label="VAT-taxable turnover in the last 12 months" hint="A rolling 12 months, not your tax year. Leave out exempt and out-of-scope sales." value={s.turnover} onChange={set("turnover")} />
         </>}
