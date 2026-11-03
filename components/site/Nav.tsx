@@ -5,8 +5,7 @@ import { appStoreUrl } from "@/lib/site";
 
 const links = [
   { href: "/#tour", label: "Tour" },
-  { href: "/#pay", label: "Your pay" },
-  { href: "/#tools", label: "Tools" },
+  { href: "/calculators", label: "Calculators" },
   { href: "/#plus", label: "Plus" },
   { href: "/#faq", label: "FAQ" },
 ];

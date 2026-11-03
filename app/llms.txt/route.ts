@@ -1,7 +1,19 @@
 import { llmsTxt } from "@/lib/llms";
+import { CALCULATORS } from "@/lib/calculators";
+import { calcUrl } from "@/lib/calcSchema";
+import { SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-static";
 
 export function GET() {
-  return new Response(llmsTxt(), { headers: { "Content-Type": "text/plain; charset=utf-8" } });
+  const body = llmsTxt([
+    {
+      title: "Free web calculators",
+      links: [
+        { title: "All calculators", url: `${SITE_URL}/calculators` },
+        ...CALCULATORS.map((c) => ({ title: `${c.name} calculator`, url: calcUrl(c.slug), note: c.description })),
+      ],
+    },
+  ]);
+  return new Response(body, { headers: { "Content-Type": "text/plain; charset=utf-8" } });
 }

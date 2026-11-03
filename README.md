@@ -18,6 +18,14 @@ The home page is a tour of the app's first run, told with the app's own coins (`
 - Canonical URLs, sitemap, robots and a generated share image for https://www.taxmate-app.com
 - Vercel Analytics integration
 
+## Calculators
+
+`/calculators` and ten free calculator pages (`/calculators/take-home-pay`, `/calculators/vat` and so on), one for each app tool that works as a quick estimate. Each page has the interactive calculator, an explanation, server-rendered worked figures where useful, FAQs (as FAQPage structured data), related calculators and a call to action into the matching app tool.
+
+- `lib/taxRules.ts`: every 2026/27 rate and threshold, and the calculations. **Update this file each tax year**, checking it against the app's `TaxRules.swift` and GOV.UK.
+- `lib/calculators.ts`: each page's copy, FAQ and what the app adds.
+- `components/calculators`: the interactive calculators. Inputs are mirrored in the address bar (`?salary=45000`), so results can be shared.
+
 ## Measurement
 
 - Every App Store link carries a campaign (`ct`), such as `home-hero`, `nav` or `home-finale-qr`, built by `appStoreUrl()` in `lib/site.ts`. Set `NEXT_PUBLIC_APP_STORE_PROVIDER_TOKEN` (App Store Connect → Analytics → Campaigns) and installs from each placement show up under Sources in App Store Connect. QR codes carry their own campaign, since scans never touch the site.

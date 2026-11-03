@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 import { GROUPS } from "@/lib/tools";
+import { calculatorForTool } from "@/lib/calculators";
 import { Coin, Stars, TAU, cssColor, drawCoin, fitCanvas, onSchemeChange, prefersReducedMotion, runLoop } from "@/lib/coins/engine";
 
 const REST = { wx: 0.28, wy: 0.42, lz: -0.05 };
@@ -92,7 +94,10 @@ export function ToolCoins() {
                 <li key={t.title} className="tool-row" data-tool data-icon={t.icon} data-tint={g.tint}>
                   <span className="tool-row-coin" aria-hidden />
                   <span>
-                    <span className="block text-[1.0625rem] font-medium">{t.title}</span>
+                    {calculatorForTool(t.title)
+                      // The whole row is the link (the title's ::after covers it); the coin canvas sits above, pointer-transparent.
+                      ? <Link href={`/calculators/${calculatorForTool(t.title)!.slug}`} className="block text-[1.0625rem] font-medium after:absolute after:inset-0 after:content-['']">{t.title}</Link>
+                      : <span className="block text-[1.0625rem] font-medium">{t.title}</span>}
                     <span className="block text-[0.9375rem] leading-snug text-muted">{t.benefit}</span>
                   </span>
                 </li>

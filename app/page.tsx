@@ -1,4 +1,5 @@
-import { Bell, Check, EyeOff, Lock, Plus, Smartphone } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Bell, Check, EyeOff, Lock, Plus, Smartphone } from "lucide-react";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { AppStoreButton } from "@/components/site/AppStoreButton";
@@ -64,6 +65,10 @@ export default function Home() {
             </Heading>
             <div className="mt-16 lg:mt-24" data-reveal>
               <ToolCoins />
+            </div>
+            <div className="mt-14 flex flex-wrap items-center gap-x-5 gap-y-3" data-reveal>
+              <Link href="/calculators" className="btn-ghost press" data-cta="home-tools-calculators">Try the calculators free <ArrowRight className="h-4 w-4" aria-hidden /></Link>
+              <span className="text-[0.9375rem] text-muted">Quick estimates on the web, from the same rules as the app.</span>
             </div>
           </div>
         </section>

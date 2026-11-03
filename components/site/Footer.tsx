@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { CoinMark } from "./CoinMark";
+import { CALCULATORS } from "@/lib/calculators";
 import { appStoreUrl, CONTACT_EMAIL, TAX_YEAR } from "@/lib/site";
 
-const COLUMNS = [
+const COLUMNS: { title: string; links: [string, string][] }[] = [
+  { title: "Calculators", links: [...CALCULATORS.slice(0, 6).map((c) => [`/calculators/${c.slug}`, c.name] as [string, string]), ["/calculators", "All calculators"]] },
   { title: "Explore", links: [["/#tour", "The tour"], ["/#pay", "Your pay, in coins"], ["/#tools", "Tools"], ["/#dates", "Key dates"], ["/#plus", "TaxMate Plus"], ["/#faq", "Questions"]] },
   { title: "Legal", links: [["/privacy", "Privacy policy"], ["/terms", "Terms of use"]] },
 ];
@@ -11,8 +13,8 @@ const COLUMNS = [
 export function Footer() {
   return (
     <footer className="mx-auto max-w-[1240px] px-5 pb-10 pt-20 sm:px-8">
-      <div className="grid gap-14 md:grid-cols-[1.5fr_1fr_1fr]">
-        <div>
+      <div className="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-[1.5fr_1fr_1fr_1fr] md:gap-x-10">
+        <div className="col-span-2 md:col-span-1">
           <Link href="/" className="inline-flex items-center gap-3" aria-label="TaxMate home">
             <CoinMark className="h-10 w-10" />
             <span className="text-2xl font-light tracking-tight">TaxMate</span>
