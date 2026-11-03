@@ -25,6 +25,11 @@ The home page is a tour of the app's first run, told with the app's own coins (`
 - `GOOGLE_SITE_VERIFICATION` and `BING_SITE_VERIFICATION` add the Search Console and Bing Webmaster Tools meta tags. Submit `/sitemap.xml` in both.
 - See `.env.example` for every variable.
 
+## Search and agents
+
+- schema.org JSON-LD (`lib/schema.ts`): Organization, WebSite and MobileApplication on every page, FAQPage on the home page.
+- `/llms.txt` (`lib/llms.ts`) describes TaxMate in plain Markdown for language models and agents, built from the same data as the pages (`lib/tools.ts`, `lib/content.ts`).
+
 ## Tech Stack
 
 - [Next.js](https://nextjs.org/) 16 with the App Router
