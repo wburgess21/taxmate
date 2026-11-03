@@ -5,6 +5,7 @@ import { Footer } from "@/components/site/Footer";
 import { AppStoreButton } from "@/components/site/AppStoreButton";
 import { AppQr } from "@/components/site/AppQr";
 import { GetTheApp } from "@/components/site/GetTheApp";
+import { AppRating } from "@/components/site/AppRating";
 import { Story } from "@/components/story/Story";
 import { PayPiles } from "@/components/sections/PayPiles";
 import { ToolCoins } from "@/components/sections/ToolCoins";
@@ -41,7 +42,7 @@ export default function Home() {
       <JsonLd data={faqSchema(FAQ)} />
       <Nav />
       <main>
-        <Story />
+        <Story rating={<AppRating className="text-white" />} />
 
         <div id="after-story" />
 
@@ -178,6 +179,7 @@ export default function Home() {
             <h2 className="display mx-auto mt-6 max-w-4xl text-[3rem] sm:text-7xl lg:text-[6.5rem]">
               Your UK tax, <em className="text-gold">made clearer.</em>
             </h2>
+            <AppRating className="mt-6 justify-center text-white" />
             <p className="mx-auto mt-6 max-w-md text-lg text-white/75">For iPhone and iPad. A few quick questions, and your tax picture in minutes.</p>
             <GetTheApp placement="home-finale" qr={<AppQr campaign="home-finale-qr" className="block h-[148px] w-[148px]" />} />
             <p className="mt-6 text-[0.8125rem] text-white/45 motion-reduce:hidden" aria-hidden>Psst: tap the screen.</p>

@@ -66,7 +66,8 @@ function useTween(target: number, ms = 650) {
   return v;
 }
 
-export function Story() {
+/** `rating` is the live App Store rating (rendered on the server), shown under the hero buttons when there is one. */
+export function Story({ rating }: { rating?: React.ReactNode }) {
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -328,6 +329,7 @@ export function Story() {
               Take the tour <ArrowDown className="h-4 w-4" aria-hidden />
             </a>
           </div>
+          {rating && <div className="story-rating">{rating}</div>}
         </div>
 
         <div className="story-captions">

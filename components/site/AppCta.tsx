@@ -1,6 +1,7 @@
 import { Check } from "lucide-react";
 import { AppStoreButton } from "./AppStoreButton";
 import { AppQr } from "./AppQr";
+import { AppRating } from "./AppRating";
 
 /**
  * The green "do more in the app" card for inner pages. On wide screens it offers a code to scan, since most desktop
@@ -11,7 +12,10 @@ export function AppCta({ title, body, points, placement }: { title: [string, str
     <section className="px-3 pb-4 pt-16 sm:px-6 lg:pb-6 lg:pt-24">
       <div className="green mx-auto grid max-w-[1240px] items-center gap-12 overflow-hidden rounded-[36px] px-7 py-12 sm:px-14 sm:py-16 lg:grid-cols-[1fr_auto] lg:px-20" data-reveal>
         <div>
-          <p className="eyebrow text-gold">Free on the App Store</p>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <p className="eyebrow text-gold">Free on the App Store</p>
+            <AppRating className="text-white" />
+          </div>
           <h2 className="display mt-4 text-[2.5rem] sm:text-6xl">{title[0]} <em className="text-gold">{title[1]}</em></h2>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/75">{body}</p>
           {points && (

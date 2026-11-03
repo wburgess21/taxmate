@@ -1744,3 +1744,17 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
     padding: 12px 10px;
   }
 }
+
+/* The App Store rating under the hero buttons; it gives way first when a phone screen is short. */
+.story-rating {
+  margin-top: 18px;
+}
+.story-rating:empty {
+  display: none;
+}
+@media (max-height: 760px) {
+  .story-stage[data-layout="narrow"] .story-rating {
+    display: none;
+  }
+}
+
