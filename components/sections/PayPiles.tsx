@@ -224,12 +224,12 @@ export function PayPiles() {
   const monthly = parts.keep / 12;
 
   return (
-    <div className="grid items-end gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
+    <div className="grid items-end gap-8 sm:gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
       <div>
-        <p className="text-[4.5rem] font-light leading-none tracking-[-0.045em] tabular-nums sm:text-[6rem]" aria-live="polite">{gbp(monthly)}</p>
-        <p className="mt-2 text-lg text-muted">take home a month, from {gbp(salary)} a year</p>
+        <p className="text-[3.5rem] font-light leading-none tracking-[-0.045em] tabular-nums sm:text-[6rem]" aria-live="polite">{gbp(monthly)}</p>
+        <p className="mt-2 text-base text-muted sm:text-lg">take home a month, from {gbp(salary)} a year</p>
 
-        <div className="mt-10">
+        <div className="mt-8 sm:mt-10">
           <div className="flex items-baseline justify-between">
             <label htmlFor={id} className="text-[0.9375rem] font-medium">Salary</label>
             <span className="text-[0.9375rem] tabular-nums text-muted">{gbp(salary)} a year</span>
@@ -248,7 +248,7 @@ export function PayPiles() {
           />
         </div>
 
-        <div role="radiogroup" aria-label="Where you pay tax" className="mt-8 inline-grid grid-cols-2 rounded-full border border-hairline bg-surface p-1">
+        <div role="radiogroup" aria-label="Where you pay tax" className="mt-6 inline-grid grid-cols-2 sm:mt-8 rounded-full border border-hairline bg-surface p-1">
           {([["rUK", "England, Wales & NI"], ["scotland", "Scotland"]] as const).map(([v, l]) => (
             <button key={v} role="radio" aria-checked={region === v} onClick={() => setRegion(v)}
               className={`rounded-full px-4 py-2 text-[0.9375rem] transition-colors ${region === v ? "bg-ink text-canvas" : "text-muted hover:text-ink"}`}>
@@ -257,9 +257,9 @@ export function PayPiles() {
           ))}
         </div>
 
-        <dl className="mt-10 grid gap-3 border-t border-hairline pt-6">
+        <dl className="mt-8 grid gap-3 border-t border-hairline pt-5 sm:mt-10 sm:pt-6">
           {CATS.map((c) => (
-            <div key={c.id} className="flex items-center justify-between text-[1.0625rem]">
+            <div key={c.id} className="flex items-center justify-between text-base sm:text-[1.0625rem]">
               <dt className="flex items-center gap-2.5"><span className="h-2.5 w-2.5 rounded-full" style={{ background: c.dot }} />{c.label}</dt>
               <dd className="tabular-nums text-muted">{gbp(parts[c.id] / 12)} <span className="text-[0.8125rem]">/ month</span></dd>
             </div>
@@ -268,7 +268,8 @@ export function PayPiles() {
       </div>
 
       <div>
-        <div className="relative h-[340px] sm:h-[420px]">
+        {/* On phones the piles are sized by the width, so the canvas is only as tall as a full column needs. */}
+        <div className="relative h-[calc((100vw-2.5rem)*0.36+44px)] sm:h-[420px]">
           <canvas ref={canvasRef} aria-hidden className="absolute inset-0 h-full w-full cursor-pointer touch-manipulation" />
         </div>
         <div className="mt-4 grid border-t border-hairline pt-4 text-[0.8125rem] text-muted" style={{ gridTemplateColumns: "5.65fr 3.9fr 1.65fr" }}>
