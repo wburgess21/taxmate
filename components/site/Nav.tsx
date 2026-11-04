@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { CoinMark } from "./CoinMark";
 import { SpinCoins } from "./SpinCoins";
+import { MobileMenu } from "./MobileMenu";
 import { appStoreUrl } from "@/lib/site";
+import { AUDIENCES } from "@/lib/audiences";
 
 const links = [
   { href: "/calculators", label: "Calculators" },
@@ -10,6 +12,15 @@ const links = [
   { href: "/blog", label: "Blog" },
   { href: "/#plus", label: "Plus" },
 ];
+
+/** Shown only in the phone menu, under the main links. */
+const extra = [
+  { href: "/#tour", label: "The tour" },
+  { href: "/#faq", label: "Questions" },
+  { href: "/privacy", label: "Privacy" },
+];
+
+const guides = AUDIENCES.map((a) => ({ href: `/for/${a.slug}`, label: a.label }));
 
 export function Nav() {
   return (
@@ -29,6 +40,7 @@ export function Nav() {
           <span className="nav-cta-coin" aria-hidden><SpinCoins className="h-[1.15em] w-[1.15em]" /></span>
           Get the app
         </a>
+        <MobileMenu links={links} extra={extra} guides={guides} />
       </nav>
     </header>
   );

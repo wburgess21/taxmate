@@ -1786,3 +1786,104 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
   border-color: color-mix(in srgb, var(--tint, var(--tool-income)) 50%, transparent);
   background: color-mix(in srgb, var(--tint, var(--tool-income)) 12%, var(--surface));
 }
+
+/* ───────────── Phone menu ───────────── */
+
+.menu-button {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-left: 6px;
+  border-radius: 999px;
+  color: currentColor;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  transition: background 0.2s;
+}
+.menu-button:hover,
+.menu-button[data-state="open"] {
+  background: color-mix(in srgb, currentColor 14%, transparent);
+}
+.menu-button:focus-visible {
+  outline: 2px solid var(--tool-income);
+  outline-offset: 2px;
+}
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  background: rgb(0 0 0 / 0.22);
+  backdrop-filter: blur(2px);
+}
+.menu-panel {
+  position: fixed;
+  top: 76px;
+  left: 12px;
+  right: 12px;
+  z-index: 70;
+  max-height: calc(100dvh - 88px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 6px 16px 20px;
+  border-radius: 28px;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  border: 1px solid var(--hairline);
+  box-shadow: 0 24px 60px rgb(0 0 0 / 0.18);
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  transform-origin: top center;
+}
+.menu-overlay[data-state="open"] {
+  animation: menu-fade 0.25s ease both;
+}
+.menu-overlay[data-state="closed"] {
+  animation: menu-fade 0.2s ease reverse both;
+}
+.menu-panel[data-state="open"] {
+  animation: menu-in 0.35s cubic-bezier(0.3, 0.7, 0.2, 1) both;
+}
+.menu-panel[data-state="closed"] {
+  animation: menu-out 0.2s ease both;
+}
+@keyframes menu-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes menu-in {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes menu-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(-6px) scale(0.98); }
+}
+.menu-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+  padding: 0 4px;
+  border-bottom: 1px solid var(--hairline);
+  font-size: 1.1875rem;
+  font-weight: 300;
+  letter-spacing: -0.015em;
+}
+.menu-link[aria-current="page"] {
+  font-weight: 500;
+}
+.menu-link:focus-visible {
+  outline: 2px solid var(--tool-income);
+  outline-offset: -2px;
+  border-radius: 10px;
+}
+/* Unlayered rules above outrank Tailwind's md:hidden, so hide the menu explicitly from the md breakpoint. */
+@media (min-width: 768px) {
+  .menu-button,
+  .menu-panel,
+  .menu-overlay {
+    display: none;
+  }
+}
