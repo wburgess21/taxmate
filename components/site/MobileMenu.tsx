@@ -15,7 +15,7 @@ type Item = { href: string; label: string };
 export function MobileMenu({ links, extra, guides }: { links: Item[]; extra: Item[]; guides: Item[] }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  // Close when the route changes (a link was followed).
+  // Close when the route changes (a link was followed). Links within the page, such as /#tour, close it on click.
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setOpen(false), [pathname]);
 
@@ -26,7 +26,7 @@ export function MobileMenu({ links, extra, guides }: { links: Item[]; extra: Ite
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="menu-overlay md:hidden" />
-        <Dialog.Content className="menu-panel md:hidden" aria-describedby={undefined}>
+        <Dialog.Content className="menu-panel md:hidden" aria-describedby={undefined} onClick={(e) => { if ((e.target as Element).closest("a")) setOpen(false); }}>
           <Dialog.Title className="sr-only">Menu</Dialog.Title>
           <nav aria-label="Site">
             <ul>

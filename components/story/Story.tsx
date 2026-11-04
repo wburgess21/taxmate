@@ -8,6 +8,7 @@ import { PHONE, Phone } from "./Phone";
 import { CalculatorScreen, EXAMPLE, HomeScreen, PersonalisingScreen, QUESTIONS, QuestionScreen, ResultSheet, WelcomeScreen } from "./Screens";
 import { StoryStage, order, type BeatId, type Env, type PersonalisePhase, type Rect } from "./stage";
 import { nextKeyDate } from "@/lib/keyDates";
+import { useTourScroll } from "./useTourScroll";
 
 
 /** Scroll length of each beat, in viewport heights. */
@@ -68,6 +69,7 @@ function useTween(target: number, ms = 650) {
 
 /** `rating` is the live App Store rating (rendered on the server), shown under the hero buttons when there is one. */
 export function Story({ rating }: { rating?: React.ReactNode }) {
+  useTourScroll();
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
