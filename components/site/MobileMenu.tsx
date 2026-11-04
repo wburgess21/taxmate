@@ -43,7 +43,7 @@ export function MobileMenu({ links, extra, guides }: { links: Item[]; extra: Ite
             <ul className="mt-3 flex flex-wrap gap-2">
               {guides.map((g) => <li key={g.href}><Link href={g.href} className="check">{g.label}</Link></li>)}
             </ul>
-            <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 px-1 text-[0.9375rem] text-muted">
+            <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-hairline px-1 pt-4 text-[0.9375rem] text-muted">
               {extra.map((l) => <li key={l.href}><Link href={l.href} className="transition-colors hover:text-ink">{l.label}</Link></li>)}
             </ul>
           </nav>
