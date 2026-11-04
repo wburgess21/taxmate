@@ -3,6 +3,7 @@
 import { createContext, useContext } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { appStoreUrl } from "@/lib/site";
+import { SpinCoins } from "@/components/site/SpinCoins";
 import type { ReactNode } from "react";
 import type { Region } from "@/lib/taxRules";
 
@@ -29,12 +30,14 @@ export function Calc({ inputs, results, cta = true }: { inputs: ReactNode; resul
       <div className="calc-results">
         {results}
         {ctx && cta && (
-          <a href={appStoreUrl(`${ctx.placement}-result`)} data-cta={`${ctx.placement}-result`} target="_blank" rel="noopener noreferrer" className="calc-save">
-            <span>
-              <span className="block font-medium text-ink">Go further in the app</span>
-              <span className="block text-[0.8125rem] text-muted">The full {ctx.tool} tool, free on iPhone and iPad</span>
+          <a href={appStoreUrl(`${ctx.placement}-result`)} data-cta={`${ctx.placement}-result`} target="_blank" rel="noopener noreferrer" className="calc-save green">
+            {/* The two-coin mark, which plays the header button's spin on hover. */}
+            <span className="calc-save-coin" aria-hidden><SpinCoins className="h-6 w-6" delay={0} /></span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[1.0625rem] font-medium leading-snug">Go further in the app</span>
+              <span className="mt-0.5 block text-[0.8125rem] leading-snug text-white/70">The full {ctx.tool} tool, free on iPhone and iPad</span>
             </span>
-            <ArrowUpRight className="h-5 w-5 flex-none" aria-hidden />
+            <span className="calc-save-go" aria-hidden><ArrowUpRight className="h-5 w-5" strokeWidth={2.4} /></span>
           </a>
         )}
       </div>

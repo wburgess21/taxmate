@@ -1764,26 +1764,62 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
 }
 
 /* "Save this in the app", at the foot of a calculator's results. */
+/* "Go further in the app", the main action under each calculator's results: a green card in the app's hero style,
+   with the coin mark (it spins on hover, like the header button) and a gold arrow. */
 .calc-save {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 14px;
-  margin-top: 4px;
-  padding: 14px 16px;
-  border-radius: 16px;
-  color: var(--tint);
-  background: var(--surface);
-  border: 1px solid color-mix(in srgb, var(--tint) 25%, transparent);
+  margin-top: 6px;
+  padding: 14px 14px 14px 14px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.12) inset, 0 12px 28px rgb(0 84 36 / 0.28);
   transition: transform 0.35s cubic-bezier(0.3, 0.7, 0.3, 1.3), box-shadow 0.3s;
 }
 .calc-save:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgb(0 0 0 / 0.06);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.12) inset, 0 18px 36px rgb(0 84 36 / 0.36);
+}
+.calc-save:active {
+  transform: scale(0.98);
 }
 .calc-save:focus-visible {
-  outline: 2px solid var(--tint);
-  outline-offset: 2px;
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+.calc-save-coin {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: rgb(255 255 255 / 0.12);
+  border: 0.5px solid rgb(255 255 255 / 0.22);
+}
+.calc-save-go {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  color: var(--brand-deep);
+  background: linear-gradient(180deg, #ecc670, var(--gold));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.55), 0 6px 14px rgb(0 0 0 / 0.2);
+  transition: transform 0.35s cubic-bezier(0.3, 0.7, 0.3, 1.3);
+}
+.calc-save:hover .calc-save-go {
+  transform: translate(2px, -2px) scale(1.06);
+}
+@media (min-width: 640px) {
+  .calc-save {
+    gap: 16px;
+    padding: 16px 16px 16px 16px;
+  }
 }
 
 .check[data-active] {
