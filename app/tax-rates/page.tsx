@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { RULES, gbp, pct } from "@/lib/taxRules";
+import { RULES, gbp, pct, pence } from "@/lib/taxRules";
 import { SITE_URL } from "@/lib/site";
 import { ORG_ID, WEBSITE_ID } from "@/lib/schema";
 import { InnerPage, PageHeading } from "@/components/site/InnerPage";
@@ -11,8 +11,8 @@ import { AppCta } from "@/components/site/AppCta";
 const Y = RULES.taxYear;
 const title = `UK Tax Rates and Thresholds ${Y}`;
 const description = `Every UK tax rate and threshold for ${Y} on one page: Income Tax bands (including Scotland), National Insurance, student loans, dividends, savings, Capital Gains Tax, pensions, VAT, mileage rates and Making Tax Digital.`;
-/** Bump when the figures are checked. */
-const UPDATED = "2026-11-03";
+/** Bump RULES.checked in lib/taxRules.ts when the figures are checked. */
+const UPDATED = RULES.checked;
 
 export const metadata: Metadata = {
   title: { absolute: `${title} · TaxMate` },
@@ -118,7 +118,7 @@ const SECTIONS: Section[] = [
   {
     id: "mileage",
     title: "Approved mileage rates",
-    tables: [{ head: ["Vehicle", "Rate a business mile"], rows: [["Cars and vans: first 10,000 miles", `${RULES.mileage.carFirst10k * 100}p`], ["Cars and vans: after 10,000 miles", "25p"], ["Motorcycles", "24p"], ["Bicycles", "20p"], ["Each passenger (employer payments)", "5p"]] }],
+    tables: [{ head: ["Vehicle", "Rate a business mile"], rows: [["Cars and vans: first 10,000 miles", `${pence(RULES.mileage.carFirst10k)}`], ["Cars and vans: after 10,000 miles", "25p"], ["Motorcycles", "24p"], ["Bicycles", "20p"], ["Each passenger (employer payments)", "5p"]] }],
     calc: ["business-mileage", "Business mileage calculator"],
   },
   {

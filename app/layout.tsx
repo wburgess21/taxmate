@@ -46,6 +46,7 @@ export const metadata: Metadata = {
   },
   description,
   applicationName: "TaxMate",
+  category: "finance",
   openGraph: {
     title: "TaxMate: Your UK tax, made clearer",
     description,

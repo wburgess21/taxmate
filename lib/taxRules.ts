@@ -8,6 +8,8 @@ export type StudentLoanPlan = "plan1" | "plan2" | "plan4" | "plan5" | "postgrad"
 
 export const RULES = {
   taxYear: "2026/27",
+  /** When these figures were last checked against GOV.UK and the app (YYYY-MM-DD). Shown on /tax-rates. */
+  checked: "2026-11-04",
   /** 6 April of the year the tax year starts. */
   startYear: 2026,
 
@@ -246,5 +248,8 @@ export function paymentsOnAccount(lastBill: number, collectedAtSource = 0) {
 /** Whole pounds, or pence when asked. */
 export const gbp = (n: number, pence = false) =>
   new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP", maximumFractionDigits: pence ? 2 : 0, minimumFractionDigits: pence ? 2 : 0 }).format(Number.isFinite(n) ? n : 0);
+
+/** A per-mile rate in pounds as pence, e.g. 0.55 → "55p" (rounded, so 0.55 × 100 can't print 55.00000000000001). */
+export const pence = (n: number) => `${Math.round(n * 100)}p`;
 
 export const pct = (r: number, digits = 0) => `${(r * 100).toFixed(digits).replace(/\.0+$/, "")}%`;

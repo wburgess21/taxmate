@@ -32,6 +32,7 @@ export async function GET() {
         { title: `UK tax rates and thresholds ${TAX_YEAR}`, url: `${SITE_URL}/tax-rates`, note: "Income Tax (including Scotland), National Insurance, allowances, dividends, Capital Gains Tax, student loans, VAT, mileage, Corporation Tax and Making Tax Digital" },
         { title: "HMRC key dates", url: `${SITE_URL}/key-dates`, note: "Every UK tax deadline for the next 12 months" },
         { title: "Key dates calendar feed (iCalendar)", url: `${SITE_URL}/key-dates.ics` },
+        { title: "Blog RSS feed", url: `${SITE_URL}/blog/rss.xml` },
       ],
     },
   ]);
