@@ -282,6 +282,11 @@
   position: fixed;
   inset: 12px 12px auto;
   z-index: 60;
+  /* Its own compositing layer: without it Safari can paint scrolling content (the fade-ins animate opacity and
+     transform) over the blurred bar, so the header seems to vanish behind a box as you scroll. */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  isolation: isolate;
   display: flex;
   justify-content: center;
   pointer-events: none;
