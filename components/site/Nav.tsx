@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { CoinMark } from "./CoinMark";
 import { SpinCoins } from "./SpinCoins";
 import { MobileMenu } from "./MobileMenu";
 import { appStoreUrl } from "@/lib/site";
@@ -27,7 +26,8 @@ export function Nav() {
     <header className="site-nav">
       <nav className="site-nav-bar" aria-label="Main">
         <Link href="/" className="mr-auto flex items-center gap-2.5 rounded-full py-1 pr-2" aria-label="TaxMate home">
-          <CoinMark className="h-7 w-7" />
+          {/* Hovering the logo plays the same spin as the Get the app button, in the header's own colour. */}
+          <SpinCoins className="h-7 w-7" ink="current" delay={0} />
           <span className="text-[1.0625rem] font-medium tracking-tight">TaxMate</span>
         </Link>
         <div className="hidden items-center md:flex">
