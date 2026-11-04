@@ -8,17 +8,32 @@ Setup tasks and open questions for the site owner are in [TODO.md](TODO.md).
 
 ## Features
 
-The home page is a tour of the app's first run, told with the app's own coins (`lib/coins` is a canvas port of the iOS coin renderer and spring physics, with cut-out holes so coins can sit over anything):
+**Pages**
 
-- **Story** (`components/story`): a pinned, scroll-driven sequence. It opens with the launch animation (once a session), then the green floods out and the hero shrinks into an HTML iPhone. Onboarding questions follow (answers land on coins, the stack grows, goals orbit as satellites), then the personalising loader, the coins landing in the home logo, a live estimate and the result sheet. App screens are built at native point sizes from the app's `Design.md`.
-- **Your pay, in coins**: drag a salary and watch it split into piles of £1,000 coins (2026/27 bands, England, Wales & NI or Scotland).
-- **Tools**: the eleven tools in their three tinted groups, each with a coin badge that flips on hover.
-- **Key dates**: the current tax year with a coin rolling to today and a live countdown to the next HMRC date.
-- Privacy, TaxMate Plus, FAQ and a closing coin heap to play with.
-- Light and dark mode follow the system; animations respect `prefers-reduced-motion` and pause off-screen.
-- Privacy policy at `/privacy` and terms of use at `/terms`
-- Canonical URLs, sitemap, robots and a generated share image for https://www.taxmate-app.com
-- Vercel Analytics integration
+| Path | What it is |
+| --- | --- |
+| `/` | The home page: a scroll-driven tour of the app's first run, a salary splitter, the tools, key dates, privacy, TaxMate Plus and FAQs |
+| `/calculators` and `/calculators/<name>` | Ten free web calculators (see below) |
+| `/tax-rates` | Every 2026/27 rate and threshold, built from `lib/taxRules.ts` |
+| `/key-dates` and `/key-dates.ics` | HMRC deadlines for the next 12 months, filterable by who they apply to, and a subscribable iCalendar feed with a reminder a week before each date |
+| `/for` and `/for/<audience>` | Guides for employees, sole traders, side hustles, landlords and company directors |
+| `/blog`, `/blog/<slug>`, `/blog/category/<slug>`, `/blog/rss.xml` | The Sanity-powered blog and its feed |
+| `/privacy`, `/terms` | Legal pages |
+
+**The home page** is told with the app's own coins (`lib/coins` is a canvas port of the iOS coin renderer and spring physics, with cut-out holes so coins can sit over anything):
+
+- **Story** (`components/story`): a pinned, scroll-driven sequence. It opens with the launch animation, then the green floods out and the hero shrinks into an HTML iPhone. Onboarding questions follow (answers land on coins, the stack grows, goals orbit as satellites), then the personalising loader, the coins landing in the home logo, a live estimate and the result sheet. App screens are built at native point sizes from the app's `Design.md`.
+- **Your pay, in coins**: drag a salary and watch it split into piles of £1,000 coins.
+- **Tools**: the eleven tools in their three tinted groups; each row links to its web calculator.
+- **Key dates**, privacy, **TaxMate Plus** (`/#plus` lands on the card), FAQs with links to the guides, and a closing coin heap to play with.
+
+**Across the site**
+
+- A floating nav with a menu on phones (`components/site/MobileMenu.tsx`, Radix Dialog).
+- Light and dark mode follow the system. Animations respect `prefers-reduced-motion` and pause off-screen.
+- Scroll-in reveals (`components/site/Reveal.tsx`) rescan on every client-side navigation. `components/site/HashScroll.tsx` re-aligns `#anchor` links once the layout settles.
+- The live App Store rating (`lib/appStore.ts`) appears under the hero and on app cards once there are at least five ratings.
+- Security headers and a strict Content Security Policy (`next.config.ts`).
 
 ## Calculators
 
@@ -53,10 +68,15 @@ Each post has a title, slug, excerpt, category, author, dates, the tax year it c
 - `GOOGLE_SITE_VERIFICATION` and `BING_SITE_VERIFICATION` add the Search Console and Bing Webmaster Tools meta tags. Submit `/sitemap.xml` in both.
 - See `.env.example` for every variable.
 
-## Search and agents
+## Search, agents and browsers
 
-- schema.org JSON-LD (`lib/schema.ts`): Organization, WebSite and MobileApplication on every page, FAQPage on the home page.
-- `/llms.txt` (`lib/llms.ts`) describes TaxMate in plain Markdown for language models and agents, built from the same data as the pages (`lib/tools.ts`, `lib/content.ts`).
+- **Structured data** (schema.org JSON-LD, `lib/schema.ts` and `lib/calcSchema.ts`): Organization, WebSite and MobileApplication (with the live rating once there is one) on every page; BreadcrumbList on inner pages; WebApplication and FAQPage on calculators; ItemList on `/calculators`; Article on `/tax-rates`; FAQPage on the home page and guides; BlogPosting and FAQPage on posts.
+- **`/llms.txt`** (`lib/llms.ts`): TaxMate in plain Markdown for language models and agents. It covers what the app and site are, the 2026/27 key figures as quotable lines, the app's tools, Plus, FAQs, and links to every calculator, guide, reference page, feed and post.
+- **`/llms-full.txt`**: the full text of every calculator explanation and FAQ, the guides, the key figures and the yearly calendar in one file, so agents can answer without running the JavaScript calculators.
+- **`/robots.txt`**: open to all crawlers, including AI crawlers, except `/api/`. **`/sitemap.xml`** lists every page and post, with last-modified dates from `RULES.checked` and Sanity.
+- **`/manifest.webmanifest`**: name, icons, colours, shortcuts, and the App Store app as a related application.
+- Calculator inputs live in the address bar (`/calculators/take-home-pay?salary=45000&region=scotland`), so agents and people can link straight to a result.
+- Everything in these files is generated from the same data as the pages (`lib/taxRules.ts`, `lib/calculators.ts`, `lib/audiences.ts`, `lib/keyDates.ts`, `lib/tools.ts`, `lib/content.ts`), so it can't drift.
 
 ## Tech Stack
 
@@ -64,9 +84,9 @@ Each post has a title, slug, excerpt, category, author, dates, the tax year it c
 - [React](https://react.dev/) 19
 - [TypeScript](https://www.typescriptlang.org/)
 - [Tailwind CSS](https://tailwindcss.com/) 4
-- shadcn-style UI primitives in `components/ui`
 - [Lucide React](https://lucide.dev/) icons
 - [Vercel Analytics](https://vercel.com/analytics)
+- [Sanity](https://www.sanity.io/) for the blog, with [Radix](https://www.radix-ui.com/) Dialog for the phone menu
 
 ## Getting Started
 
@@ -110,31 +130,38 @@ npm run lint
 
 Runs ESLint using the Next.js core web vitals and TypeScript rules.
 
+```bash
+npm test
+```
+
+Checks the tax engine against the app's own worked examples (`tests/taxRules.test.ts`).
+
 ## Project Structure
 
 ```text
-app/
-  globals.css        Global Tailwind CSS theme and base styles
-  layout.tsx         Root layout, metadata, fonts, and analytics
-  page.tsx           Main TaxMate landing page
-  privacy/page.tsx   Privacy policy route
-  terms/page.tsx     Terms of use route
-components/ui/       Reusable UI primitives
-lib/utils.ts         Shared class name helper
-public/              Static assets, including logo and hero image
+app/                    Routes: home, calculators, tax-rates, key-dates (+ .ics), for, blog (+ rss.xml),
+                        privacy, terms, llms.txt, llms-full.txt, sitemap, robots, manifest, api/revalidate
+components/blog/        Post body (Portable Text), cards, categories, images from Sanity's CDN
+components/calculators/ The ten interactive calculators and their shared fields
+components/sections/    Home page sections (salary splitter, tools, timeline, Plus coin, FAQ, coin heap)
+components/site/        Nav and phone menu, footer, page frame, app call to action, structured data, trackers
+components/story/       The home page's scroll-driven tour
+lib/                    Tax rules, page content, structured data, llms.txt, Sanity client, coins engine
+studio/                 Sanity Studio (its own package)
+tests/                  Tax engine tests against the app's fixtures
 ```
 
 ## Key Files
 
-- `app/page.tsx` contains the main marketing page content and App Store links.
-- `app/layout.tsx` defines the default metadata, Geist fonts, viewport settings, and Vercel Analytics.
-- `app/privacy/page.tsx` contains the hosted privacy policy.
-- `app/terms/page.tsx` links to Apple's standard EULA.
-- `app/globals.css` defines the Tailwind theme tokens and app-wide base styles.
+- `lib/taxRules.ts`: every 2026/27 figure and calculation, and `RULES.checked`, the date they were last checked.
+- `lib/calculators.ts`, `lib/audiences.ts`, `lib/keyDates.ts`, `lib/content.ts`: the copy and data behind the pages, structured data and llms files.
+- `lib/site.ts`: the site URL, App Store link and `appStoreUrl()` campaign helper.
+- `app/layout.tsx`: default metadata, fonts, site-wide structured data, analytics and the scroll helpers.
+- `app/globals.css`: Tailwind theme tokens and component styles.
 
 ## Styling Notes
 
-The project uses Tailwind CSS v4 with CSS variables in `app/globals.css`. UI components follow the shadcn `new-york` style configuration from `components.json`, with aliases such as `@/components` and `@/lib` configured in `tsconfig.json`.
+The project uses Tailwind CSS v4 with CSS variables in `app/globals.css`. Path aliases such as `@/components` and `@/lib` are configured in `tsconfig.json`.
 
 The primary brand color used throughout the site is `#005424`.
 

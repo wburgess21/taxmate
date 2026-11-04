@@ -12,13 +12,18 @@ _Last updated: 4 November 2026_
 
 ## 2. Measurement (about 20 minutes)
 
-- [ ] **App Store campaign token.** In App Store Connect, open Analytics for TaxMate and find the campaign link generator (under Acquisition or Sources → Campaigns, depending on the layout). Copy the `pt=` value into Vercel → Settings → Environment Variables as `NEXT_PUBLIC_APP_STORE_PROVIDER_TOKEN`, then redeploy. Installs by button (`home-hero`, `calc-vat-result`, `mobile-menu`, and so on) then appear under Sources in App Store Connect after a day or two.
+- [ ] **App Store campaign token.** In App Store Connect, open Analytics for TaxMate and find the campaign link generator (under Acquisition or Sources → Campaigns, depending on the layout). Copy the `pt=` value into Vercel → Settings → Environment Variables as `NEXT_PUBLIC_APP_STORE_PROVIDER_TOKEN`, then redeploy. Installs by button (`home-hero`, `nav`, `calc-vat-result`, and so on) then appear under Sources in App Store Connect after a day or two.
 - [ ] **Vercel Analytics events.** You're on Pro, so custom events work. After deploying, check Vercel → Analytics → Events for `App Store click` (with `placement` and `path`) and `QR shown`.
 - [ ] **Google Search Console.** Add `https://www.taxmate-app.com` as a property and choose the HTML tag method. Put the `content="…"` value in Vercel as `GOOGLE_SITE_VERIFICATION`, redeploy, click Verify, then submit `https://www.taxmate-app.com/sitemap.xml`.
 - [ ] **Bing Webmaster Tools** (Bing also powers Copilot and ChatGPT search). Import from Search Console, or use the meta tag and set `BING_SITE_VERIFICATION`. Submit the sitemap there too.
 - [ ] Optional: turn on **Vercel Speed Insights** to track Core Web Vitals on the new pages.
 
-## 3. Blog (about 30 minutes, then ongoing)
+## 3. Search and agents (5 minutes, after deploying)
+
+- [ ] Open `https://www.taxmate-app.com/llms.txt` and `/llms-full.txt` and skim them: this is how assistants will describe TaxMate. Tell Claude about anything you'd word differently.
+- [ ] Test a calculator page in Google's [Rich Results Test](https://search.google.com/test/rich-results) (it should find FAQ, breadcrumb and web application data).
+
+## 4. Blog (about 30 minutes, then ongoing)
 
 The full steps are in the README under "Blog (Sanity)".
 
@@ -38,26 +43,26 @@ The full steps are in the README under "Blog (Sanity)".
   - Working from home: what employees lost in April 2026, and what the self-employed can still claim.
   - Self Assessment by 31 January: a checklist.
 
-## 4. App Store and other channels
+## 5. App Store and other channels
 
 - [ ] In App Store Connect, set the app's **Marketing URL** to `https://www.taxmate-app.com` and the **Support URL** to a page on the site.
 - [ ] Ask happy users for ratings (for example with `SKStoreReviewController` after a successful calculation). The site shows the live rating automatically once there are at least five.
 - [ ] Link to `/calculators` and `/key-dates` from your social profiles, and share the calendar feed (`/key-dates.ics`) in a post before 31 January.
 
-## 5. Check these facts
+## 6. Check these facts
 
-The calculators match the app's rules and pass its own worked examples (`npm test`). The extra facts were checked on 4 November 2026 against the GOV.UK policy paper, LITRG and CIPP: 55p mileage for employees as well as sole traders, the end of employee working-from-home relief from 6 April 2026, dividend rates of 10.75%, 35.75% and 39.35%, property income rates of 22%, 42% and 47% from April 2027, and thresholds frozen until April 2031. One is left:
+The calculators match the app's rules and pass its own worked examples (`npm test`). The extra facts were checked on 4 November 2026 against the GOV.UK policy paper, LITRG and CIPP: 55p mileage for employees as well as sole traders, the end of employee working-from-home relief from 6 April 2026, dividend rates of 10.75%, 35.75% and 39.35%, property income rates of 22%, 42% and 47% from April 2027, and thresholds frozen until April 2031. You confirmed the 20p bicycle rate from GOV.UK, so everything is checked.
 
-- [ ] **Bicycles (20p a mile)** for employee mileage. It isn't in the app, and no source confirmed it for 2026/27. Check GOV.UK's "Expenses and benefits: business travel mileage" page.
 - [ ] Optional: let this cloud environment reach `www.gov.uk` (environment settings, network access), so Claude can read GOV.UK pages directly next time.
 
-## 6. Every new tax year (each spring)
+## 7. Every new tax year (each spring)
 
 - [ ] Update `lib/taxRules.ts` alongside the app's `TaxRules.swift`, add the app's new worked examples to `tests/taxRules.test.ts`, and run `npm test`.
-- [ ] Update the "Last checked" date on `/tax-rates` (`UPDATED` in `app/tax-rates/page.tsx`) and `TAX_YEAR` in `lib/site.ts`.
+- [ ] Update `RULES.checked` in `lib/taxRules.ts` (it dates `/tax-rates`, the sitemap and the llms files) and `TAX_YEAR` in `lib/site.ts`.
 - [ ] Refresh blog posts that quote figures, and set their "Updated" date in Sanity.
 
 ## Done
 
+- [x] Confirmed the 20p bicycle mileage rate on GOV.UK (4 November 2026).
 - [x] Checked the remaining facts against official and trusted sources (4 November 2026).
 - [x] Gave Claude access to the iOS repo, so the web calculators could be checked against the app (4 November 2026).
