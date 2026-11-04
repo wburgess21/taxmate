@@ -104,9 +104,10 @@ export default function Home() {
         </section>
 
         {/* Plus: a receipt for a one-off payment */}
-        <section id="plus" className="px-3 py-24 sm:px-6 lg:py-32">
-          <div className="green mx-auto grid max-w-[1240px] items-center gap-14 overflow-hidden rounded-[36px] px-7 py-14 sm:px-14 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-20" data-reveal>
-            <div>
+        <section className="px-3 py-24 sm:px-6 lg:py-32">
+          {/* The anchor is the green card itself, so /#plus lands with its top just under the floating nav. */}
+          <div id="plus" className="green mx-auto grid scroll-mt-[84px] max-w-[1240px] items-center gap-14 overflow-hidden rounded-[36px] px-7 py-14 sm:px-14 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-20">
+            <div data-reveal>
               <p className="eyebrow !gap-2 !text-lg text-gold"><Plus className="h-5 w-5" strokeWidth={2.4} aria-hidden /> TaxMate Plus</p>
               <h2 className="display mt-5 text-[2.75rem] sm:text-6xl lg:text-7xl">
                 One payment.
@@ -121,7 +122,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="relative mx-auto w-full max-w-[440px] pt-6 lg:mr-6">
+            <div className="relative mx-auto w-full max-w-[440px] pt-6 lg:mr-6" data-reveal style={{ ["--reveal-delay" as string]: "120ms" }}>
               <div className="receipt-wrap">
                 <div className="receipt">
                   <p className="text-center font-mono text-[0.8125rem] font-medium tracking-[0.2em]">TAXMATE PLUS</p>

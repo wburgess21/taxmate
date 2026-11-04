@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { RevealOnScroll } from "@/components/site/Reveal";
 import { ClickTracker } from "@/components/site/ClickTracker";
+import { HashScroll } from "@/components/site/HashScroll";
 import { JsonLd } from "@/components/site/JsonLd";
 import { siteSchema } from "@/lib/schema";
 import { appRating } from "@/lib/appStore";
@@ -87,6 +88,7 @@ export default async function RootLayout({
         {children}
         <RevealOnScroll />
         <ClickTracker />
+        <HashScroll />
         <Analytics />
       </body>
     </html>
