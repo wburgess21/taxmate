@@ -23,6 +23,7 @@ The home page is a tour of the app's first run, told with the app's own coins (`
 `/calculators` and ten free calculator pages (`/calculators/take-home-pay`, `/calculators/vat` and so on), one for each app tool that works as a quick estimate. Each page has the interactive calculator, an explanation, server-rendered worked figures where useful, FAQs (as FAQPage structured data), related calculators and a call to action into the matching app tool.
 
 - `lib/taxRules.ts`: every 2026/27 rate and threshold, and the calculations. **Update this file each tax year**, checking it against the app's `TaxRules.swift` and GOV.UK.
+- `tests/taxRules.test.ts`: the app's own worked examples (`taxmate-ios/Documentation/TaxRules`), run with `npm test`. Add the app's new fixtures here each tax year.
 - `lib/calculators.ts`: each page's copy, FAQ and what the app adds.
 - `components/calculators`: the interactive calculators. Inputs are mirrored in the address bar (`?salary=45000`), so results can be shared.
 

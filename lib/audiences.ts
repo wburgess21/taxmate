@@ -39,7 +39,7 @@ export const AUDIENCES: AudiencePage[] = [
     body: [
       { h: "What comes off your pay", p: ["Your employer deducts Income Tax, National Insurance, and any pension and student loan contributions before you’re paid. Your payslip and your P60 at the end of the year show exactly how much."] },
       { h: "Check your tax code", p: ["Most people with one job have the code 1257L. A different code can mean benefits in kind, untaxed income or an underpayment being collected. Codes ending in W1, M1 or X are emergency codes and can take too much until they’re fixed."] },
-      { h: "Ways to keep more", ul: ["Pay into your pension: you get relief at your top rate, and salary sacrifice saves NI too", "Claim professional subscriptions and work uniform cleaning from HMRC", "Claim Mileage Allowance Relief if you drive your own car for work and your employer pays under 45p a mile", "Transfer Marriage Allowance if your partner earns under the Personal Allowance"] },
+      { h: "Ways to keep more", ul: ["Pay into your pension: you get relief at your top rate, and salary sacrifice saves NI too", "Claim professional subscriptions and work uniform cleaning from HMRC", "Claim Mileage Allowance Relief if you drive your own car for work and your employer pays under 55p a mile", "Transfer Marriage Allowance if your partner earns under the Personal Allowance"] },
       { h: "When you need Self Assessment", p: ["Usually only if you have other income: self-employment over £1,000, rent, or large amounts of savings interest or dividends. Child Benefit with income over £60,000 can be paid through your tax code instead."] },
     ],
     calculators: ["take-home-pay", "pension-contribution", "business-mileage", "combined-income"],

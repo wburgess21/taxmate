@@ -59,8 +59,8 @@ export const RULES = {
 
   vat: { standard: 0.2, reduced: 0.05, registration: 90_000, deregistration: 88_000 },
 
-  /** Approved mileage rates, pence per business mile. */
-  mileage: { carFirst10k: 0.45, carAfter: 0.25, motorcycle: 0.24, bicycle: 0.2, passenger: 0.05 },
+  /** Approved mileage rates, pounds per business mile. Cars and vans rose from 45p to 55p on 6 April 2026. */
+  mileage: { carFirst10k: 0.55, carAfter: 0.25, motorcycle: 0.24, bicycle: 0.2, passenger: 0.05 },
 
   /** Simplified expenses for working from home (self-employed): hours a month → flat amount a month. */
   homeOffice: [
@@ -129,11 +129,16 @@ export function class4NI(profit: number) {
   return Math.max(0, Math.min(profit, upl) - lpl) * main + Math.max(0, profit - upl) * upper;
 }
 
+/**
+ * Student loan repayments. With more than one undergraduate plan you repay once, from the lowest threshold; a
+ * postgraduate loan is repaid separately on top. Rounded down to whole pounds for the year, as the app does.
+ */
 export function studentLoan(pay: number, plans: StudentLoanPlan[]) {
-  return plans.reduce((sum, p) => {
-    const { threshold, rate } = RULES.studentLoans[p];
-    return sum + Math.max(0, pay - threshold) * rate;
-  }, 0);
+  const under = plans.filter((p) => p !== "postgrad").map((p) => RULES.studentLoans[p]);
+  const lowest = under.length ? Math.min(...under.map((l) => l.threshold)) : Infinity;
+  const ug = Number.isFinite(lowest) ? Math.max(0, pay - lowest) * 0.09 : 0;
+  const pg = plans.includes("postgrad") ? Math.max(0, pay - RULES.studentLoans.postgrad.threshold) * RULES.studentLoans.postgrad.rate : 0;
+  return Math.floor(ug) + Math.floor(pg);
 }
 
 export type TakeHomeInput = {
@@ -231,7 +236,7 @@ export function mtdStart(qualifyingIncome: number) {
 export function paymentsOnAccount(lastBill: number, collectedAtSource = 0) {
   const { minimumBill, collectedAtSourceShare } = RULES.paymentsOnAccount;
   const total = lastBill + collectedAtSource;
-  const needed = lastBill >= minimumBill && (total === 0 || collectedAtSource / total < collectedAtSourceShare);
+  const needed = lastBill >= minimumBill && (total === 0 || collectedAtSource / total <= collectedAtSourceShare);
   return { needed, each: needed ? lastBill / 2 : 0 };
 }
 

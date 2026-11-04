@@ -10,6 +10,8 @@ export function VatCalculator() {
   const [s, set] = useQueryState({ mode: "add" as "add" | "remove", amount: 1_000, rate: "0.2", turnover: 70_000 });
   const r = vatSplit(s.amount, Number(s.rate), s.mode);
   const left = RULES.vat.registration - s.turnover;
+  // Registration is triggered by going over the threshold, not reaching it.
+  const over = s.turnover > RULES.vat.registration;
   return (
     <div className="grid gap-6">
       <Calc
@@ -36,8 +38,8 @@ export function VatCalculator() {
         results={<>
           <ResultHero
             label="VAT registration"
-            value={left > 0 ? `${gbp(left)} to go` : "Register now"}
-            sub={left > 0 ? `You’re under the ${gbp(RULES.vat.registration)} threshold. Check again every month.` : `You’ve gone over ${gbp(RULES.vat.registration)}. Register within 30 days of the end of the month you went over.`}
+            value={over ? "Register now" : left > 0 ? `${gbp(left)} to go` : "At the threshold"}
+            sub={!over ? `You’re not over the ${gbp(RULES.vat.registration)} threshold. Check again every month.` : `You’ve gone over ${gbp(RULES.vat.registration)}. Register within 30 days of the end of the month you went over.`}
           />
           <Note>You also have to register straight away if you expect to go over {gbp(RULES.vat.registration)} in the next 30 days alone. You can deregister if turnover drops below {gbp(RULES.vat.deregistration)}.</Note>
         </>}

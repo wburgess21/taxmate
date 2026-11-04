@@ -1,6 +1,6 @@
 "use client";
 
-import { expenseSaving, gbp, mileageAllowance, pct, type Region, type Vehicle } from "@/lib/taxRules";
+import { RULES, expenseSaving, gbp, mileageAllowance, pct, type Region, type Vehicle } from "@/lib/taxRules";
 import { Note, NumberField, ResultHero, ResultRows, Segmented, useQueryState } from "./fields";
 import { Calc, REGIONS } from "./shared";
 
@@ -39,7 +39,7 @@ export function MileageCalculator() {
           { label: "Tax saved", value: gbp(saving), strong: true },
         ]} />
         <Note>
-          {s.vehicle === "car" ? "Cars and vans: 45p a mile for the first 10,000 business miles, then 25p." : s.vehicle === "motorcycle" ? "Motorcycles: 24p a mile." : "Bicycles: 20p a mile."} The rate covers fuel, wear and insurance, so you can’t claim those as well.
+          {s.vehicle === "car" ? `Cars and vans: ${RULES.mileage.carFirst10k * 100}p a mile for the first 10,000 business miles, then 25p. The first 10,000 miles are shared across all your cars and vans.` : s.vehicle === "motorcycle" ? "Motorcycles: 24p a mile." : "Bicycles: 20p a mile."} The rate covers fuel, wear and insurance, so you can’t claim those as well.
         </Note>
       </>}
     />

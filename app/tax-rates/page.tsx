@@ -118,7 +118,7 @@ const SECTIONS: Section[] = [
   {
     id: "mileage",
     title: "Approved mileage rates",
-    tables: [{ head: ["Vehicle", "Rate a business mile"], rows: [["Cars and vans: first 10,000 miles", "45p"], ["Cars and vans: after 10,000 miles", "25p"], ["Motorcycles", "24p"], ["Bicycles", "20p"], ["Each passenger (employer payments)", "5p"]] }],
+    tables: [{ head: ["Vehicle", "Rate a business mile"], rows: [["Cars and vans: first 10,000 miles", `${RULES.mileage.carFirst10k * 100}p`], ["Cars and vans: after 10,000 miles", "25p"], ["Motorcycles", "24p"], ["Bicycles", "20p"], ["Each passenger (employer payments)", "5p"]] }],
     calc: ["business-mileage", "Business mileage calculator"],
   },
   {

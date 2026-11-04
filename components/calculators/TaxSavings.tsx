@@ -32,7 +32,7 @@ export function TaxSavingsCalculator() {
       inputs={<>
         <NumberField name="bill" label={`Your ${prev} Self Assessment bill`} hint="Income Tax and Class 4 NI on your return, after tax already taken through PAYE." value={s.bill} onChange={set("bill")} />
         <NumberField name="paid" label={`Payments on account already made for ${prev}`} hint="What you paid in January and July towards this bill. Enter 0 if none." value={s.paid} onChange={set("paid")} />
-        <NumberField name="paye" label="Tax taken at source" hint="PAYE on a salary or pension. If it covers 80% or more of your tax, you won’t need payments on account." value={s.paye} onChange={set("paye")} />
+        <NumberField name="paye" label="Tax taken at source" hint="PAYE on a salary or pension. If it covers more than 80% of your tax, you won’t need payments on account." value={s.paye} onChange={set("paye")} />
       </>}
       results={<>
         <ResultHero
@@ -49,7 +49,7 @@ export function TaxSavingsCalculator() {
         <Note>
           {poa.needed
             ? `Each payment on account is half of your ${prev} bill. If you expect to earn less in ${cur}, you can ask HMRC to reduce them.`
-            : `No payments on account: your bill is under ${gbp(RULES.paymentsOnAccount.minimumBill)}, or 80% or more of your tax is taken at source.`}
+            : `No payments on account: your bill is under ${gbp(RULES.paymentsOnAccount.minimumBill)}, or more than 80% of your tax is taken at source.`}
           {" "}Dates: {JAN.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })} and {JUL.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}.
         </Note>
       </>}

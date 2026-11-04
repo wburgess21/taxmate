@@ -199,13 +199,13 @@ export const CALCULATORS: CalculatorPage[] = [
     tool: "Business Mileage",
     name: "Business mileage",
     h1: ["Business mileage", "calculator."],
-    title: `Mileage Allowance Calculator ${Y}: 45p a Mile, HMRC Rates`,
-    description: `Work out your business mileage claim at HMRC’s approved rates (45p and 25p a mile) for ${Y}, as a sole trader or an employee claiming Mileage Allowance Relief.`,
+    title: `Mileage Allowance Calculator ${Y}: 55p a Mile, HMRC Rates`,
+    description: `Work out your business mileage claim at HMRC’s approved rates (55p and 25p a mile) for ${Y}, as a sole trader or an employee claiming Mileage Allowance Relief.`,
     lede: "Turn your business miles into a deduction, or claim back what your employer doesn’t pay, at HMRC’s approved rates.",
     body: [
       {
         h: "HMRC’s approved mileage rates",
-        ul: ["Cars and vans: 45p a mile for the first 10,000 business miles in the tax year, then 25p", "Motorcycles: 24p a mile", "Bicycles: 20p a mile", "Each passenger on a business trip: 5p a mile (employer payments only)"],
+        ul: ["Cars and vans: 55p a mile for the first 10,000 business miles in the tax year (up from 45p in 2025/26), then 25p. The 10,000 miles are shared across all the cars and vans in one business", "Motorcycles: 24p a mile", "Bicycles: 20p a mile", "Each passenger on a business trip: 5p a mile (employer payments only)"],
       },
       {
         h: "Self-employed",
@@ -264,7 +264,7 @@ export const CALCULATORS: CalculatorPage[] = [
         h: "What payments on account are",
         p: [
           "They’re advance payments towards next year’s tax bill. Each one is half of your last Self Assessment bill, paid on 31 January and 31 July.",
-          `You don’t make them if your last bill was under ${gbp(RULES.paymentsOnAccount.minimumBill)}, or if 80% or more of your tax was already taken at source, for example through PAYE.`,
+          `You don’t make them if your last bill was under ${gbp(RULES.paymentsOnAccount.minimumBill)}, or if more than 80% of your tax was already taken at source, for example through PAYE.`,
         ],
       },
       {

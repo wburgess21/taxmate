@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // The Sanity Studio has its own toolchain.
     "studio/**",
+    // Plain Node tests (npm test), run with type stripping.
+    "tests/**",
   ]),
 ]);
 
