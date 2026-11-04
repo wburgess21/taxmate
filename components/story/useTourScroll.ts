@@ -1,5 +1,26 @@
 import { useEffect } from "react";
-import { easeInOutCubic, prefersReducedMotion } from "@/lib/coins/engine";
+import { prefersReducedMotion } from "@/lib/coins/engine";
+
+/** A CSS-style cubic-bezier easing (x1, y1, x2, y2), solved for x with a few Newton steps. */
+function cubicBezier(x1: number, y1: number, x2: number, y2: number) {
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx;
+  const cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  return (u: number) => {
+    let t = u;
+    for (let i = 0; i < 8; i++) {
+      const x = ((ax * t + bx) * t + cx) * t - u, d = (3 * ax * t + 2 * bx) * t + cx;
+      if (Math.abs(d) < 1e-6) break;
+      t -= x / d;
+    }
+    return ((ay * t + by) * t + cy) * t;
+  };
+}
+
+/**
+ * Moves from the first frame (an ease-in-out cubic barely moved for half a second, which read as a delay), then
+ * eases gently into the stop.
+ */
+const ease = cubicBezier(0.35, 0.1, 0.45, 1);
 
 /**
  * Links to the tour (#tour: the hero's "Take the tour", and "The tour" in the footer and menu) scroll there the way a
@@ -18,7 +39,7 @@ export function useTourScroll(anchorId = "tour") {
       if (Math.abs(distance) < 2) return;
       // About a second per screen of story, within limits, so the morph reads at a natural scrolling pace.
       const screens = Math.abs(distance) / innerHeight;
-      const duration = Math.min(3200, Math.max(1100, 650 + screens * 850));
+      const duration = Math.min(3600, Math.max(1250, 750 + screens * 980));
       const html = document.documentElement, prev = html.style.scrollBehavior;
       // Each frame sets the position directly; the page's CSS smooth scroll would fight it.
       html.style.scrollBehavior = "auto";
@@ -33,7 +54,7 @@ export function useTourScroll(anchorId = "tour") {
       for (const t of ["wheel", "touchstart", "keydown", "pointerdown"]) addEventListener(t, stop, { passive: true });
       const step = (now: number) => {
         const u = Math.min(1, (now - start) / duration);
-        scrollTo(0, from + distance * easeInOutCubic(u));
+        scrollTo(0, from + distance * ease(u));
         if (u < 1) raf = requestAnimationFrame(step);
         else stop();
       };
