@@ -1,14 +1,15 @@
 import Link from "next/link";
 import type { Category } from "@/lib/sanity";
 
+/** Category chips: one row that scrolls sideways on phones. */
 export function CategoryNav({ categories, current }: { categories: Category[]; current?: string }) {
   if (!categories.length) return null;
+  const items: [string, string, boolean][] = [["/blog", "All", !current], ...categories.map((c) => [`/blog/category/${c.slug}`, c.title, current === c.slug] as [string, string, boolean])];
   return (
-    <nav aria-label="Categories" className="mx-auto mt-10 max-w-[1240px] px-5 sm:px-8">
-      <ul className="flex flex-wrap gap-2">
-        <li><Link href="/blog" className="check" aria-current={!current ? "page" : undefined} data-active={!current || undefined}>All</Link></li>
-        {categories.map((c) => (
-          <li key={c.slug}><Link href={`/blog/category/${c.slug}`} className="check" aria-current={current === c.slug ? "page" : undefined} data-active={current === c.slug || undefined}>{c.title}</Link></li>
+    <nav aria-label="Categories" className="mx-auto mt-8 max-w-[1240px] px-5 sm:mt-10 sm:px-8">
+      <ul className="chip-row">
+        {items.map(([href, label, on]) => (
+          <li key={href} className="flex-none"><Link href={href} className="check" aria-current={on ? "page" : undefined} data-active={on || undefined}>{label}</Link></li>
         ))}
       </ul>
     </nav>
