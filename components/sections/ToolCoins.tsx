@@ -1,40 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
+import { GROUPS } from "@/lib/tools";
+import { calculatorForTool } from "@/lib/calculators";
 import { Coin, Stars, TAU, cssColor, drawCoin, fitCanvas, onSchemeChange, prefersReducedMotion, runLoop } from "@/lib/coins/engine";
-
-type Tool = { title: string; benefit: string; icon: string };
-type Group = { id: string; title: string; summary: string; tint: string; tools: Tool[] };
-
-/** The app's tool groups and their tints (CalculatorCatalogView.swift). */
-export const GROUPS: Group[] = [
-  {
-    id: "income", title: "Your income", summary: "See what you take home and what you owe.", tint: "var(--tool-income)",
-    tools: [
-      { title: "Take Home Pay", benefit: "Understand your pay after deductions", icon: "banknote" },
-      { title: "Self-employed Tax", benefit: "Understand your annual business tax", icon: "briefcase" },
-      { title: "Combined Income", benefit: "Plan supported employment and business income", icon: "layers" },
-    ],
-  },
-  {
-    id: "claims", title: "Claim and reduce", summary: "Lower your bill with allowable costs and relief.", tint: "var(--tool-claims)",
-    tools: [
-      { title: "Home Office", benefit: "Estimate your home office tax relief", icon: "house" },
-      { title: "Business Expenses", benefit: "Compare costs and allowances", icon: "credit-card" },
-      { title: "Business Mileage", benefit: "Estimate deductions and keep journey logs", icon: "car" },
-      { title: "Pension Contribution", benefit: "Compare cash and pension tax relief", icon: "piggy-bank" },
-    ],
-  },
-  {
-    id: "planning", title: "Plan ahead", summary: "Stay ahead of payments, thresholds and dates.", tint: "var(--tool-planning)",
-    tools: [
-      { title: "Tax Savings Planner", benefit: "Set money aside for dated tax payments", icon: "calendar" },
-      { title: "VAT", benefit: "Add or remove VAT and monitor turnover", icon: "percent" },
-      { title: "Making Tax Digital", benefit: "Check eligibility and start dates", icon: "file-clock" },
-      { title: "Annual Summary", benefit: "Share planning records as PDF or CSV", icon: "file-text" },
-    ],
-  },
-];
 
 const REST = { wx: 0.28, wy: 0.42, lz: -0.05 };
 
@@ -124,7 +94,10 @@ export function ToolCoins() {
                 <li key={t.title} className="tool-row" data-tool data-icon={t.icon} data-tint={g.tint}>
                   <span className="tool-row-coin" aria-hidden />
                   <span>
-                    <span className="block text-[1.0625rem] font-medium">{t.title}</span>
+                    {calculatorForTool(t.title)
+                      // The whole row is the link (the title's ::after covers it); the coin canvas sits above, pointer-transparent.
+                      ? <Link href={`/calculators/${calculatorForTool(t.title)!.slug}`} className="block text-[1.0625rem] font-medium after:absolute after:inset-0 after:content-['']">{t.title}</Link>
+                      : <span className="block text-[1.0625rem] font-medium">{t.title}</span>}
                     <span className="block text-[0.9375rem] leading-snug text-muted">{t.benefit}</span>
                   </span>
                 </li>
