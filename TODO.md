@@ -6,6 +6,7 @@ _Last updated: 4 November 2026_
 
 ## 1. Before you merge
 
+- [ ] **On your iPhone in Safari, scroll down from the top of a few pages and check the header stays visible.** Claude couldn't reproduce the disappearing header in Chrome and has applied the standard Safari fix. If it still happens, send a screenshot and your iOS version.
 - [ ] Look over the Vercel preview of this branch, on your phone as well as desktop: home page, `/calculators`, a calculator or two, `/tax-rates`, `/key-dates`, `/for/landlords`, `/blog` and the phone menu.
 - [ ] Merge the pull request (ask Claude to open one when you're ready).
 
@@ -45,13 +46,10 @@ The full steps are in the README under "Blog (Sanity)".
 
 ## 5. Check these facts
 
-The calculators now match the app's rules and pass its own worked examples (`npm test`). These points go beyond what the app covers, so check them against GOV.UK:
+The calculators match the app's rules and pass its own worked examples (`npm test`). The extra facts were checked on 4 November 2026 against the GOV.UK policy paper, LITRG and CIPP: 55p mileage for employees as well as sole traders, the end of employee working-from-home relief from 6 April 2026, dividend rates of 10.75%, 35.75% and 39.35%, property income rates of 22%, 42% and 47% from April 2027, and thresholds frozen until April 2031. One is left:
 
-- [ ] **Employee mileage.** The site uses 55p for employees claiming Mileage Allowance Relief as well as for sole traders. The app's notes only confirm the self-employed simplified-expenses rate. Check the employee approved mileage rate for 2026/27 and tell Claude if it differs.
-- [ ] **Bicycles (20p) and passengers (5p).** These aren't in the app. Check they still apply.
-- [ ] **Working from home for employees.** The site says employees can no longer claim the £6 a week from HMRC themselves from 6 April 2026 (only an employer can pay it tax-free).
-- [ ] **Property income rates.** The landlords guide says 22%, 42% and 47% from April 2027.
-- [ ] **Dividend rates** (10.75% and 35.75%) and the **income tax threshold freeze until April 2031** on the tax rates page.
+- [ ] **Bicycles (20p a mile)** for employee mileage. It isn't in the app, and no source confirmed it for 2026/27. Check GOV.UK's "Expenses and benefits: business travel mileage" page.
+- [ ] Optional: let this cloud environment reach `www.gov.uk` (environment settings, network access), so Claude can read GOV.UK pages directly next time.
 
 ## 6. Every new tax year (each spring)
 
@@ -61,4 +59,5 @@ The calculators now match the app's rules and pass its own worked examples (`npm
 
 ## Done
 
+- [x] Checked the remaining facts against official and trusted sources (4 November 2026).
 - [x] Gave Claude access to the iOS repo, so the web calculators could be checked against the app (4 November 2026).
