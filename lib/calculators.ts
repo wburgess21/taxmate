@@ -133,8 +133,8 @@ export const CALCULATORS: CalculatorPage[] = [
     name: "Home office",
     h1: ["Working from home", "tax relief."],
     title: `Working From Home Tax Relief Calculator ${Y}: Simplified Expenses`,
-    description: `Work out what you can claim for working from home as a sole trader: HMRC’s flat rates of £10, £18 or £26 a month, and the tax it saves you in ${Y}.`,
-    lede: "Self-employed and working from home? See what HMRC’s flat rate lets you claim, and what that’s worth in tax.",
+    description: `Work out what you can claim for working from home as a sole trader in ${Y}: HMRC’s flat rate (£10, £18 or £26 a month) or a share of your actual bills, whichever is more, and the tax it saves.`,
+    lede: "Self-employed and working from home? Compare HMRC’s flat rate with a share of your actual bills, and see what the better claim is worth in tax.",
     body: [
       {
         h: "Two ways to claim",
@@ -153,6 +153,7 @@ export const CALCULATORS: CalculatorPage[] = [
       },
     ],
     faq: [
+      { q: "Why does the flat rate stop at £312?", a: "The highest flat rate is £26 a month, for 101 hours or more, so twelve months comes to £312. If your bills are high or you use a lot of your home for work, claiming a share of your actual costs instead can give more." },
       { q: "Can I claim broadband and phone as well?", a: "Yes. The flat rate covers heat, light and power. Business use of your phone and internet can be claimed on top." },
       { q: "Does claiming home office costs affect Capital Gains Tax?", a: "Only if part of your home is used exclusively for business. Using a room for work and also for personal use doesn’t usually create a Capital Gains Tax issue." },
     ],
