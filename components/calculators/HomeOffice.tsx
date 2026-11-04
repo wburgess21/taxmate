@@ -1,7 +1,7 @@
 "use client";
 
 import { RULES, expenseSaving, gbp, homeOfficeMonthly, type Region } from "@/lib/taxRules";
-import { Note, NumberField, ResultHero, ResultRows, Segmented, useQueryState } from "./fields";
+import { Note, NumberField, Warning, ResultHero, ResultRows, Segmented, useQueryState } from "./fields";
 import { Calc, REGIONS } from "./shared";
 
 const HOURS: [string, string][] = [["0", "0–24"], ["25", "25–50"], ["51", "51–100"], ["101", "101+"]];
@@ -19,7 +19,7 @@ export function HomeOfficeCalculator() {
   const actual = Math.round(s.bills * Math.min(100, s.share)) / 100;
   const best = actual > flat ? "actual" : "flat";
   const claim = Math.max(flat, actual);
-  const { saving } = expenseSaving(s.profit, claim, s.region);
+  const { saving, loss, wipesOut } = expenseSaving(s.profit, claim, s.region);
   return (
     <Calc
       inputs={<>
@@ -44,6 +44,14 @@ export function HomeOfficeCalculator() {
           { label: <>Share of bills{best === "actual" ? " (best)" : ""}</>, value: gbp(actual) },
           { label: "Tax and NI the best claim saves", value: gbp(saving), strong: true },
         ]} />
+        {wipesOut && (
+          <Warning>
+            That claim is more than your {gbp(s.profit)} profit, so it would cancel all your tax and leave a {gbp(loss)} loss. Check the bills and business share: home costs rarely come close to a business’s profit.
+          </Warning>
+        )}
+        {!wipesOut && s.share > 50 && actual > flat && (
+          <Warning>A {s.share}% business share is high for a home. HMRC expects a split you can explain, such as a room used only for work.</Warning>
+        )}
         <Note>
           The flat rate is £10, £18 or £26 a month depending on hours, so it can never be more than {gbp(FLAT_MAX)} a year. Use one method or the other, not both.
           Business use of your phone and broadband can be claimed on top of either.

@@ -182,11 +182,14 @@ export function combinedIncome(salary: number, profit: number, region: Region) {
   return { salary, profit, tax: total.tax, paye, ni, class4: c4, selfAssessment, keep: salary + profit - total.tax - ni - c4, bands: total.bands, marginal: total.marginal };
 }
 
-/** The tax a deductible cost saves for a sole trader with this profit: Income Tax and Class 4. */
+/**
+ * The tax a deductible cost saves for a sole trader with this profit: Income Tax and Class 4. It can never save more
+ * than the tax on the profit; any cost beyond the profit becomes a trading `loss` instead.
+ */
 export function expenseSaving(profit: number, cost: number, region: Region) {
   const before = selfEmployedTax(profit, region).total;
   const after = selfEmployedTax(Math.max(0, profit - cost), region).total;
-  return { saving: before - after, realCost: cost - (before - after) };
+  return { saving: before - after, realCost: cost - (before - after), loss: Math.max(0, cost - profit), wipesOut: cost >= profit && profit > 0 };
 }
 
 export type Vehicle = "car" | "motorcycle" | "bicycle";

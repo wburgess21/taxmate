@@ -42,3 +42,11 @@ test("MTD: exactly on a threshold doesn't trigger it", () => {
   assert.equal(T.mtdStart(50_000.01)?.from, 2026);
   assert.equal(T.mtdStart(20_000), null);
 });
+
+test("An expense can't save more than the tax on the profit; the rest is a loss", () => {
+  const r = T.expenseSaving(40_000, 100_000, "rUK");
+  assert.equal(Math.round(r.saving * 100) / 100, Math.round(T.selfEmployedTax(40_000, "rUK").total * 100) / 100);
+  assert.equal(r.loss, 60_000);
+  assert.equal(r.wipesOut, true);
+  assert.equal(T.expenseSaving(40_000, 300, "rUK").wipesOut, false);
+});

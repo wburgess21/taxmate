@@ -165,6 +165,15 @@ export function SplitBar({ parts }: { parts: { value: number; color: string }[] 
   );
 }
 
+/** A caution under the results, for figures that need a second look. */
+export function Warning({ children }: { children: ReactNode }) {
+  return (
+    <p role="status" className="rounded-[14px] px-4 py-3 text-[0.875rem] leading-relaxed" style={{ background: "color-mix(in srgb, var(--tool-claims) 12%, var(--surface))", border: "1px solid color-mix(in srgb, var(--tool-claims) 30%, transparent)" }}>
+      {children}
+    </p>
+  );
+}
+
 /** A short note under the results. */
 export function Note({ children }: { children: ReactNode }) {
   return <p className="text-[0.8125rem] leading-relaxed text-muted">{children}</p>;

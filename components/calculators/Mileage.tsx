@@ -1,7 +1,7 @@
 "use client";
 
 import { RULES, expenseSaving, gbp, mileageAllowance, pct, type Region, type Vehicle } from "@/lib/taxRules";
-import { Note, NumberField, ResultHero, ResultRows, Segmented, useQueryState } from "./fields";
+import { Note, NumberField, Warning, ResultHero, ResultRows, Segmented, useQueryState } from "./fields";
 import { Calc, REGIONS } from "./shared";
 
 const VEHICLES: [Vehicle, string][] = [["car", "Car or van"], ["motorcycle", "Motorcycle"], ["bicycle", "Bicycle"]];
@@ -12,7 +12,8 @@ export function MileageCalculator() {
   const allowance = mileageAllowance(s.miles, s.vehicle);
   const self = s.work === "self";
   const claim = self ? allowance : Math.max(0, allowance - s.miles * (s.paid / 100));
-  const saving = self ? expenseSaving(s.profit, claim, s.region).saving : claim * Number(s.rate);
+  const se = expenseSaving(s.profit, claim, s.region);
+  const saving = self ? se.saving : claim * Number(s.rate);
   return (
     <Calc
       inputs={<>
@@ -38,6 +39,7 @@ export function MileageCalculator() {
           ...(self ? [] : [{ label: "Paid by your employer", value: `−${gbp(s.miles * (s.paid / 100))}` }]),
           { label: "Tax saved", value: gbp(saving), strong: true },
         ]} />
+        {self && se.wipesOut && <Warning>That mileage is worth more than your {gbp(s.profit)} profit, so it cancels all your tax and leaves a {gbp(se.loss)} loss.</Warning>}
         <Note>
           {s.vehicle === "car" ? `Cars and vans: ${RULES.mileage.carFirst10k * 100}p a mile for the first 10,000 business miles, then 25p. The first 10,000 miles are shared across all your cars and vans.` : s.vehicle === "motorcycle" ? "Motorcycles: 24p a mile." : "Bicycles: 20p a mile."} The rate covers fuel, wear and insurance, so you can’t claim those as well.
         </Note>

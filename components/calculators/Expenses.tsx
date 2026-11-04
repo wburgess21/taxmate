@@ -1,12 +1,12 @@
 "use client";
 
 import { expenseSaving, gbp, pct, type Region } from "@/lib/taxRules";
-import { Note, NumberField, ResultHero, ResultRows, Segmented, useQueryState } from "./fields";
+import { Note, NumberField, Warning, ResultHero, ResultRows, Segmented, useQueryState } from "./fields";
 import { Calc, REGIONS } from "./shared";
 
 export function ExpensesCalculator() {
   const [s, set] = useQueryState({ cost: 1_200, profit: 40_000, region: "rUK" as Region });
-  const { saving, realCost } = expenseSaving(s.profit, s.cost, s.region);
+  const { saving, realCost, loss, wipesOut } = expenseSaving(s.profit, s.cost, s.region);
   return (
     <Calc
       inputs={<>
@@ -21,6 +21,7 @@ export function ExpensesCalculator() {
           { label: "Tax and NI saved", value: `−${gbp(saving)}` },
           { label: "Real cost", value: gbp(realCost), strong: true },
         ]} />
+        {wipesOut && <Warning>This cost is more than your {gbp(s.profit)} profit, so it saves all your tax for the year and leaves a {gbp(loss)} loss, which can sometimes be set against other income or carried forward.</Warning>}
         <Note>An expense saves tax, but it still costs money: only buy what the business needs. Assumes self-employment is your only income.</Note>
       </>}
     />
