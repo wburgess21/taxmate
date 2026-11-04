@@ -4,6 +4,8 @@ TaxMate is the marketing and legal website for the TaxMate iOS app: UK tax calcu
 
 The site follows the app's design language (`taxmate-ios/Documentation/Design.md`): the canvas and surface colours, green and gold hero cards, and the three tool-group tints, in light and dark mode.
 
+Setup tasks and open questions for the site owner are in [TODO.md](TODO.md).
+
 ## Features
 
 The home page is a tour of the app's first run, told with the app's own coins (`lib/coins` is a canvas port of the iOS coin renderer and spring physics, with cut-out holes so coins can sit over anything):
