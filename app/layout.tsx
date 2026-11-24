@@ -2,7 +2,12 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { RevealOnScroll } from "@/components/site/Reveal";
-import { SITE_URL } from "@/lib/site";
+import { ClickTracker } from "@/components/site/ClickTracker";
+import { HashScroll } from "@/components/site/HashScroll";
+import { JsonLd } from "@/components/site/JsonLd";
+import { siteSchema } from "@/lib/schema";
+import { appRating } from "@/lib/appStore";
+import { APP_STORE_ID, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -41,6 +46,7 @@ export const metadata: Metadata = {
   },
   description,
   applicationName: "TaxMate",
+  category: "finance",
   openGraph: {
     title: "TaxMate: Your UK tax, made clearer",
     description,
@@ -51,7 +57,12 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image", title: "TaxMate: Your UK tax, made clearer", description },
   appleWebApp: { title: "TaxMate" },
-  itunes: { appId: "6757307991" },
+  itunes: { appId: APP_STORE_ID },
+  // Search Console and Bing Webmaster Tools (Bing also feeds Copilot and ChatGPT search). Set the codes in Vercel.
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+    other: process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : undefined,
+  },
 };
 
 export const viewport: Viewport = {
@@ -63,7 +74,7 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -74,8 +85,11 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: introScript }} />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} font-sans antialiased`}>
+        <JsonLd data={siteSchema(await appRating())} />
         {children}
         <RevealOnScroll />
+        <ClickTracker />
+        <HashScroll />
         <Analytics />
       </body>
     </html>

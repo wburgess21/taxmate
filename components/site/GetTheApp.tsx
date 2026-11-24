@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { AppStoreButton } from "./AppStoreButton";
-import { APP_STORE_URL } from "@/lib/site";
+import { appStoreUrl } from "@/lib/site";
+import { trackEvent } from "@/lib/track";
 
 type Mode = "store" | "scan";
 
@@ -11,7 +12,7 @@ type Mode = "store" | "scan";
  * scan with an iPhone (most desktop visitors install on their phone); the area eases between the two. Phones only
  * see the button.
  */
-export function GetTheApp({ qr }: { qr: ReactNode }) {
+export function GetTheApp({ qr, placement }: { qr: ReactNode; placement: string }) {
   const [mode, setMode] = useState<Mode>("store");
   const ref = useRef<HTMLDivElement>(null);
 
@@ -36,7 +37,7 @@ export function GetTheApp({ qr }: { qr: ReactNode }) {
       <div role="tablist" aria-label="How to get TaxMate" className="get-app-switch hidden lg:grid">
         <span className="get-app-thumb" aria-hidden />
         {tabs.map(([m, label]) => (
-          <button key={m} role="tab" type="button" aria-selected={mode === m} aria-controls={`get-app-${m}`} id={`get-app-tab-${m}`} onClick={() => setMode(m)}>
+          <button key={m} role="tab" type="button" aria-selected={mode === m} aria-controls={`get-app-${m}`} id={`get-app-tab-${m}`} onClick={() => { setMode(m); if (m === "scan") trackEvent("QR shown", { placement }); }}>
             {label}
           </button>
         ))}
@@ -44,12 +45,12 @@ export function GetTheApp({ qr }: { qr: ReactNode }) {
       <div className="w-full lg:mt-8">
         <div className="get-app-panel" id="get-app-store" role="tabpanel" aria-labelledby="get-app-tab-store" data-on={mode === "store" || undefined}>
           <div className="flex justify-center overflow-hidden py-2">
-            <AppStoreButton variant="gold" still />
+            <AppStoreButton variant="gold" still placement={placement} />
           </div>
         </div>
         <div className="get-app-panel hidden lg:grid" id="get-app-scan" role="tabpanel" aria-labelledby="get-app-tab-scan" data-on={mode === "scan" || undefined}>
           <div className="flex flex-col items-center overflow-hidden py-2">
-            <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" className="get-app-qr" aria-label="TaxMate on the App Store">
+            <a href={appStoreUrl(`${placement}-qr`)} data-cta={`${placement}-qr`} target="_blank" rel="noopener noreferrer" className="get-app-qr" aria-label="TaxMate on the App Store">
               {qr}
             </a>
             <p className="mt-4 text-[0.9375rem] text-white/70">Point your iPhone camera here</p>

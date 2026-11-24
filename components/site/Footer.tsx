@@ -1,18 +1,22 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { CoinMark } from "./CoinMark";
-import { APP_STORE_URL, CONTACT_EMAIL, TAX_YEAR } from "@/lib/site";
+import { CALCULATORS } from "@/lib/calculators";
+import { AUDIENCES } from "@/lib/audiences";
+import { appStoreUrl, CONTACT_EMAIL, TAX_YEAR } from "@/lib/site";
 
-const COLUMNS = [
-  { title: "Explore", links: [["/#tour", "The tour"], ["/#pay", "Your pay, in coins"], ["/#tools", "Tools"], ["/#dates", "Key dates"], ["/#plus", "TaxMate Plus"], ["/#faq", "Questions"]] },
+const COLUMNS: { title: string; links: [string, string][] }[] = [
+  { title: "Calculators", links: [...CALCULATORS.slice(0, 6).map((c) => [`/calculators/${c.slug}`, c.name] as [string, string]), ["/calculators", "All calculators"]] },
+  { title: "Explore", links: [["/#tour", "The tour"], ["/#tools", "Tools"], ["/#plus", "TaxMate Plus"], ["/tax-rates", "Tax rates"], ["/key-dates", "Key dates"], ["/blog", "Blog"], ["/#faq", "Questions"]] },
+  { title: "Who it’s for", links: AUDIENCES.map((a) => [`/for/${a.slug}`, a.label] as [string, string]) },
   { title: "Legal", links: [["/privacy", "Privacy policy"], ["/terms", "Terms of use"]] },
 ];
 
 export function Footer() {
   return (
     <footer className="mx-auto max-w-[1240px] px-5 pb-10 pt-20 sm:px-8">
-      <div className="grid gap-14 md:grid-cols-[1.5fr_1fr_1fr]">
-        <div>
+      <div className="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-3 lg:grid-cols-[1.4fr_1fr_1fr_1fr_0.8fr] md:gap-x-10">
+        <div className="col-span-2 md:col-span-3 lg:col-span-1">
           <Link href="/" className="inline-flex items-center gap-3" aria-label="TaxMate home">
             <CoinMark className="h-10 w-10" />
             <span className="text-2xl font-light tracking-tight">TaxMate</span>
@@ -21,7 +25,7 @@ export function Footer() {
             Your UK tax, made clearer. Calculators for pay, self-employment, expenses and planning, on iPhone and iPad.
           </p>
           <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[0.9375rem]">
-            <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-medium text-accent underline-offset-4 hover:underline">Download on the App Store <ArrowUpRight className="h-4 w-4" aria-hidden /></a>
+            <a href={appStoreUrl("footer")} data-cta="footer" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-medium text-accent underline-offset-4 hover:underline">Download on the App Store <ArrowUpRight className="h-4 w-4" aria-hidden /></a>
             <a href={`mailto:${CONTACT_EMAIL}`} className="text-muted underline-offset-4 hover:text-ink hover:underline">{CONTACT_EMAIL}</a>
           </div>
         </div>

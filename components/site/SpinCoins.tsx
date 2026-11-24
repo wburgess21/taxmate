@@ -11,8 +11,11 @@ const MARGIN = 12;
  * The two-coin mark that, each time its button is hovered or focused, swaps its artwork for the hero's 3D coins and
  * plays the home logo's spin (the top coin first, with a hop, while the launch stars twinkle), then hands back to the
  * artwork, as the app's HomeLogo does.
+ *
+ * `ink` is the coins' colour: white for the green button, or "current" to follow the surrounding text colour (the
+ * header logo, which is dark, light or white over the hero). `delay` waits for a widening button before spinning.
  */
-export function SpinCoins({ className = "" }: { className?: string }) {
+export function SpinCoins({ className = "", ink = "white", delay = 90 }: { className?: string; ink?: "white" | "current"; delay?: number }) {
   const boxRef = useRef<HTMLSpanElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [spinning, setSpinning] = useState(false);
@@ -26,8 +29,16 @@ export function SpinCoins({ className = "" }: { className?: string }) {
     for (const c of [front, back]) { c.idle = false; c.setInk([255, 255, 255], true); c.kp = [150, 16]; c.kr = [100, 17]; }
     let time = 0, finishAt = 0, pending: { at: number; run: () => void }[] = [];
 
+    let colour = "#ffffff";
+    const setInk = () => {
+      const rgb = ink === "current" ? (getComputedStyle(box).color.match(/\d+(\.\d+)?/g) ?? ["255", "255", "255"]).slice(0, 3).map(Number) : [255, 255, 255];
+      for (const c of [front, back]) c.setInk(rgb as [number, number, number], true);
+      colour = `rgb(${rgb.join(" ")})`;
+    };
+
     const play = () => {
       if (reduce) return;
+      setInk();
       const h = box.clientHeight, w = box.clientWidth || h;
       const placed = Geometry.artCoins(MARGIN + w / 2, MARGIN + h / 2, h);
       for (const [c, p, rest] of [[front, placed.front, Geometry.frontRest], [back, placed.back, Geometry.backRest]] as const) {
@@ -47,7 +58,7 @@ export function SpinCoins({ className = "" }: { className?: string }) {
     };
     // The icon slides in as the button widens; the spin starts as it arrives.
     let timer: ReturnType<typeof setTimeout> | undefined;
-    const onEnter = () => { clearTimeout(timer); timer = setTimeout(play, 90); };
+    const onEnter = () => { clearTimeout(timer); timer = setTimeout(play, delay); };
     trigger.addEventListener("pointerenter", onEnter);
     trigger.addEventListener("focus", onEnter);
 
@@ -58,13 +69,13 @@ export function SpinCoins({ className = "" }: { className?: string }) {
       front.update(dt); back.update(dt); stars.update(dt);
       const { ctx } = fitCanvas(canvas);
       for (const c of [back, front]) drawCoin(ctx, c, { time, reduceMotion: true });
-      stars.draw(ctx, "#ffffff");
+      stars.draw(ctx, colour);
       if (finishAt && time >= finishAt && front.isSettled && back.isSettled && stars.isEmpty) { finishAt = 0; setSpinning(false); return false; }
       return !!finishAt;
     });
 
     return () => { loop.stop(); clearTimeout(timer); trigger.removeEventListener("pointerenter", onEnter); trigger.removeEventListener("focus", onEnter); };
-  }, []);
+  }, [ink, delay]);
 
   return (
     <span ref={boxRef} className={`relative inline-block ${className}`} aria-hidden>

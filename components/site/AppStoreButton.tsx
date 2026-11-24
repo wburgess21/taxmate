@@ -1,4 +1,4 @@
-import { APP_STORE_URL } from "@/lib/site";
+import { appStoreUrl } from "@/lib/site";
 
 function AppleGlyph({ className }: { className?: string }) {
   return (
@@ -11,11 +11,14 @@ function AppleGlyph({ className }: { className?: string }) {
 type Variant = "primary" | "gold" | "glass";
 
 /** "Download on the App Store" in the site's button styles. */
-/** `still` leaves out the hover lift and press, for places where the button should just sit. */
-export function AppStoreButton({ variant = "primary", label = "Download on the App Store", className = "", still = false }: { variant?: Variant; label?: string; className?: string; still?: boolean }) {
+/**
+ * `still` leaves out the hover lift and press, for places where the button should just sit. `placement` names the
+ * button for measurement: it becomes the App Store campaign and the `data-cta` that the click tracker reports.
+ */
+export function AppStoreButton({ variant = "primary", label = "Download on the App Store", className = "", still = false, placement }: { variant?: Variant; label?: string; className?: string; still?: boolean; placement: string }) {
   const style = variant === "gold" ? "btn-gold" : variant === "glass" ? "btn-glass glass" : "btn-primary";
   return (
-    <a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" className={`${style} ${still ? "" : "press"} ${className}`}>
+    <a href={appStoreUrl(placement)} data-cta={placement} target="_blank" rel="noopener noreferrer" className={`${style} ${still ? "" : "press"} ${className}`}>
       <AppleGlyph className="h-[1.15em] w-[1.15em] -mt-0.5" />
       {label}
     </a>

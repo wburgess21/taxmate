@@ -1,9 +1,11 @@
-import { Bell, Check, EyeOff, Lock, Plus, Smartphone } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Bell, Check, EyeOff, Lock, Plus, Smartphone } from "lucide-react";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { AppStoreButton } from "@/components/site/AppStoreButton";
 import { AppQr } from "@/components/site/AppQr";
 import { GetTheApp } from "@/components/site/GetTheApp";
+import { AppRating } from "@/components/site/AppRating";
 import { Story } from "@/components/story/Story";
 import { PayPiles } from "@/components/sections/PayPiles";
 import { ToolCoins } from "@/components/sections/ToolCoins";
@@ -12,27 +14,10 @@ import { PlusCoin } from "@/components/sections/PlusCoin";
 import { CoinHeap } from "@/components/sections/CoinHeap";
 import { Faq } from "@/components/sections/Faq";
 import { TAX_YEAR } from "@/lib/site";
-
-const PLUS = [
-  "Home Office reports",
-  "Saved tax savings plans",
-  "Manual journey logs",
-  "Named expense comparisons",
-  "Annual PDF and CSV summaries",
-  "Pension comparisons",
-  "Combined-income planning",
-  "Rolling VAT monitoring",
-  "Plan and VAT reminders",
-];
-
-const FAQ = [
-  { q: "Is TaxMate free?", a: "Yes. It’s free to download, and every calculator gives you a free estimate. TaxMate Plus is a single, one-time purchase that unlocks saved reports, plans, journey logs, exports and monitoring. There’s no subscription." },
-  { q: "Where are my answers and calculations stored?", a: "On your device. There’s no account to create, and your calculations aren’t sent to us. Deadline reminders are scheduled locally on your iPhone or iPad." },
-  { q: "Which tax year does it use?", a: `Estimates use ${TAX_YEAR} HMRC rates and thresholds, including Scottish Income Tax bands. The rules are checked against GOV.UK guidance and updated for each new tax year.` },
-  { q: "Who is TaxMate for?", a: "Employees checking their pay, sole traders and freelancers, company directors, landlords, and anyone with a salary and side income. Answer a few questions and TaxMate brings forward the tools that fit you." },
-  { q: "Is this tax advice? Is TaxMate affiliated with HMRC?", a: "No to both. TaxMate is an independent planning tool built on published HMRC guidance. Estimates depend on the figures you enter, so keep your records and check anything important with HMRC or an accountant." },
-  { q: "Can I share results with my accountant?", a: "Yes. Results can be shared, and with Plus the Annual Summary exports your selected planning records as a PDF or CSV." },
-];
+import { FAQ, PLUS } from "@/lib/content";
+import { AUDIENCES } from "@/lib/audiences";
+import { JsonLd } from "@/components/site/JsonLd";
+import { faqSchema } from "@/lib/schema";
 
 const PRIVACY = [
   { icon: Lock, title: "No account", body: "No sign-up, no password, no email address. Open it and start." },
@@ -54,9 +39,10 @@ function Heading({ kicker, children, body, center = false }: { kicker: string; c
 export default function Home() {
   return (
     <>
+      <JsonLd data={faqSchema(FAQ)} />
       <Nav />
       <main>
-        <Story />
+        <Story rating={<AppRating className="text-white" />} />
 
         <div id="after-story" />
 
@@ -81,6 +67,10 @@ export default function Home() {
             </Heading>
             <div className="mt-16 lg:mt-24" data-reveal>
               <ToolCoins />
+            </div>
+            <div className="mt-14 flex flex-wrap items-center gap-x-5 gap-y-3" data-reveal>
+              <Link href="/calculators" className="btn-ghost press" data-cta="home-tools-calculators">Try the calculators free <ArrowRight className="h-4 w-4" aria-hidden /></Link>
+              <span className="text-[0.9375rem] text-muted">Quick estimates on the web, from the same rules as the app.</span>
             </div>
           </div>
         </section>
@@ -114,9 +104,10 @@ export default function Home() {
         </section>
 
         {/* Plus: a receipt for a one-off payment */}
-        <section id="plus" className="px-3 py-24 sm:px-6 lg:py-32">
-          <div className="green mx-auto grid max-w-[1240px] items-center gap-14 overflow-hidden rounded-[36px] px-7 py-14 sm:px-14 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-20" data-reveal>
-            <div>
+        <section className="px-3 py-24 sm:px-6 lg:py-32">
+          {/* The anchor is the green card itself, so /#plus lands with its top just under the floating nav. */}
+          <div id="plus" className="green mx-auto grid scroll-mt-[84px] max-w-[1240px] items-center gap-14 overflow-hidden rounded-[36px] px-7 py-14 sm:px-14 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-20">
+            <div data-reveal>
               <p className="eyebrow !gap-2 !text-lg text-gold"><Plus className="h-5 w-5" strokeWidth={2.4} aria-hidden /> TaxMate Plus</p>
               <h2 className="display mt-5 text-[2.75rem] sm:text-6xl lg:text-7xl">
                 One payment.
@@ -126,12 +117,12 @@ export default function Home() {
                 Every estimate is free. Plus unlocks everything else.
               </p>
               <div className="mt-10 flex flex-wrap items-center gap-4">
-                <AppStoreButton variant="gold" label="Get TaxMate" />
+                <AppStoreButton variant="gold" label="Get TaxMate" placement="home-plus" />
                 <span className="text-[0.875rem] text-white/60">One-time purchase in the app</span>
               </div>
             </div>
 
-            <div className="relative mx-auto w-full max-w-[440px] pt-6 lg:mr-6">
+            <div className="relative mx-auto w-full max-w-[440px] pt-6 lg:mr-6" data-reveal style={{ ["--reveal-delay" as string]: "120ms" }}>
               <div className="receipt-wrap">
                 <div className="receipt">
                   <p className="text-center font-mono text-[0.8125rem] font-medium tracking-[0.2em]">TAXMATE PLUS</p>
@@ -166,6 +157,14 @@ export default function Home() {
           <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
             <div className="lg:sticky lg:top-28 lg:self-start">
               <Heading kicker="Questions">Good <em>questions.</em></Heading>
+              <nav aria-label="Guides by situation" className="mt-10 hidden lg:block" data-reveal>
+                <p className="text-[0.9375rem] text-muted">Guides for how you work</p>
+                <ul className="mt-3 flex flex-wrap gap-2">
+                  {AUDIENCES.map((a) => (
+                    <li key={a.slug}><Link href={`/for/${a.slug}`} className="check" style={{ ["--tint" as string]: a.tint }}>{a.label}</Link></li>
+                  ))}
+                </ul>
+              </nav>
             </div>
             <div data-reveal>
               <Faq items={FAQ} />
@@ -181,8 +180,9 @@ export default function Home() {
             <h2 className="display mx-auto mt-6 max-w-4xl text-[3rem] sm:text-7xl lg:text-[6.5rem]">
               Your UK tax, <em className="text-gold">made clearer.</em>
             </h2>
+            <AppRating className="mt-6 justify-center text-white" />
             <p className="mx-auto mt-6 max-w-md text-lg text-white/75">For iPhone and iPad. A few quick questions, and your tax picture in minutes.</p>
-            <GetTheApp qr={<AppQr className="block h-[148px] w-[148px]" />} />
+            <GetTheApp placement="home-finale" qr={<AppQr campaign="home-finale-qr" className="block h-[148px] w-[148px]" />} />
             <p className="mt-6 text-[0.8125rem] text-white/45 motion-reduce:hidden" aria-hidden>Psst: tap the screen.</p>
           </div>
         </section>
