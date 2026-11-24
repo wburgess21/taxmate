@@ -94,7 +94,7 @@ export default function PrivacyPolicy() {
               <li>
                 <strong className="font-medium text-ink">App records and preferences</strong>: when you accepted the
                 in-app disclaimer (the date and version), your reminder settings, your progress through onboarding, and
-                whether you have bought TaxMate Plus.
+                whether you have TaxMate Plus.
               </li>
             </ul>
             <p className="mb-4">
@@ -138,7 +138,7 @@ export default function PrivacyPolicy() {
           <section className="mb-12">
             <h2>Purchases</h2>
             <p className="mb-4">
-              TaxMate Plus is bought through Apple&rsquo;s App Store. Apple processes the payment; we never receive your
+              TaxMate Plus, whether yearly or lifetime, is bought through Apple&rsquo;s App Store. Apple processes the payment; we never receive your
               payment details. The app checks your purchase with Apple on your device and remembers on the device that Plus
               is unlocked. Apple&rsquo;s handling of purchases is covered by{" "}
               <a href="https://www.apple.com/legal/privacy/" target="_blank" rel="noopener noreferrer">Apple&rsquo;s privacy policy</a>.

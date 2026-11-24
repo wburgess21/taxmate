@@ -103,22 +103,22 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Plus: a receipt for a one-off payment */}
+        {/* Plus: a receipt for £24.99 a year or £49.99 for life */}
         <section className="px-3 py-24 sm:px-6 lg:py-32">
           {/* The anchor is the green card itself, so /#plus lands with its top just under the floating nav. */}
           <div id="plus" className="green mx-auto grid scroll-mt-[84px] max-w-[1240px] items-center gap-14 overflow-hidden rounded-[36px] px-7 py-14 sm:px-14 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-20">
             <div data-reveal>
               <p className="eyebrow !gap-2 !text-lg text-gold"><Plus className="h-5 w-5" strokeWidth={2.4} aria-hidden /> TaxMate Plus</p>
-              <h2 className="display mt-5 text-[2.75rem] sm:text-6xl lg:text-7xl">
-                One payment.
-                <em className="block text-gold">Yours for life.</em>
+              <h2 className="display mt-5 text-[clamp(2rem,9.6vw,2.75rem)] sm:text-6xl lg:text-7xl">
+                £24.99 a year.
+                <em className="block text-gold">Or £49.99 <span className="whitespace-nowrap">for life.</span></em>
               </h2>
               <p className="mt-6 max-w-md text-lg leading-relaxed text-white/75">
-                Every estimate is free. Plus unlocks everything else.
+                Every estimate is free. Plus unlocks everything else, with a yearly plan or a one-off lifetime purchase.
               </p>
               <div className="mt-10 flex flex-wrap items-center gap-4">
                 <AppStoreButton variant="gold" label="Get TaxMate" placement="home-plus" />
-                <span className="text-[0.875rem] text-white/60">One-time purchase in the app</span>
+                <span className="text-[0.875rem] text-white/60">Yearly or lifetime, bought in the app</span>
               </div>
             </div>
 
@@ -138,14 +138,13 @@ export default function Home() {
                     ))}
                   </ul>
                   <div className="receipt-rule" />
-                  <p className="receipt-line"><span>Monthly fee</span><span className="leader" aria-hidden /><span className="font-mono">£0.00</span></p>
-                  <p className="receipt-line"><span>Renewals</span><span className="leader" aria-hidden /><span className="font-mono">None</span></p>
-                  <p className="receipt-line text-[1.0625rem] font-semibold"><span>Yours</span><span className="leader" aria-hidden /><span>For life</span></p>
+                  <p className="receipt-line"><span>Yearly</span><span className="leader" aria-hidden /><span className="font-mono">£24.99</span></p>
+                  <p className="receipt-line text-[1.0625rem] font-semibold"><span>Lifetime</span><span className="leader" aria-hidden /><span className="font-mono">£49.99</span></p>
                   <p className="mt-5 text-center text-[0.75rem] tracking-[0.2em] text-[#1b221d]/45">THANK YOU ✦</p>
                 </div>
               </div>
               {/* The gold coin, resting on the receipt's corner. */}
-              <div className="pointer-events-auto absolute -right-5 -top-20 h-32 w-32 sm:-right-14 sm:-top-24 sm:h-56 sm:w-56">
+              <div className="pointer-events-auto absolute -right-5 -top-12 h-32 w-32 sm:-right-14 sm:-top-24 sm:h-56 sm:w-56">
                 <PlusCoin />
               </div>
             </div>

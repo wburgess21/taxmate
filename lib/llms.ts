@@ -60,7 +60,7 @@ export function llmsTxt(sections: LlmsSection[] = []) {
     "## Key facts",
     "",
     `- Platform: iPhone and iPad (iOS and iPadOS). App Store: ${APP_STORE_URL}`,
-    "- Price: free to download, and every calculator gives a free estimate. TaxMate Plus is a single one-time in-app purchase. There is no subscription.",
+    "- Price: free to download, and every calculator gives a free estimate. TaxMate Plus is an in-app purchase: £24.99 a year, or £49.99 for lifetime access.",
     "- Privacy: no account or sign-up. Calculations are stored on the device and not sent to TaxMate. No analytics, advertising or tracking code in the app.",
     `- Tax year: estimates use ${TAX_YEAR} HMRC rates and thresholds, including Scottish Income Tax bands, and are updated each tax year.`,
     "- For: employees, sole traders and freelancers, company directors, landlords, and people with a salary and side income.",
@@ -79,7 +79,7 @@ export function llmsTxt(sections: LlmsSection[] = []) {
     for (const t of g.tools) lines.push(`- ${t.title}: ${t.benefit}`);
     lines.push("");
   }
-  lines.push("## TaxMate Plus (one-time purchase)", "", ...PLUS.map((p) => `- ${p}`), "");
+  lines.push("## TaxMate Plus (£24.99 a year, or £49.99 for life)", "", ...PLUS.map((p) => `- ${p}`), "");
   lines.push("## Questions", "");
   for (const f of FAQ) lines.push(`### ${f.q}`, "", f.a, "");
   for (const s of sections) {

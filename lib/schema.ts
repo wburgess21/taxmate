@@ -7,7 +7,7 @@ export const APP_ID = `${SITE_URL}/#app`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;
 
 export const APP_DESCRIPTION =
-  "UK tax calculators for iPhone and iPad: take-home pay, self-employed tax, combined income, home office, business expenses, mileage, pensions, tax savings, VAT, Making Tax Digital and annual summaries. Free estimates, with a one-time TaxMate Plus purchase and no subscription. Calculations stay on your device.";
+  "UK tax calculators for iPhone and iPad: take-home pay, self-employed tax, combined income, home office, business expenses, mileage, pensions, tax savings, VAT, Making Tax Digital and annual summaries. Free estimates, with TaxMate Plus at £24.99 a year or £49.99 for life. Calculations stay on your device.";
 
 export type Rating = { value: number; count: number };
 
@@ -52,6 +52,8 @@ export function siteSchema(rating?: Rating | null) {
         publisher: { "@id": ORG_ID },
         offers: [
           { "@type": "Offer", name: "TaxMate", price: "0", priceCurrency: "GBP", availability: "https://schema.org/InStock", url: APP_STORE_URL },
+          { "@type": "Offer", name: "TaxMate Plus (yearly)", price: "24.99", priceCurrency: "GBP", availability: "https://schema.org/InStock", url: APP_STORE_URL },
+          { "@type": "Offer", name: "TaxMate Plus (lifetime)", price: "49.99", priceCurrency: "GBP", availability: "https://schema.org/InStock", url: APP_STORE_URL },
         ],
         ...(rating ? { aggregateRating: { "@type": "AggregateRating", ratingValue: rating.value.toFixed(1), ratingCount: rating.count, bestRating: "5", worstRating: "1" } } : {}),
       },

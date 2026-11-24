@@ -27,7 +27,7 @@ export function AppCta({ title, body, points, placement }: { title: [string, str
           )}
           <div className="mt-9 flex flex-wrap items-center gap-4">
             <AppStoreButton variant="gold" label="Get TaxMate" placement={placement} />
-            <span className="text-[0.875rem] text-white/60">Free estimates. Plus is a one-time purchase.</span>
+            <span className="text-[0.875rem] text-white/60">Free estimates. Plus is £24.99 a year, or £49.99 for life.</span>
           </div>
         </div>
         <div className="hidden flex-col items-center lg:flex">
