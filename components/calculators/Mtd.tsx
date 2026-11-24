@@ -8,6 +8,8 @@ export function MtdCalculator() {
   const [s, set] = useQueryState({ trading: 38_000, property: 0 });
   const income = s.trading + s.property;
   const m = mtdStart(income);
+  // A start date in the current tax year or earlier has already arrived.
+  const started = m !== null && m.from <= RULES.startYear;
   return (
     <Calc
       inputs={<>
@@ -17,13 +19,13 @@ export function MtdCalculator() {
       results={<>
         <ResultHero
           label="Making Tax Digital for Income Tax"
-          value={m ? `From April ${m.from}` : "Not yet"}
-          sub={m ? `Your qualifying income of ${gbp(income)} is over ${gbp(m.over)}. HMRC will check this on your ${m.basedOn} tax return.` : `Qualifying income of ${gbp(income)} is under ${gbp(RULES.mtd[RULES.mtd.length - 1].over)}, so you don’t have to join yet.`}
+          value={!m ? "Not yet" : started ? `Since April ${m.from}` : `From April ${m.from}`}
+          sub={m ? `Your qualifying income of ${gbp(income)} is over ${gbp(m.over)}. ${started ? `If it was over that on your ${m.basedOn} return, you should already be using it.` : `HMRC will check this on your ${m.basedOn} tax return.`}` : `Qualifying income of ${gbp(income)} is under ${gbp(RULES.mtd[RULES.mtd.length - 1].over)}, so you don’t have to join yet.`}
         />
         <ResultRows rows={[
           ...RULES.mtd.map((t) => ({ label: `Over ${gbp(t.over)} on your ${t.basedOn} return`, value: `6 April ${t.from}`, strong: m?.from === t.from })),
         ]} />
-        <Note>Once you’re in, you keep digital records in compatible software, send a quarterly update to HMRC, and file your return through the same software by 31 January. Employment income and pensions don’t count towards the threshold.</Note>
+        <Note>HMRC checks each year’s return against that year’s threshold, so if an earlier year’s income was higher, you may have to start sooner. Once you’re in, you keep digital records in compatible software, send a quarterly update to HMRC, and file your return through the same software by 31 January. Employment income and pensions don’t count towards the threshold.</Note>
       </>}
     />
   );

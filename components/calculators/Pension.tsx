@@ -1,7 +1,7 @@
 "use client";
 
 import { RULES, gbp, pct, pensionRelief, type Region } from "@/lib/taxRules";
-import { COLORS, Note, NumberField, ResultHero, ResultRows, Segmented, SplitBar, useQueryState } from "./fields";
+import { COLORS, Note, NumberField, Warning, ResultHero, ResultRows, Segmented, SplitBar, useQueryState } from "./fields";
 import { Calc, REGIONS } from "./shared";
 
 export function PensionCalculator() {
@@ -23,9 +23,17 @@ export function PensionCalculator() {
           { label: "Extra relief through Self Assessment", value: gbp(r.extra), color: COLORS.tax },
           { label: "Real cost to you", value: gbp(r.realCost), strong: true },
         ]} />
+        {r.overEarnings && (
+          <Warning>
+            Tax relief only covers payments up to your earnings ({gbp(r.limit)} gross{s.income < RULES.pensions.minimumRelief ? ", the minimum anyone can pay in with relief" : ""}). The figures only give relief on that much: tell your provider, as relief added on the rest will be taken back.
+          </Warning>
+        )}
+        {r.tapered && (
+          <Warning>Over {gbp(RULES.pensions.taperFrom)} your annual allowance may be lower than {gbp(RULES.pensions.annualAllowance)} (the tapered allowance). Check it before paying in large amounts.</Warning>
+        )}
         <Note>
           {r.overAllowance ? `That’s over the ${gbp(RULES.pensions.annualAllowance)} annual allowance: you may be able to carry forward unused allowance from the last three years. ` : ""}
-          Relief is limited to 100% of your earnings. If you earn between £100,000 and £125,140, contributions also win back your Personal Allowance, which the figures include.
+          Relief is limited to 100% of your earnings, or {gbp(RULES.pensions.minimumRelief)} gross if you earn less. If you earn between £100,000 and £125,140, contributions also win back your Personal Allowance, which the figures include.
         </Note>
       </>}
     />

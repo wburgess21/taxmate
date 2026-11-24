@@ -15,10 +15,10 @@ export const per = (n: number, p: Period) => (p === "month" ? n / 12 : p === "we
 export const perLabel = (p: Period) => (p === "month" ? "a month" : p === "week" ? "a week" : "a year");
 
 /** Which page a calculator is on, so its "save this in the app" link carries the right campaign. */
-export const CalcContext = createContext<{ placement: string; tool: string } | null>(null);
+export const CalcContext = createContext<{ placement: string; tool: string; plus?: boolean } | null>(null);
 
-export function CalcProvider({ placement, tool, children }: { placement: string; tool: string; children: ReactNode }) {
-  return <CalcContext.Provider value={{ placement, tool }}>{children}</CalcContext.Provider>;
+export function CalcProvider({ placement, tool, plus, children }: { placement: string; tool: string; plus?: boolean; children: ReactNode }) {
+  return <CalcContext.Provider value={{ placement, tool, plus }}>{children}</CalcContext.Provider>;
 }
 
 /** The two halves of a calculator card. The results end with a link to carry on in the app, at the moment it's most useful. */
@@ -35,7 +35,7 @@ export function Calc({ inputs, results, cta = true }: { inputs: ReactNode; resul
             <span className="calc-save-coin" aria-hidden><SpinCoins className="h-6 w-6" delay={0} /></span>
             <span className="min-w-0 flex-1">
               <span className="block text-[1.0625rem] font-medium leading-snug">Go further in the app</span>
-              <span className="mt-0.5 block text-[0.8125rem] leading-snug text-white/70">The full {ctx.tool} tool, free on iPhone and iPad</span>
+              <span className="mt-0.5 block text-[0.8125rem] leading-snug text-white/70">{ctx.plus ? `The full ${ctx.tool} tool, with TaxMate Plus` : `The full ${ctx.tool} tool, free on iPhone and iPad`}</span>
             </span>
             <span className="calc-save-go" aria-hidden><ArrowUpRight className="h-5 w-5" strokeWidth={2.4} /></span>
           </a>
