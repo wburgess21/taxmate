@@ -18,8 +18,16 @@ export function MileageCalculator() {
   const claim = self ? allowance : Math.max(0, allowance - s.miles * (s.paid / 100));
   const se = expenseSaving(s.profit, claim, s.region);
   const saving = self ? se.saving : claim * Number(s.rate);
+  const card = claim >= 1 ? {
+    kicker: `Business mileage · ${RULES.taxYear}`,
+    lead: self ? "I can deduct" : "I can claim back",
+    amount: gbp(claim),
+    sub: self ? `for ${s.miles.toLocaleString("en-GB")} business miles, saving about ${gbp(saving)} in tax and NI.` : `in Mileage Allowance Relief, worth about ${gbp(saving)} in tax.`,
+    tip: { lead: "Driving for work?", amount: pence(RULES.mileage.carFirst10k), sub: "a mile is what HMRC lets you claim for your first 10,000 business miles in a car or van." },
+  } : null;
   return (
     <Calc
+      card={card}
       inputs={<>
         <Segmented name="work" label="You drive for" value={s.work} onChange={set("work")} options={[["self", "My own business"], ["employee", "My employer"]]} />
         <NumberField name="miles" label="Business miles this tax year" prefix="" suffix="miles" decimals={0} value={s.miles} onChange={set("miles")} hint="Not your usual commute: only journeys made for work." />

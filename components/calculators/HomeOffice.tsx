@@ -25,8 +25,16 @@ export function HomeOfficeCalculator() {
     : r.best === "flat"
       ? `The flat rate (${gbp(r.monthly)} a month for ${r.months} month${r.months === 1 ? "" : "s"})${r.fixedShare ? " plus your share of fixed costs" : ""}${gap >= 1 ? `, ${gbp(gap)} more than a share of all your bills` : ""}.`
       : `A share of all your bills, ${gap >= 1 ? `${gbp(gap)} more than the flat rate plus fixed costs` : "level with the flat rate"}.`;
+  const card = r.claim >= 1 ? {
+    kicker: `Working from home · ${RULES.taxYear}`,
+    lead: "I can claim",
+    amount: gbp(r.claim),
+    sub: `for working from home this year${saving >= 1 ? `, and save ${gbp(saving)} in tax` : ""}.`,
+    tip: { lead: "Self-employed at home?", amount: `Up to ${gbp(FLAT_MAX)}`, sub: "a year at HMRC’s flat rate, plus a share of council tax, mortgage interest and rent on top." },
+  } : null;
   return (
     <Calc
+      card={card}
       inputs={<>
         <p className="kicker -mb-2">Your work at home</p>
         <NumberField name="hours" label="Hours you work at home in a month" prefix="" suffix="hours" decimals={0} max={744} value={s.hours} onChange={set("hours")}

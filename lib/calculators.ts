@@ -16,6 +16,9 @@ export type CalculatorPage = {
   lede: string;
   body: Block[];
   faq: { q: string; a: string }[];
+  /** The message a share pre-fills (WhatsApp, X, email, the share sheet), in the sender's voice. Keep it under ~110
+   * characters so a post on X still has room for the link. */
+  share: string;
   /** What the full tool in the app adds. */
   inApp: string[];
   /** The app keeps this tool's result for TaxMate Plus (app: TaxCapability), so its app link mustn't say it's free. */
@@ -29,6 +32,7 @@ const PA = gbp(RULES.personalAllowance);
 export const CALCULATORS: CalculatorPage[] = [
   {
     slug: "take-home-pay",
+    share: "Handy way to see what actually lands in your account after tax, NI, pension and student loan",
     tool: "Take Home Pay",
     name: "Take-home pay",
     h1: ["Take-home pay", "calculator."],
@@ -66,6 +70,7 @@ export const CALCULATORS: CalculatorPage[] = [
   },
   {
     slug: "self-employed-tax",
+    share: "Self-employed? This shows your tax bill and how much of each invoice to put aside",
     tool: "Self-employed Tax",
     name: "Self-employed tax",
     h1: ["Self-employed", "tax calculator."],
@@ -102,6 +107,7 @@ export const CALCULATORS: CalculatorPage[] = [
   },
   {
     slug: "combined-income",
+    share: "Got a side hustle on top of a job? This shows the extra tax it brings",
     tool: "Combined Income",
     name: "Combined income",
     h1: ["Salary plus", "side income."],
@@ -131,6 +137,7 @@ export const CALCULATORS: CalculatorPage[] = [
   },
   {
     slug: "home-office",
+    share: "Working from home? This shows whether HMRC’s flat rate or your actual bills gets you more",
     tool: "Home Office",
     name: "Home office",
     h1: ["Working from home", "tax relief."],
@@ -167,6 +174,7 @@ export const CALCULATORS: CalculatorPage[] = [
   },
   {
     slug: "business-expenses",
+    share: "See what a business expense really costs once the tax saving is counted",
     tool: "Business Expenses",
     name: "Business expenses",
     h1: ["What an expense", "really costs."],
@@ -202,6 +210,7 @@ export const CALCULATORS: CalculatorPage[] = [
   },
   {
     slug: "business-mileage",
+    share: "Quick way to check what your business mileage is worth at HMRC’s rates",
     tool: "Business Mileage",
     name: "Business mileage",
     h1: ["Business mileage", "calculator."],
@@ -231,6 +240,7 @@ export const CALCULATORS: CalculatorPage[] = [
   },
   {
     slug: "pension-contribution",
+    share: "What a pension payment really costs once tax relief is in",
     tool: "Pension Contribution",
     name: "Pension tax relief",
     h1: ["Pension tax relief", "calculator."],
@@ -260,6 +270,7 @@ export const CALCULATORS: CalculatorPage[] = [
   },
   {
     slug: "payments-on-account",
+    share: "Know what’s due on 31 January and 31 July, and what to put aside each month",
     tool: "Tax Savings Planner",
     name: "Payments on account",
     h1: ["Payments on account", "planner."],
@@ -288,6 +299,7 @@ export const CALCULATORS: CalculatorPage[] = [
   },
   {
     slug: "vat",
+    share: "Add or take off VAT in a second, and see how close you are to having to register",
     tool: "VAT",
     name: "VAT",
     h1: ["VAT", "calculator."],
@@ -319,6 +331,7 @@ export const CALCULATORS: CalculatorPage[] = [
   },
   {
     slug: "making-tax-digital",
+    share: "Sole trader or landlord? Check when Making Tax Digital starts for you",
     tool: "Making Tax Digital",
     name: "Making Tax Digital",
     h1: ["Making Tax Digital", "checker."],
