@@ -25,7 +25,19 @@ function taxYear(now: Date): State {
   return { start, end, today, marks };
 }
 
-const MONTHS = ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"];
+const MONTH_NAMES = ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"];
+/** The year's first month plus every month that holds a key date: the labels that stay on narrow screens, where all twelve don't fit. */
+const KEY_MONTHS = new Set([4, ...KEY_DATES.map((d) => d.month)]);
+const YEAR_START = new Date(2026, 3, 6), YEAR_END = new Date(2027, 3, 5);
+/**
+ * Each month label sits at the start of its month on the track, on the same 0–100% scale as the dots below, so the two line up.
+ * The year runs 6 April to 5 April, so April labels both ends: the first is flush with the line's start, the last centred on its end dot.
+ */
+const MONTHS = MONTH_NAMES.map((name, i) => {
+  const number = ((i + 3) % 12) + 1;
+  const first = i === 0 ? YEAR_START : new Date(number >= 4 ? 2026 : 2027, number - 1, 1);
+  return { name, number, left: ((+first - +YEAR_START) / (+YEAR_END - +YEAR_START)) * 100 };
+});
 const pct = (s: State, d: Date) => ((+d - +s.start) / (+s.end - +s.start)) * 100;
 
 /** Key dates on the tax year, with a coin that rolls along to today. Worked out in the visitor's browser. */
@@ -104,8 +116,16 @@ export function YearTimeline() {
 
       <div ref={trackRef} className="relative mt-14 pb-2">
         {/* Month ticks */}
-        <div className="grid grid-cols-12 text-[0.75rem] text-muted">
-          {MONTHS.map((m, i) => <span key={m} className={i % 2 ? "max-sm:invisible" : ""}>{m}</span>)}
+        <div className="relative h-4 text-[0.75rem] leading-4 text-muted">
+          {MONTHS.map((m, i) => (
+            <span
+              key={m.name}
+              className={`absolute top-0 ${i ? "-translate-x-1/2" : ""} ${KEY_MONTHS.has(m.number) ? "" : "max-sm:invisible"}`}
+              style={{ left: `${m.left.toFixed(2)}%` }}
+            >{m.name}</span>
+          ))}
+          {/* The year ends on 5 April, so the track closes with the month it began in. */}
+          <span aria-hidden className="absolute left-full top-0 -translate-x-1/2">{MONTH_NAMES[0]}</span>
         </div>
         <div className="relative mt-3 h-16">
           <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-hairline" />
