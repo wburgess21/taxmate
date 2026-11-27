@@ -38,6 +38,8 @@ export const RULES = {
   employeeNI: { primaryThreshold: 12_570, upperEarningsLimit: 50_270, main: 0.08, upper: 0.02 },
   /** Class 4 self-employed National Insurance. Class 2 is voluntary since April 2024. */
   class4NI: { lowerProfitsLimit: 12_570, upperProfitsLimit: 50_270, main: 0.06, upper: 0.02 },
+  /** Class 4 main-rate annual maximum, less main-rate Class 1 already paid (SSCR 2001 reg 100; app: SharedIncomeRules). */
+  class4MainMaximum: 2_262,
   /** Employer (secondary Class 1) National Insurance. */
   employerNI: { secondaryThreshold: 5_000, rate: 0.15, employmentAllowance: 10_500 },
 
@@ -52,7 +54,8 @@ export const RULES = {
   dividends: { allowance: 500, basic: 0.1075, higher: 0.3575, additional: 0.3935 },
   savings: { startingRate: 5_000, allowanceBasic: 1_000, allowanceHigher: 500 },
   capitalGains: { annualExempt: 3_000, basic: 0.18, higher: 0.24 },
-  pensions: { annualAllowance: 60_000, basicRelief: 0.2 },
+  /** Gross personal contributions get relief up to relevant earnings, or `minimumRelief` if that's more. Over `taperFrom` threshold income the annual allowance may be tapered. */
+  pensions: { annualAllowance: 60_000, basicRelief: 0.2, minimumRelief: 3_600, taperFrom: 200_000 },
   marriageAllowance: 1_260,
   tradingAllowance: 1_000,
   propertyAllowance: 1_000,
@@ -179,9 +182,22 @@ export function combinedIncome(salary: number, profit: number, region: Region) {
   const total = incomeTax(salary + profit, region);
   const paye = incomeTax(salary, region).tax;
   const ni = employeeNI(salary);
-  const c4 = class4NI(profit);
+  const c4 = class4WithEmployment(profit, salary);
   const selfAssessment = Math.max(0, total.tax - paye) + c4;
   return { salary, profit, tax: total.tax, paye, ni, class4: c4, selfAssessment, keep: salary + profit - total.tax - ni - c4, bands: total.bands, marginal: total.marginal };
+}
+
+/**
+ * Class 4 for someone who also pays Class 1: main-rate Class 4 stops once main-rate Class 1 plus Class 4 reach the
+ * annual maximum, and the rest of the band is charged at the upper rate. Mirrors the app's SharedIncomeRules.class4.
+ */
+export function class4WithEmployment(profit: number, salary: number) {
+  const { lowerProfitsLimit: lpl, upperProfitsLimit: upl, main, upper } = RULES.class4NI;
+  const e = RULES.employeeNI;
+  const mainClass1 = Math.max(0, Math.min(salary, e.upperEarningsLimit) - e.primaryThreshold) * e.main;
+  const band = Math.max(0, Math.min(profit, upl) - lpl);
+  const atMain = Math.min(band * main, Math.max(0, RULES.class4MainMaximum - mainClass1));
+  return Math.round((atMain + (band - atMain / main) * upper + Math.max(0, profit - upl) * upper) * 100) / 100;
 }
 
 /**
@@ -210,17 +226,69 @@ export function homeOfficeMonthly(hours: number) {
   return amount;
 }
 
+/** Average hours in a month (24 × 365 ÷ 12), the whole-day basis HMRC uses to time-apportion fixed costs. */
+const HOURS_IN_MONTH = 730;
+
+export type HomeOfficeInput = {
+  /** Hours of business work at home in a typical month. */
+  hours: number;
+  /** Months of the year worked from home. */
+  months: number;
+  /** Yearly running costs that rise with use: heating, electricity, metered water. */
+  running: number;
+  /** Yearly fixed costs: council tax, mortgage interest, rent, insurance, water rates. */
+  fixed: number;
+  rooms: number;
+  workRooms: number;
+  /** The work room is also used for other things. */
+  shared: boolean;
+  /** Hours a month a shared work room is used for other things. */
+  otherHours: number;
+};
+
+/**
+ * HMRC's two ways for a sole trader to claim use of home (BIM75010, BIM47820, BIM47825). The flat rate replaces only
+ * running costs, so a business share of fixed costs is added to both methods. Costs are split by area (rooms) and,
+ * for a shared room, by time: fixed costs by business hours out of the whole day, running costs by business hours out
+ * of the room's total use. The higher of the two is the claim.
+ */
+export function homeOffice(i: HomeOfficeInput) {
+  const months = Math.max(0, Math.min(12, Math.round(i.months)));
+  const hours = Math.max(0, Math.min(744, i.hours));
+  const monthly = homeOfficeMonthly(Math.floor(hours));
+  const flat = monthly * months;
+  const rooms = Math.max(0, Math.round(i.rooms));
+  const area = rooms ? Math.min(rooms, Math.max(0, Math.round(i.workRooms))) / rooms : 0;
+  const other = Math.max(0, i.otherHours);
+  const fixedTime = i.shared ? Math.min(1, hours / HOURS_IN_MONTH) : 1;
+  const runningTime = !i.shared ? 1 : hours + other > 0 ? hours / (hours + other) : 0;
+  const year = months / 12;
+  const pennies = (n: number) => Math.round(n * 100) / 100;
+  const fixedShare = pennies(Math.max(0, i.fixed) * area * fixedTime * year);
+  const runningShare = pennies(Math.max(0, i.running) * area * runningTime * year);
+  const flatClaim = pennies(flat + fixedShare);
+  const actualClaim = pennies(runningShare + fixedShare);
+  const best: "flat" | "actual" = actualClaim > flatClaim ? "actual" : "flat";
+  return { monthly, months, flat, area, fixedShare, runningShare, flatClaim, actualClaim, best, claim: Math.max(flatClaim, actualClaim) };
+}
+
 /**
  * A personal (relief at source) pension payment. The provider adds 20% basic rate relief; higher and additional rate
  * taxpayers claim the rest through Self Assessment, which is the drop in Income Tax from widening the bands.
  */
 export function pensionRelief(income: number, netPaid: number, region: Region) {
-  const gross = netPaid / (1 - RULES.pensions.basicRelief);
-  const basic = gross - netPaid;
-  const before = incomeTax(income, region).tax;
-  const after = incomeTax(income, region, gross).tax;
-  const extra = Math.max(0, before - after);
-  return { gross, basic, extra, totalRelief: basic + extra, realCost: netPaid - extra, overAllowance: gross > RULES.pensions.annualAllowance };
+  const p = RULES.pensions;
+  // Relief only reaches contributions up to relevant earnings (or £3,600 gross); any more goes in without relief.
+  const limit = Math.max(p.minimumRelief, income);
+  const full = netPaid / (1 - p.basicRelief);
+  const relieved = Math.min(full, limit);
+  const basic = relieved * p.basicRelief;
+  const gross = netPaid + basic;
+  const extra = Math.max(0, incomeTax(income, region).tax - incomeTax(income, region, relieved).tax);
+  return {
+    gross, basic, extra, totalRelief: basic + extra, realCost: netPaid - extra,
+    overAllowance: gross > p.annualAllowance, overEarnings: full > limit, limit, tapered: income > p.taperFrom,
+  };
 }
 
 export function vatSplit(amount: number, rate: number, mode: "add" | "remove") {

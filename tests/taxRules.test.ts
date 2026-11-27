@@ -50,3 +50,45 @@ test("An expense can't save more than the tax on the profit; the rest is a loss"
   assert.equal(r.wipesOut, true);
   assert.equal(T.expenseSaving(40_000, 300, "rUK").wipesOut, false);
 });
+
+// Combined income: Class 4 at the main rate is capped by the annual maximum once Class 1 has used it (app: SharedIncomeRules.class4).
+eq("Combined £60k/£20k Class 4 (main rate used up by Class 1)", T.combinedIncome(60000, 20000, "rUK").class4, 148.6);
+eq("Combined £30k/£30k Class 4 (part headroom)", T.combinedIncome(30000, 30000, "rUK").class4, 927);
+eq("Combined £10k/£30k Class 4 (no Class 1)", T.combinedIncome(10000, 30000, "rUK").class4, 1045.8);
+
+// Pension relief is limited to relevant earnings, or £3,600 gross if more (app: PensionCalculator).
+test("Pension relief stops at earnings", () => {
+  const r = T.pensionRelief(20000, 24000, "rUK");
+  assert.equal(r.overEarnings, true);
+  assert.ok(Math.abs(r.basic - 4000) < 0.006, `basic ${r.basic}`);
+  assert.equal(T.pensionRelief(0, 2880, "rUK").overEarnings, false);
+  assert.ok(Math.abs(T.pensionRelief(0, 2880, "rUK").basic - 720) < 0.006);
+  assert.equal(T.pensionRelief(60270, 8000, "rUK").overEarnings, false);
+});
+
+// Home office, HMRC BIM75010 / BIM47820: the flat rate replaces running costs only; fixed costs are claimed on top.
+test("Home office: shared room, flat rate plus fixed costs wins", () => {
+  const r = T.homeOffice({ hours: 87, months: 12, running: 2000, fixed: 4800, rooms: 5, workRooms: 1, shared: true, otherHours: 87 });
+  assert.equal(r.flat, 216);
+  assert.equal(r.fixedShare, 114.41);
+  assert.equal(r.runningShare, 200);
+  assert.equal(r.best, "flat");
+  assert.equal(r.claim, 330.41);
+});
+test("Home office: room used only for work, actual costs win", () => {
+  const r = T.homeOffice({ hours: 120, months: 12, running: 2000, fixed: 4800, rooms: 5, workRooms: 1, shared: false, otherHours: 0 });
+  assert.equal(r.flat, 312);
+  assert.equal(r.fixedShare, 960);
+  assert.equal(r.runningShare, 400);
+  assert.equal(r.best, "actual");
+  assert.equal(r.claim, 1360);
+});
+test("Home office: hours change both methods", () => {
+  const at = (hours: number) => T.homeOffice({ hours, months: 12, running: 2000, fixed: 4800, rooms: 5, workRooms: 1, shared: true, otherHours: 60 }).claim;
+  assert.ok(at(30) < at(60) && at(60) < at(110), `${at(30)} ${at(60)} ${at(110)}`);
+});
+test("Home office: band edges and part years", () => {
+  const flat = (hours: number, months = 12) => T.homeOffice({ hours, months, running: 0, fixed: 0, rooms: 1, workRooms: 1, shared: true, otherHours: 0 }).flat;
+  assert.deepEqual([flat(24), flat(25), flat(50), flat(50.9), flat(51), flat(100), flat(101)], [0, 120, 120, 120, 216, 216, 312]);
+  assert.equal(flat(101, 6), 156);
+});

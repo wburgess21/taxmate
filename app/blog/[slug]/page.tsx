@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: { canonical: `/blog/${p.slug}` },
     robots: p.noindex ? { index: false, follow: true } : undefined,
     openGraph: { type: "article", title, description, url: `/blog/${p.slug}`, publishedTime: p.publishedAt, modifiedTime: p.updatedAt ?? p.publishedAt, ...(image ? { images: [{ url: image, width: 1200, height: 630, alt: p.mainImage?.alt }] } : {}) },
-    twitter: { title, description, ...(image ? { images: [image] } : {}) },
+    twitter: { card: "summary_large_image", title, description, ...(image ? { images: [image] } : {}) },
   };
 }
 

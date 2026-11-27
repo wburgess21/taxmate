@@ -65,6 +65,7 @@ Each post has a title, slug, excerpt, category, author, dates, the tax year it c
 
 - Every App Store link carries a campaign (`ct`), such as `home-hero`, `nav` or `home-finale-qr`, built by `appStoreUrl()` in `lib/site.ts`. Set `NEXT_PUBLIC_APP_STORE_PROVIDER_TOKEN` (App Store Connect → Analytics → Campaigns) and installs from each placement show up under Sources in App Store Connect. QR codes carry their own campaign, since scans never touch the site.
 - Clicks on anything marked `data-cta` are sent to Vercel Analytics as an `App Store click` event with the placement and page (`components/site/ClickTracker.tsx`). Switching the closing call to action to its QR code sends `QR shown`. Custom events need a Vercel Pro plan.
+- Sharing sends its own events (`components/calculators/Share.tsx`): `Share menu opened`, `Share link`, `Share link cancelled`, `Share figures switched`, `Share image opened`, `Share image style`, `Share image` and `Share image cancelled`. Pro allows two properties per event and `path` is one (it also names the calculator), so the detail rides in a single `option`, such as `whatsapp, with figures`, `device, no figures` or `save, tip`. With Web Analytics Plus (eight properties) these could be split into separate fields.
 - `GOOGLE_SITE_VERIFICATION` and `BING_SITE_VERIFICATION` add the Search Console and Bing Webmaster Tools meta tags. Submit `/sitemap.xml` in both.
 - See `.env.example` for every variable.
 

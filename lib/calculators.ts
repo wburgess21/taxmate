@@ -16,8 +16,13 @@ export type CalculatorPage = {
   lede: string;
   body: Block[];
   faq: { q: string; a: string }[];
+  /** The message a share pre-fills (WhatsApp, X, email, the share sheet), in the sender's voice. Keep it under ~110
+   * characters so a post on X still has room for the link. */
+  share: string;
   /** What the full tool in the app adds. */
   inApp: string[];
+  /** The app keeps this tool's result for TaxMate Plus (app: TaxCapability), so its app link mustn't say it's free. */
+  plus?: boolean;
   related: string[];
 };
 
@@ -27,6 +32,7 @@ const PA = gbp(RULES.personalAllowance);
 export const CALCULATORS: CalculatorPage[] = [
   {
     slug: "take-home-pay",
+    share: "Handy way to see what actually lands in your account after tax, NI, pension and student loan",
     tool: "Take Home Pay",
     name: "Take-home pay",
     h1: ["Take-home pay", "calculator."],
@@ -64,6 +70,7 @@ export const CALCULATORS: CalculatorPage[] = [
   },
   {
     slug: "self-employed-tax",
+    share: "Self-employed? This shows your tax bill and how much of each invoice to put aside",
     tool: "Self-employed Tax",
     name: "Self-employed tax",
     h1: ["Self-employed", "tax calculator."],
@@ -100,6 +107,7 @@ export const CALCULATORS: CalculatorPage[] = [
   },
   {
     slug: "combined-income",
+    share: "Got a side hustle on top of a job? This shows the extra tax it brings",
     tool: "Combined Income",
     name: "Combined income",
     h1: ["Salary plus", "side income."],
@@ -129,18 +137,20 @@ export const CALCULATORS: CalculatorPage[] = [
   },
   {
     slug: "home-office",
+    share: "Working from home? This shows whether HMRC’s flat rate or your actual bills gets you more",
     tool: "Home Office",
     name: "Home office",
     h1: ["Working from home", "tax relief."],
     title: `Working From Home Tax Relief Calculator ${Y}: Simplified Expenses`,
-    description: `Work out what you can claim for working from home as a sole trader in ${Y}: HMRC’s flat rate (£10, £18 or £26 a month) or a share of your actual bills, whichever is more, and the tax it saves.`,
+    description: `Work out what you can claim for working from home as a sole trader in ${Y}: HMRC’s flat rate (£10, £18 or £26 a month) plus fixed costs, or a share of your actual bills, whichever is more, and the tax it saves.`,
     lede: "Self-employed and working from home? Compare HMRC’s flat rate with a share of your actual bills, and see what the better claim is worth in tax.",
     body: [
       {
         h: "Two ways to claim",
         p: [
           "The simplified flat rate needs no bills or sums: you claim a fixed amount for each month, based on the hours you work at home.",
-          "Or you can claim a share of your actual costs, such as heating, electricity, council tax, rent or mortgage interest. Split them by the rooms you use and the time you use them for work. It takes more records but often gives more.",
+          "The flat rate only replaces running costs, such as heating and electricity. You can still claim a business share of fixed costs on top, such as council tax, mortgage interest, rent, insurance and water rates.",
+          "Or you can claim a share of all your actual costs instead. Split them by the rooms you use and the time you use them for work. It takes more records but can give more.",
         ],
         ul: ["25 to 50 hours a month: £10", "51 to 100 hours a month: £18", "101 hours or more: £26"],
       },
@@ -153,15 +163,18 @@ export const CALCULATORS: CalculatorPage[] = [
       },
     ],
     faq: [
-      { q: "Why does the flat rate stop at £312?", a: "The highest flat rate is £26 a month, for 101 hours or more, so twelve months comes to £312. If your bills are high or you use a lot of your home for work, claiming a share of your actual costs instead can give more." },
+      { q: "Why does the flat rate stop at £312?", a: "The highest flat rate is £26 a month, for 101 hours or more, so twelve months comes to £312. That only covers running costs: a business share of fixed costs like council tax and mortgage interest can be added on top. If your bills are high or you use a lot of your home for work, claiming a share of all your actual costs can give more." },
+      { q: "How do I split costs for a room I also use for other things?", a: "Split by area and by time. Take the room’s share of the home, then your working hours as a share of the time. HMRC’s own examples split fixed costs by your hours out of the whole day, and running costs like heating by your hours out of the time the room is in use." },
       { q: "Can I claim broadband and phone as well?", a: "Yes. The flat rate covers heat, light and power. Business use of your phone and internet can be claimed on top." },
       { q: "Does claiming home office costs affect Capital Gains Tax?", a: "Only if part of your home is used exclusively for business. Using a room for work and also for personal use doesn’t usually create a Capital Gains Tax issue." },
     ],
     inApp: ["Flat rate versus actual costs, side by side", "Room and hours split", "Saved Home Office reports"],
+    plus: true,
     related: ["business-expenses", "business-mileage", "self-employed-tax"],
   },
   {
     slug: "business-expenses",
+    share: "See what a business expense really costs once the tax saving is counted",
     tool: "Business Expenses",
     name: "Business expenses",
     h1: ["What an expense", "really costs."],
@@ -197,6 +210,7 @@ export const CALCULATORS: CalculatorPage[] = [
   },
   {
     slug: "business-mileage",
+    share: "Quick way to check what your business mileage is worth at HMRC’s rates",
     tool: "Business Mileage",
     name: "Business mileage",
     h1: ["Business mileage", "calculator."],
@@ -206,11 +220,11 @@ export const CALCULATORS: CalculatorPage[] = [
     body: [
       {
         h: "HMRC’s approved mileage rates",
-        ul: ["Cars and vans: 55p a mile for the first 10,000 business miles in the tax year (up from 45p in 2025/26), then 25p. The 10,000 miles are shared across all the cars and vans in one business", "Motorcycles: 24p a mile", "Bicycles: 20p a mile", "Each passenger on a business trip: 5p a mile (employer payments only)"],
+        ul: ["Cars and vans: 55p a mile for the first 10,000 business miles in the tax year (up from 45p in 2025/26), then 25p. The 10,000 miles are shared across all the cars and vans in one business", "Motorcycles: 24p a mile", "Bicycles: 20p a mile (employees only)", "Each passenger on a business trip: 5p a mile (employer payments only)"],
       },
       {
         h: "Self-employed",
-        p: ["You can use mileage instead of your actual vehicle costs, as long as you stick with it for that vehicle. Keep a log of each journey: date, where, why and how far."],
+        p: ["You can use mileage instead of your actual vehicle costs, as long as you stick with it for that vehicle. The flat rates cover cars, vans and motorcycles only: for a bicycle, claim its actual costs instead. Keep a log of each journey: date, where, why and how far."],
       },
       {
         h: "Employees",
@@ -226,6 +240,7 @@ export const CALCULATORS: CalculatorPage[] = [
   },
   {
     slug: "pension-contribution",
+    share: "What a pension payment really costs once tax relief is in",
     tool: "Pension Contribution",
     name: "Pension tax relief",
     h1: ["Pension tax relief", "calculator."],
@@ -250,10 +265,12 @@ export const CALCULATORS: CalculatorPage[] = [
       { q: "What about workplace pensions?", a: "Most workplace schemes use a net pay arrangement, taking contributions before tax so you get full relief automatically. This calculator is for relief at source payments." },
     ],
     inApp: ["Cash versus pension comparisons", "Salary sacrifice", "The £100,000 taper, mapped", "Saved pension comparisons"],
+    plus: true,
     related: ["take-home-pay", "self-employed-tax", "payments-on-account"],
   },
   {
     slug: "payments-on-account",
+    share: "Know what’s due on 31 January and 31 July, and what to put aside each month",
     tool: "Tax Savings Planner",
     name: "Payments on account",
     h1: ["Payments on account", "planner."],
@@ -282,6 +299,7 @@ export const CALCULATORS: CalculatorPage[] = [
   },
   {
     slug: "vat",
+    share: "Add or take off VAT in a second, and see how close you are to having to register",
     tool: "VAT",
     name: "VAT",
     h1: ["VAT", "calculator."],
@@ -313,6 +331,7 @@ export const CALCULATORS: CalculatorPage[] = [
   },
   {
     slug: "making-tax-digital",
+    share: "Sole trader or landlord? Check when Making Tax Digital starts for you",
     tool: "Making Tax Digital",
     name: "Making Tax Digital",
     h1: ["Making Tax Digital", "checker."],

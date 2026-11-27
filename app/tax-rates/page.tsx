@@ -118,12 +118,13 @@ const SECTIONS: Section[] = [
   {
     id: "mileage",
     title: "Approved mileage rates",
-    tables: [{ head: ["Vehicle", "Rate a business mile"], rows: [["Cars and vans: first 10,000 miles", `${pence(RULES.mileage.carFirst10k)}`], ["Cars and vans: after 10,000 miles", "25p"], ["Motorcycles", "24p"], ["Bicycles", "20p"], ["Each passenger (employer payments)", "5p"]] }],
+    tables: [{ head: ["Vehicle", "Rate a business mile"], rows: [["Cars and vans: first 10,000 miles", `${pence(RULES.mileage.carFirst10k)}`], ["Cars and vans: after 10,000 miles", "25p"], ["Motorcycles", "24p"], ["Bicycles (employees only)", "20p"], ["Each passenger (employer payments)", "5p"]] }],
     calc: ["business-mileage", "Business mileage calculator"],
   },
   {
     id: "home-office",
     title: "Working from home: simplified expenses",
+    intro: "Hours are the business hours you work at home that month. The flat rate replaces running costs only: a business share of fixed costs, such as council tax and mortgage interest, can be claimed on top.",
     tables: [{ head: ["Hours worked at home in the month", "Flat rate a month"], rows: [["25 to 50", "£10"], ["51 to 100", "£18"], ["101 or more", "£26"]] }],
     calc: ["home-office", "Home office calculator"],
   },

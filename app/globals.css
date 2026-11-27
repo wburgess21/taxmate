@@ -1378,9 +1378,11 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
 /* ───────────── Calculators ───────────── */
 
 /* Inputs on the left, a tinted results pane on the right (stacked on phones). */
+/* Not clipped, so the share menu can reach past the card; the results pane rounds its own outer corners instead. */
 .calc {
   display: grid;
-  overflow: hidden;
+  /* One column on phones that can shrink below its content's natural width, so narrow screens never scroll sideways. */
+  grid-template-columns: minmax(0, 1fr);
 }
 @media (min-width: 960px) {
   .calc {
@@ -1389,17 +1391,20 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
 }
 .calc-inputs {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   align-content: start;
   gap: 22px;
   padding: 26px 22px;
 }
 .calc-results {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   align-content: start;
   gap: 18px;
   padding: 26px 22px 28px;
   background: color-mix(in srgb, var(--tint) 7%, var(--surface));
   border-top: 1px solid var(--hairline);
+  border-radius: 0 0 21px 21px;
 }
 @media (min-width: 640px) {
   .calc-inputs,
@@ -1411,11 +1416,278 @@ html[data-intro="flood"] .story-hero-copy > :nth-child(4) { transition-delay: 0.
   .calc-results {
     border-top: 0;
     border-left: 1px solid var(--hairline);
+    border-radius: 0 21px 21px 0;
   }
+}
+
+/* Sharing: a button in the results' corner, its menu, and the result-image dialog. */
+.calc-results[data-share] {
+  position: relative;
+}
+.share-anchor {
+  position: absolute;
+  top: 16px;
+  right: 14px;
+  z-index: 20;
+}
+/* Keep the first result label clear of the button, and as tall as it, so a long figure below never runs under it. */
+.calc-results[data-share] > .share-anchor + * .kicker:first-child {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: -10px;
+  padding-right: 52px;
+}
+/* The same when the results open with a control (take-home pay's Year / Month / Week) instead of a label. */
+.calc-results[data-share] > .share-anchor + .field > legend {
+  margin-top: -10px;
+  line-height: 44px;
+  padding-right: 52px;
+}
+@media (min-width: 640px) {
+  .share-anchor {
+    top: 26px;
+    right: 26px;
+  }
+  .calc-results[data-share] > .share-anchor + * .kicker:first-child,
+  .calc-results[data-share] > .share-anchor + .field > legend {
+    padding-right: 110px;
+  }
+}
+.share-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.share-button:hover,
+.share-button[aria-expanded="true"] {
+  border-color: color-mix(in srgb, var(--ink) 30%, transparent);
+}
+.share-button:focus-visible,
+.share-copy:focus-visible,
+.share-target:focus-visible,
+.share-wide:focus-visible,
+.share-primary:focus-visible,
+.share-switch:focus-visible,
+.share-close:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.share-button-label {
+  display: none;
+}
+@media (min-width: 640px) {
+  .share-button-label {
+    display: inline;
+  }
+}
+.share-pop {
+  grid-template-columns: minmax(0, 1fr);
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: min(360px, calc(100vw - 40px));
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  box-shadow: 0 24px 60px rgb(15 23 18 / 0.18);
+  color: var(--ink);
+}
+.share-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 4px 4px 4px 14px;
+  border-radius: 12px;
+  background: var(--canvas);
+  border: 1px solid var(--hairline);
+}
+.share-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 9px;
+  background: var(--ink);
+  color: var(--surface);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.share-targets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.share-target,
+.share-wide {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.share-target:hover,
+.share-wide:hover {
+  border-color: color-mix(in srgb, var(--ink) 30%, transparent);
+}
+.share-wide {
+  width: 100%;
+  font-size: 0.9375rem;
+}
+.share-result {
+  min-height: 48px;
+  border-radius: 14px;
+}
+.share-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 48px;
+  border-radius: 14px;
+  background: var(--ink);
+  color: var(--surface);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.share-primary:disabled,
+.share-wide:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.share-figures {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--hairline);
+}
+.share-switch {
+  flex: none;
+  position: relative;
+  width: 46px;
+  height: 28px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 14%, var(--surface));
+  /* An outline strong enough (3:1) to see the switch's edge in both themes. */
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 50%, var(--surface));
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.share-switch span {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.12), 0 1px 3px rgb(0 0 0 / 0.25);
+  transition: transform 0.2s;
+}
+.share-switch[aria-checked="true"] {
+  background: var(--tool-income);
+  box-shadow: none;
+}
+.share-switch[aria-checked="true"] span {
+  transform: translateX(18px);
+}
+.share-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgb(15 23 18 / 0.5);
+}
+.share-dialog {
+  position: fixed;
+  z-index: 81;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(760px, calc(100vw - 24px));
+  max-height: calc(100dvh - 24px);
+  overflow-y: auto;
+  display: grid;
+  gap: 24px;
+  padding: 20px;
+  border-radius: 26px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 40px 100px rgb(0 0 0 / 0.3);
+}
+@media (min-width: 720px) {
+  .share-dialog {
+    grid-template-columns: 320px minmax(0, 1fr);
+    padding: 28px;
+  }
+}
+.share-preview {
+  justify-self: center;
+  width: min(100%, 320px);
+  aspect-ratio: 1080 / 1350;
+  border-radius: 18px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #005424, #00351a);
+}
+.share-preview img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+@media (max-width: 719px) {
+  .share-preview {
+    width: min(100%, 240px);
+  }
+}
+.share-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: -8px -8px 0 0;
+  border-radius: 999px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.share-close:hover {
+  color: var(--ink);
+  background: var(--canvas);
 }
 
 .field {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 8px;
 }
 .field-label {
