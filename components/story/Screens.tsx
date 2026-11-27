@@ -7,6 +7,7 @@ import {
   CalendarDays,
   Check,
   CheckCircle2,
+  CirclePoundSterling,
   ChevronLeft,
   ChevronRight,
   Circle,
@@ -17,6 +18,7 @@ import {
   GraduationCap,
   KeyRound,
   LayoutGrid,
+  ListChecks,
   Lock,
   MapPin,
   PiggyBank,
@@ -91,24 +93,26 @@ function ActionBar({ label, tone = "brand" }: { label: string; tone?: "brand" | 
 export function WelcomeScreen({ shown }: { shown: boolean }) {
   return (
     <div className="app-screen app-welcome" data-shown={shown || undefined}>
-      <div className="px-[20px] pt-[54px]">
-        {/* The launch coins sit in this space, on the green. */}
+      {/* The launch coins sit in this space, on the green: lower on iPhone, nearer the middle of the space above the card. */}
+      <div className="px-[20px] pt-[134px]">
         <div className="h-[236px]" data-anchor="welcome" />
-        <div className="px-[8px]">
-          <p className="rise text-[36px] font-light leading-[42px] text-white" style={{ ["--d" as string]: "0.1s" }}>Your UK tax, made clearer.</p>
-          <p className="rise mt-[12px] text-[17px] leading-[25px] text-white/80" style={{ ["--d" as string]: "0.2s" }}>
-            Answer a few quick questions and TaxMate will tailor your tools, key dates and tips.
-          </p>
-          <div className="mt-[24px] grid gap-[14px] text-[15px] text-white">
-            {([[Sparkles, "Live estimates that update as you type"], [Lock, "Your answers and calculations stay on this device"], [ClipboardList, "Each tool explains its scope and assumptions"]] as const).map(([Icon, text], i) => (
-              <p key={text} className="rise flex items-center gap-[10px]" style={{ ["--d" as string]: `${0.3 + i * 0.08}s` }}>
-                <Icon size={17} strokeWidth={2.2} className="flex-none text-gold" /> {text}
-              </p>
-            ))}
-          </div>
-        </div>
       </div>
-      <ActionBar label="Get started" tone="inverted" />
+      {/* The words and button on a glass card docked to the bottom: the same gap on three sides, corners following the screen's. */}
+      <div className="app-welcome-card">
+        <p className="rise text-[30px] font-semibold leading-[36px] text-white" style={{ ["--d" as string]: "0.35s" }}>Welcome to TaxMate</p>
+        <p className="rise mt-[8px] text-[17px] leading-[22px] text-white/80" style={{ ["--d" as string]: "0.42s" }}>Your UK tax, made clearer.</p>
+        <div className="mt-[20px] grid gap-[12px] text-[15px] leading-[20px] text-white">
+          {([[CirclePoundSterling, "Estimate take-home pay and tax"], [ListChecks, "Explore expenses and tax relief"], [CalendarDays, "Plan savings around key dates"]] as const).map(([Icon, text], i) => (
+            <p key={text} className="rise flex items-center gap-[10px]" style={{ ["--d" as string]: `${0.5 + i * 0.07}s` }}>
+              <Icon size={18} strokeWidth={2.2} className="flex-none text-gold" /> {text}
+            </p>
+          ))}
+        </div>
+        <span className="app-primary rise mt-[20px]" data-tone="inverted" style={{ ["--d" as string]: "0.72s" }}>Get started</span>
+        <p className="rise mt-[14px] flex items-center justify-center gap-[5px] text-[13px] text-white/75" style={{ ["--d" as string]: "0.78s" }}>
+          <Lock size={12} strokeWidth={2.6} /> Your answers stay on this device
+        </p>
+      </div>
     </div>
   );
 }
